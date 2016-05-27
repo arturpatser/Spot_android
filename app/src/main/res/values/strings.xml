@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">potspot</string>
+    <string name="potspot">POTSPOT</string>
+    <string name="under_potspot">book a patio, balcony, backyard</string>
+    <string name="log_in">Log in</string>
+    <string name="under_log_in">Welcome back!</string>
+    <string name="email">Email</string>
+    <string name="password">password</string>
+    <string name="your_name">Your name</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="under_sign_up">Nice to meet you!</string>
+    <string name="google">Google</string>
+    <string name="facebook">Facebook</string>
+</resources>
