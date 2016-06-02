@@ -1,5 +1,6 @@
 package com.example.gridyn.potspot;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
@@ -44,10 +45,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onCLickLoginActivity(View view) {
-        startActivity(new Intent(this, LoginActivity.class));
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
     public void onCLickSignUpActivity(View view) {
-        startActivity(new Intent(this, SignUpActivity.class));
+        Intent intent = new Intent(this, SignUpActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 }

@@ -4,7 +4,9 @@ import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -17,6 +19,7 @@ public class SignUpActivity extends AppCompatActivity {
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 
+        initToolbar();
         setFonts();
     }
 
@@ -37,7 +40,17 @@ public class SignUpActivity extends AppCompatActivity {
         Snackbar.make(view, "Sign Up", Snackbar.LENGTH_SHORT).show();
     }
 
-    public void onCliCkBack(View view) {
-        finish();
+    private void initToolbar() {
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.sign_up_toolbar);
+        if (toolbar != null) {
+            toolbar.setNavigationIcon(R.drawable.back);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+//                    NavUtils.navigateUpFromSameTask(SignUpActivity.this);
+                    finish();
+                }
+            });
+        }
     }
 }

@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#20242d</color>
+    <color name="colorPrimaryDark">#20242d</color>
     <color name="colorAccent">#FF4081</color>
     <color name="btnLoginPart">#b43b33</color>
+    <color name="btnFindAvailable">#b43a35</color>
     <color name="txtBtnGoogle">#61616161</color>
+    <color name="backgroundPrice">#80616161</color>
 </resources>

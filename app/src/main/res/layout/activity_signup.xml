@@ -5,13 +5,12 @@
     android:layout_height="match_parent"
     android:background="@drawable/helper_background">
 
-    <ImageButton
-        android:layout_width="wrap_content"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/sign_up_toolbar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/back"
-        android:layout_marginTop="40dp"
-        android:layout_marginLeft="20dp"
-        android:onClick="onCliCkBack"/>
+        android:background="@android:color/transparent"
+        android:layout_marginTop="20dp"/>
 
     <TextView
         android:id="@+id/tv_sign_up"
