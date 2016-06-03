@@ -23,4 +23,6 @@
     <string name="no_problem">No problem!</string>
     <string name="your_email">Your Email</string>
     <string name="reset">Reset</string>
+    <string name="details">details</string>
+    <string name="reject">reject</string>
 </resources>

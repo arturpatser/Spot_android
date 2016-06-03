@@ -6,12 +6,20 @@ public class Spot {
     private Integer price;
     private String typeListing;
     private String image;
+    private String name;
+    private String description;
 
     public Spot(String title, Integer price, String typeListing, String image) {
         this.title = title;
         this.price = price;
         this.typeListing = typeListing;
         this.image = image;
+    }
+
+    public Spot(String name, String image, String description) {
+        this.name = name;
+        this.image = image;
+        this.description = description;
     }
 
     public String getTitle() {
@@ -44,5 +52,21 @@ public class Spot {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

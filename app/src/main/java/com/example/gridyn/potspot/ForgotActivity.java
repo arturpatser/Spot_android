@@ -1,11 +1,9 @@
 package com.example.gridyn.potspot;
 
-import android.annotation.SuppressLint;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -31,7 +29,6 @@ public class ForgotActivity extends AppCompatActivity {
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    NavUtils.navigateUpFromSameTask(ForgotActivity.this);
                     finish();
                 }
             });

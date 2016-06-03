@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.example.gridyn.potspot.adapter.TabsPagerFragmentAdapter;
@@ -55,6 +57,18 @@ public class TabsActivity extends AppCompatActivity {
         tabLayout.getTabAt(0).setIcon(R.drawable.home);
         tabLayout.getTabAt(1).setIcon(R.drawable.notification);
         tabLayout.getTabAt(2).setIcon(R.drawable.profile);
+    }
+
+    public void onClickDetails(View view) {
+        Snackbar.make(view, "details", Snackbar.LENGTH_SHORT).show();
+    }
+
+    public void onClickAccept(View view) {
+        Snackbar.make(view, "accept", Snackbar.LENGTH_SHORT).show();
+    }
+
+    public void onClickReject(View view) {
+        Snackbar.make(view, "reject", Snackbar.LENGTH_SHORT).show();
     }
 
 /*

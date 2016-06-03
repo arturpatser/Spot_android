@@ -100,7 +100,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void initRecyclerView() {
-        RecyclerView recyclerView = (RecyclerView) mView.findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = (RecyclerView) mView.findViewById(R.id.home_recycler_view);
         HomeAdapter adapter = new HomeAdapter(mSpotList, getContext(), getActivity());
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 1, LinearLayoutManager.VERTICAL, false);
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
@@ -112,8 +112,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
     private void initSpotList() {
         mSpotList = new ArrayList<>();
-        mSpotList.add(new Spot("Title", 35, "Balcony", "balcony.jpg"));
-        mSpotList.add(new Spot("Title", 45, "Backyard", "chairs.jpg"));
-        mSpotList.add(new Spot("Title", 15, "Mountains", "mountain.jpg"));
+        mSpotList.add(new Spot("Title", 35, "Balcony", "images/balcony.jpg"));
+        mSpotList.add(new Spot("Title", 45, "Backyard", "images/chairs.jpg"));
+        mSpotList.add(new Spot("Title", 15, "Mountains", "images/mountain.jpg"));
     }
 }

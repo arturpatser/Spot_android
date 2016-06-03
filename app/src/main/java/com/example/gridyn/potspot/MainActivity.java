@@ -1,6 +1,5 @@
 package com.example.gridyn.potspot;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
@@ -20,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 
         setFonts();
+        Person.getInstance();
     }
 
     private void setFonts() {

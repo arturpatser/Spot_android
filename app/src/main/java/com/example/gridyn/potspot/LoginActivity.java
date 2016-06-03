@@ -4,11 +4,8 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -23,11 +20,7 @@ public class LoginActivity extends AppCompatActivity {
 
         initToolbar();
         setFonts();
-    }
-
-    public void onClickLogIn(View view) {
-        Snackbar.make(view, "Log In", Snackbar.LENGTH_SHORT).show();
-        startActivity(new Intent(this, TabsActivity.class));
+        Person.setHost();
     }
 
     private void setFonts() {
@@ -53,16 +46,27 @@ public class LoginActivity extends AppCompatActivity {
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    NavUtils.navigateUpFromSameTask(LoginActivity.this);
                     finish();
                 }
             });
         }
     }
 
+    public void onClickLogIn(View view) {
+        Intent intent = new Intent(this, TabsActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
+
     public void onClickForgotLogin(View view) {
         Intent intent = new Intent(this, ForgotActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
     }
 }

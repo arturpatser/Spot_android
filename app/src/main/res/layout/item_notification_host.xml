@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:id="@+id/notification_host_card"
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="10dp"
+    android:layout_height="200dp"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    card_view:cardElevation="3dp"
+    card_view:cardUseCompatPadding="true">
+
+    <LinearLayout
+        android:id="@+id/notification_host_back"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_image"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@drawable/profile"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            app:civ_border_width="3dp"
+            app:civ_border_color="#FF000000" />
+
+        <TextView
+            android:id="@+id/notification_host_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="Name"
+            android:textColor="@android:color/white"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="5dp" />
+
+        <TextView
+            android:id="@+id/notification_host_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:text="comment"
+            android:textColor="@android:color/white"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:id="@+id/notification_host_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:text="03:49"
+            android:textColor="@android:color/white"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp">
+
+            <Button
+                android:id="@+id/notification_host_details"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:text="@string/details"
+                android:textColor="@android:color/white"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:onClick="onClickDetails"/>
+
+            <Button
+                android:id="@+id/notification_host_accept"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:text="@string/accept"
+                android:textColor="@android:color/white"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:onClick="onClickAccept"/>
+
+            <Button
+                android:id="@+id/notification_host_reject"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:text="@string/reject"
+                android:textColor="@android:color/white"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:onClick="onClickReject"/>
+        </LinearLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>
