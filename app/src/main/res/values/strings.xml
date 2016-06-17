@@ -25,4 +25,19 @@
     <string name="reset">Reset</string>
     <string name="details">details</string>
     <string name="reject">reject</string>
+    <string name="review">review</string>
+
+    <string name="nd_search">Search</string>
+    <string name="nd_message">Messages</string>
+    <string name="nd_pay_spot">Payed spots</string>
+    <string name="nd_my_spots">My spot</string>
+    <string name="nd_invite_friends">Invite friends</string>
+    <string name="nd_give_feedback">Give feedback</string>
+
+    <string name="nd_open">open</string>
+    <string name="nd_close">close</string>
+    <string name="search_radius">Search radius (km)</string>
+    <string name="friend_text">Invite your friends\n and\n SMOKE TOGETHER</string>
+    <string name="friend_email">Email of your friend</string>
+    <string name="invite">invite</string>
 </resources>

@@ -85,7 +85,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="50dp"
         android:onClick="onClickSignUp"
-        android:background="@drawable/loginbtn"
+        android:background="@drawable/btn_login_part"
         android:textAllCaps="false"
         android:textSize="20sp"
         android:textColor="@android:color/white"/>

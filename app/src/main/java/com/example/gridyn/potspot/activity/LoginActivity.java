@@ -1,4 +1,4 @@
-package com.example.gridyn.potspot;
+package com.example.gridyn.potspot.activity;
 
 import android.content.Intent;
 import android.content.res.AssetManager;
@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.gridyn.potspot.R;
+
 public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,7 +22,7 @@ public class LoginActivity extends AppCompatActivity {
 
         initToolbar();
         setFonts();
-        Person.setHost();
+//        Person.setHost();
     }
 
     private void setFonts() {

@@ -25,7 +25,7 @@
         <item name="textAllCaps">true</item>
     </style>
 
-    <style name="AppTheme.Home" parent="AppTheme">
+    <style name="AppTheme.Other" parent="AppTheme">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
     </style>

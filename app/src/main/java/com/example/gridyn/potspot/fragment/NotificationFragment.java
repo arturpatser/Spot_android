@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import com.example.gridyn.potspot.Person;
 import com.example.gridyn.potspot.R;
 import com.example.gridyn.potspot.Spot;
-import com.example.gridyn.potspot.adapter.HomeAdapter;
+import com.example.gridyn.potspot.adapter.NotificationClientAdapter;
 import com.example.gridyn.potspot.adapter.NotificationHostAdapter;
 
 import java.util.ArrayList;
@@ -35,7 +35,6 @@ public class NotificationFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        initSpotList();
         if(Person.isHost()) {
             mView = inflater.inflate(R.layout.fragment_notification_host, container, false);
             initRecyclerViewHost();
@@ -46,14 +45,22 @@ public class NotificationFragment extends Fragment {
         return mView;
     }
 
-    private void initSpotList() {
+    private void initSpotHost() {
         mSpotList = new ArrayList<>();
         mSpotList.add(new Spot("Andrey", "images/balcony.jpg", "Balcony"));
         mSpotList.add(new Spot("Petr", "images/chairs.jpg", "Backyard"));
         mSpotList.add(new Spot("Leha", "images/mountain.jpg", "Mountains"));
     }
 
+    private void initSpotClient() {
+        mSpotList = new ArrayList<>();
+        mSpotList.add(new Spot("Title", 35, "Balcony", "images/balcony.jpg"));
+        mSpotList.add(new Spot("Title", 45, "Backyard", "images/chairs.jpg"));
+        mSpotList.add(new Spot("Title", 15, "Mountains", "images/mountain.jpg"));
+    }
+
     private void initRecyclerViewHost() {
+        initSpotHost();
         RecyclerView recyclerView = (RecyclerView) mView.findViewById(R.id.notification_host_recycler_view);
         NotificationHostAdapter adapter = new NotificationHostAdapter(mSpotList, getContext(), getActivity());
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 1, LinearLayoutManager.VERTICAL, false);
@@ -65,6 +72,14 @@ public class NotificationFragment extends Fragment {
     }
 
     private void initRecyclerViewClient() {
+        initSpotClient();
+        RecyclerView recyclerView = (RecyclerView) mView.findViewById(R.id.notification_client_recycler_view);
+        NotificationClientAdapter adapter = new NotificationClientAdapter(mSpotList, getContext(), getActivity());
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 1, LinearLayoutManager.VERTICAL, false);
+        RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
 
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(gridLayoutManager);
+        recyclerView.setItemAnimator(itemAnimator);
     }
 }

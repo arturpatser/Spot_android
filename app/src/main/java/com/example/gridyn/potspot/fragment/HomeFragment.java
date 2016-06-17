@@ -48,33 +48,24 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         if(!flag) {
             mView = inflater.inflate(R.layout.fragment_home, container, false);
             flag = true;
+            mFindAvailable = (Button) mView.findViewById(R.id.btn_find_available);
+
+            initSpot();
+            initRecyclerView();
+            setFonts();
+
+            final SupportMapFragment mapFragment = (SupportMapFragment)
+                    getChildFragmentManager().findFragmentById(R.id.map);
+            mapFragment.getMapAsync(this);
+
+            mFindAvailable.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Snackbar.make(mView, "find first available", Snackbar.LENGTH_LONG).show();
+                }
+            });
+
         }
-
-        mFindAvailable = (Button) mView.findViewById(R.id.btn_find_available);
-
-        initSpotList();
-        initRecyclerView();
-        setFonts();
-
-        SupportMapFragment mapFragment = (SupportMapFragment)
-                getChildFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
-        mFindAvailable.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Snackbar.make(mView, "find first available", Snackbar.LENGTH_LONG).show();
-            }
-        });
-
-      /*  FloatingActionButton fab = (FloatingActionButton) mView.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });*/
-
         return mView;
     }
 
@@ -110,7 +101,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         recyclerView.setItemAnimator(itemAnimator);
     }
 
-    private void initSpotList() {
+    private void initSpot() {
         mSpotList = new ArrayList<>();
         mSpotList.add(new Spot("Title", 35, "Balcony", "images/balcony.jpg"));
         mSpotList.add(new Spot("Title", 45, "Backyard", "images/chairs.jpg"));

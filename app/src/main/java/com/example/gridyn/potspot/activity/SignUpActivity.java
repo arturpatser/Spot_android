@@ -1,4 +1,4 @@
-package com.example.gridyn.potspot;
+package com.example.gridyn.potspot.activity;
 
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
@@ -10,6 +10,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.example.gridyn.potspot.R;
 
 public class SignUpActivity extends AppCompatActivity {
     @Override

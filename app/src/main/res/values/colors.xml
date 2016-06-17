@@ -7,4 +7,6 @@
     <color name="btnFindAvailable">#b43a35</color>
     <color name="txtBtnGoogle">#61616161</color>
     <color name="backgroundPrice">#80616161</color>
+    <color name="btnReviewGreen">#455127</color>
+    <color name="btnReviewTime">#262830</color>
 </resources>

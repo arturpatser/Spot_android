@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.example.gridyn.potspot.AssetsHelper;
 import com.example.gridyn.potspot.R;
 import com.example.gridyn.potspot.Spot;
-import com.google.android.gms.wearable.Asset;
 
 import java.util.List;
 
@@ -46,7 +45,7 @@ public class NotificationHostAdapter extends RecyclerView.Adapter<NotificationHo
         Spot spot = mSpotList.get(position);
         AssetManager asset = mContext.getAssets();
 
-        holder.back.setBackground(AssetsHelper.loadImageFromAsset(mContext, spot.getImage()));
+        holder.background.setBackground(AssetsHelper.loadImageFromAsset(mContext, spot.getImage()));
         holder.name.setText(spot.getName());
         holder.description.setText(spot.getDescription());
 
@@ -72,7 +71,7 @@ public class NotificationHostAdapter extends RecyclerView.Adapter<NotificationHo
         private Button accept;
         private Button reject;
         private CardView cardView;
-        private LinearLayout back;
+        private LinearLayout background;
         private CircleImageView image;
 
         public Holder(View itemView) {
@@ -80,12 +79,12 @@ public class NotificationHostAdapter extends RecyclerView.Adapter<NotificationHo
             name = (TextView) itemView.findViewById(R.id.notification_host_name);
             description = (TextView) itemView.findViewById(R.id.notification_host_description);
             cardView = (CardView) itemView.findViewById(R.id.notification_host_card);
-            back = (LinearLayout) itemView.findViewById(R.id.notification_host_back);
+            background = (LinearLayout) itemView.findViewById(R.id.notification_host_back);
             time = (TextView) itemView.findViewById(R.id.notification_host_time);
             details = (Button) itemView.findViewById(R.id.notification_host_details);
             accept = (Button) itemView.findViewById(R.id.notification_host_accept);
             reject = (Button) itemView.findViewById(R.id.notification_host_reject);
-            image = (CircleImageView) itemView.findViewById(R.id.profile_image);
+            image = (CircleImageView) itemView.findViewById(R.id.notification_host_profile);
         }
     }
 }
