@@ -91,7 +91,7 @@ public class TabsActivity extends AppCompatActivity implements NavigationView.On
                 intent = new Intent(this, MessageActivity.class);
                 break;
             case R.id.nav_pay_spot:
-
+                intent = new Intent(this, PaidSpotsActivity.class);
                 break;
             case R.id.nav_my_spot:
 
@@ -100,7 +100,7 @@ public class TabsActivity extends AppCompatActivity implements NavigationView.On
                 intent = new Intent(this, InviteFriendActivity.class);
                 break;
             case R.id.nav_feedback:
-
+                intent = new Intent(this, FeedbackActivity.class);
                 break;
         }
 

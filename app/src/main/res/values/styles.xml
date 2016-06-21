@@ -19,6 +19,13 @@
         <item name="android:layout_marginRight">40dp</item>
     </style>
 
+    <style name="FeedbackEditText" parent="AppTheme">
+        <item name="colorControlNormal">@android:color/white</item>
+        <item name="colorControlActivated">@android:color/white</item>
+        <item name="colorControlHighlight">@android:color/white</item>
+        <item name="colorAccent">@color/btnFindAvailable</item>
+    </style>
+
     <style name="AppTheme.TextAppearance.Design.Tab" parent="TextAppearance.AppCompat.Button">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">?android:textColorSecondary</item>

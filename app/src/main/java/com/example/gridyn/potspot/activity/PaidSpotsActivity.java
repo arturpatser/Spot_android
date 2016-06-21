@@ -13,36 +13,27 @@ import android.widget.TextView;
 
 import com.example.gridyn.potspot.R;
 import com.example.gridyn.potspot.Spot;
-import com.example.gridyn.potspot.adapter.MessageAdapter;
+import com.example.gridyn.potspot.adapter.PaidSpotsAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class MessageActivity extends AppCompatActivity {
+public class PaidSpotsActivity extends AppCompatActivity {
 
     private List<Spot> mSpotList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_message);
-        initSpots();
+        setContentView(R.layout.activity_paid_spots);
         initToolbar();
         initRecyclerView();
-    }
 
-    private void initSpots() {
-        mSpotList = new ArrayList<>();
-        mSpotList.add(new Spot("Ethan Hunt", null, "Awesome backyard in downtown"));
-        mSpotList.add(new Spot("Forrest Gump", null, "Very good balcony for your party"));
-        mSpotList.add(new Spot("Jules Winnfield", null, "Simple patio for smokes"));
+        final TextView title = (TextView) findViewById(R.id.ps_title);
+        title.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/Roboto-Medium.ttf"));
     }
 
     private void initToolbar() {
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.message_toolbar);
-        final TextView messageTitle = (TextView) findViewById(R.id.message_title);
-        messageTitle.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/Roboto-Regular.ttf"));
-        toolbar.setTitle("");
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.ps_toolbar);
         toolbar.setNavigationIcon(R.drawable.back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,12 +41,11 @@ public class MessageActivity extends AppCompatActivity {
                 finish();
             }
         });
-//        setSupportActionBar(toolbar);
     }
 
     private void initRecyclerView() {
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.message_recycler);
-        MessageAdapter adapter = new MessageAdapter(mSpotList, getApplicationContext(), this);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.ps_recycler_view);
+        PaidSpotsAdapter adapter = new PaidSpotsAdapter(mSpotList, getApplicationContext(), this);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), 1, LinearLayoutManager.VERTICAL, false);
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
 

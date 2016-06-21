@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="350dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            card_view:cardElevation="3dp"
+            card_view:cardUseCompatPadding="true"
+            card_view:cardBackgroundColor="@android:color/white"
+            android:id="@+id/view">
+
+            <ImageView
+                android:id="@+id/paid_image"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:scaleType="centerCrop"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="150dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Awesome balcony for your party"
+                    android:layout_marginTop="10dp"
+                    android:textSize="16sp"
+                    android:textColor="#212121"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Toronto Canada"
+                    android:textSize="12sp"
+                    android:textColor="#616161"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Total price"
+                    android:textSize="10sp"
+                    android:textColor="#616161"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="$25"
+                    android:textSize="12sp"
+                    android:textColor="#212121"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/date_time_reserved_for"
+                    android:layout_marginTop="10dp"
+                    android:textSize="10sp"
+                    android:textColor="#616161"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="02/06/16 08:00 pm"
+                    android:textSize="12sp"
+                    android:textColor="#212121"/>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
+
+    <com.github.clans.fab.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/btnFindAvailable"
+        android:src="@android:drawable/sym_action_email"
+        android:layout_gravity="right|center_vertical"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true" />
+
+</RelativeLayout>

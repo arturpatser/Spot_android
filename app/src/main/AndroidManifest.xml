@@ -42,6 +42,10 @@
             android:theme="@style/AppTheme.Other"/>
         <activity android:name=".activity.InviteFriendActivity"
             android:theme="@style/AppTheme.Other"/>
+        <activity android:name=".activity.FeedbackActivity"
+            android:theme="@style/AppTheme.Other"/>
+        <activity android:name=".activity.PaidSpotsActivity"
+            android:theme="@style/AppTheme.Other"/>
 
 
         <meta-data

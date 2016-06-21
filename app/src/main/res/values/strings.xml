@@ -40,4 +40,11 @@
     <string name="friend_text">Invite your friends\n and\n SMOKE TOGETHER</string>
     <string name="friend_email">Email of your friend</string>
     <string name="invite">invite</string>
+    <string name="feedback">Feedback</string>
+    <string name="subject">Subject</string>
+    <string name="description">Description</string>
+    <string name="send_feedback">Send Feedback to PotSpot about the app</string>
+    <string name="thanks_for_feedback">Thanks for feedback!</string>
+    <string name="no_problems">NO PROBLEMS</string>
+    <string name="date_time_reserved_for">Date &amp; Time reserved for</string>
 </resources>
