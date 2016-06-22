@@ -47,4 +47,18 @@
     <string name="thanks_for_feedback">Thanks for feedback!</string>
     <string name="no_problems">NO PROBLEMS</string>
     <string name="date_time_reserved_for">Date &amp; Time reserved for</string>
+    <string name="your_potspot">Your Potspot</string>
+    <string name="price_range">Price range</string>
+    <string name="spot_type">Spot Type</string>
+    <string name="patio">Patio</string>
+    <string name="backyard">Backyard</string>
+    <string name="smoking_rooms">Smoking rooms</string>
+    <string name="balcony">Balcony</string>
+    <string name="number_of_guests">Number of guests</string>
+    <string name="guest">guest</string>
+    <string name="additional_filters">Additional filters</string>
+    <string name="tobacco_friendly">Tobacco friendly</string>
+    <string name="handicap_accesible">Handicap accesible</string>
+    <string name="heated">Heated</string>
+    <string name="check_10_spots">Check 10+ spots</string>
 </resources>

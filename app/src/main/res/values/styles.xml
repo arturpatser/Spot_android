@@ -2,10 +2,15 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-         <!--Customize your theme here. -->
+        <!--Customize your theme here. -->
         <!--<item name="colorPrimary">@color/colorPrimary</item>-->
-         <item name="colorPrimaryDark">@android:color/transparent</item>
+        <item name="colorPrimaryDark">@android:color/transparent</item>
         <item name="colorAccent">@android:color/white</item>
+    </style>
+    
+    <style name="AppTheme.Other" parent="AppTheme">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
     </style>
 
     <style name="LoginEditText" parent="AppTheme">
@@ -23,7 +28,12 @@
         <item name="colorControlNormal">@android:color/white</item>
         <item name="colorControlActivated">@android:color/white</item>
         <item name="colorControlHighlight">@android:color/white</item>
-        <item name="colorAccent">@color/btnFindAvailable</item>
+        <item name="colorAccent">@color/mainRed</item>
+    </style>
+
+    <style name="CustomCheckBox" parent="AppTheme">
+        <item name="colorAccent">@color/mainRed</item>
+        <item name="android:textColorSecondary">@color/mainGrey</item>
     </style>
 
     <style name="AppTheme.TextAppearance.Design.Tab" parent="TextAppearance.AppCompat.Button">
@@ -32,9 +42,8 @@
         <item name="textAllCaps">true</item>
     </style>
 
-    <style name="AppTheme.Other" parent="AppTheme">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-    </style>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

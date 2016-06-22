@@ -1,7 +1,6 @@
 package com.example.gridyn.potspot.fragment;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -32,9 +31,9 @@ public class NotificationFragment extends Fragment {
         return fragment;
     }
 
-    @Nullable
+
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if(Person.isHost()) {
             mView = inflater.inflate(R.layout.fragment_notification_host, container, false);
             initRecyclerViewHost();

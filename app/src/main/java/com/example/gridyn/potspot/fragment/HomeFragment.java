@@ -99,6 +99,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setItemAnimator(itemAnimator);
+        recyclerView.onWindowFocusChanged(false);
     }
 
     private void initSpot() {

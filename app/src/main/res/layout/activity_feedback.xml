@@ -24,7 +24,7 @@
         android:id="@+id/feedback_todo"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/btnFindAvailable"
+        android:background="@color/mainRed"
         android:text="@string/send_feedback"
         android:gravity="center"
         android:textSize="16sp"

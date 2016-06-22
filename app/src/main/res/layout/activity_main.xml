@@ -53,7 +53,7 @@
         android:textAllCaps="false"
         android:layout_gravity="center"
         android:textSize="20sp"
-        android:textColor="@color/txtBtnGoogle"
+        android:textColor="@color/mainGrey"
         android:layout_marginBottom="14dp"/>
 
     <Button

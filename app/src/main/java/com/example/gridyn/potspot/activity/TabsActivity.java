@@ -85,7 +85,7 @@ public class TabsActivity extends AppCompatActivity implements NavigationView.On
 
         switch (item.getItemId()) {
             case R.id.nav_search:
-//                intent = new Intent(this, SearchCriteriaActivity.class);
+                intent = new Intent(this, SearchCriteriaActivity.class);
                 break;
             case R.id.nav_message:
                 intent = new Intent(this, MessageActivity.class);
@@ -94,7 +94,7 @@ public class TabsActivity extends AppCompatActivity implements NavigationView.On
                 intent = new Intent(this, PaidSpotsActivity.class);
                 break;
             case R.id.nav_my_spot:
-
+                intent = new Intent(this, YourSpotsActivity.class);
                 break;
             case R.id.nav_friends:
                 intent = new Intent(this, InviteFriendActivity.class);

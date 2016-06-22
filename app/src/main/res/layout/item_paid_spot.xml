@@ -85,7 +85,7 @@
     <com.github.clans.fab.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/btnFindAvailable"
+        android:background="@color/mainRed"
         android:src="@android:drawable/sym_action_email"
         android:layout_gravity="right|center_vertical"
         android:layout_centerVertical="true"
