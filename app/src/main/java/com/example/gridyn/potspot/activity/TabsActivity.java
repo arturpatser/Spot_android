@@ -19,7 +19,8 @@ import android.widget.TextView;
 import com.example.gridyn.potspot.R;
 import com.example.gridyn.potspot.adapter.TabsPagerFragmentAdapter;
 
-public class TabsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class TabsActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     private Toolbar mToolbar;
     private DrawerLayout mDrawer;
@@ -41,15 +42,13 @@ public class TabsActivity extends AppCompatActivity implements NavigationView.On
             toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-            navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
     private void initToolbar() {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
         final TextView titleToolbar = (TextView) findViewById(R.id.toolbar_title);
-        if (titleToolbar != null) {
-            titleToolbar.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/Roboto-Medium.ttf"));
-        }
+        mToolbar = (Toolbar) findViewById(R.id.toolbar_tabs);
+        titleToolbar.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/Roboto-Medium.ttf"));
         mToolbar.setTitle("");
         setSupportActionBar(mToolbar);
     }

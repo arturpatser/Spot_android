@@ -1,5 +1,6 @@
 package com.example.gridyn.potspot.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -97,5 +98,10 @@ public class SearchCriteriaActivity extends AppCompatActivity implements SeekBar
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
 
+    }
+
+    public void onClickCheckSpots(View view) {
+        final Intent intent = new Intent(this, SearchResultActivity.class);
+        startActivity(intent);
     }
 }

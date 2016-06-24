@@ -43,28 +43,33 @@
         <activity
             android:name=".activity.SearchCriteriaActivity"
             android:parentActivityName=".activity.TabsActivity"
-            android:theme="@style/AppTheme.Other"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Other" />
         <activity
             android:name=".activity.MessageActivity"
-            android:theme="@style/AppTheme.Other"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Other" />
         <activity
             android:name=".activity.InviteFriendActivity"
-            android:theme="@style/AppTheme.Other"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Other" />
         <activity
             android:name=".activity.FeedbackActivity"
-            android:theme="@style/AppTheme.Other"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Other" />
         <activity
             android:name=".activity.PaidSpotsActivity"
-            android:theme="@style/AppTheme.Other"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Other" />
         <activity
             android:name=".activity.YourSpotsActivity"
-            android:theme="@style/AppTheme.Other"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Other" />
+
+        <activity
+            android:name=".activity.SearchResultActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Other" />
 
         <meta-data
             android:name="com.google.android.gms.version"

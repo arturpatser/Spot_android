@@ -8,6 +8,13 @@ public class Spot {
     private String image;
     private String name;
     private String description;
+    private String address;
+
+    public Spot(String name, String image, String description) {
+        this.name = name;
+        this.image = image;
+        this.description = description;
+    }
 
     public Spot(String title, Integer price, String typeListing, String image) {
         this.title = title;
@@ -16,10 +23,12 @@ public class Spot {
         this.image = image;
     }
 
-    public Spot(String name, String image, String description) {
-        this.name = name;
+    public Spot(String image, Integer price, String description, String typeListing, String address) {
         this.image = image;
-        this.description = description;
+        this.price = price;
+        this.typeListing = description;
+        this.title = typeListing;
+        this.address = address;
     }
 
     public String getTitle() {
@@ -68,5 +77,9 @@ public class Spot {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getAddress() {
+        return address;
     }
 }

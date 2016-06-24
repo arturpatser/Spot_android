@@ -1,9 +1,9 @@
 package com.example.gridyn.potspot.fragment;
 
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.example.gridyn.potspot.R;
 import com.example.gridyn.potspot.Spot;
+import com.example.gridyn.potspot.activity.SearchResultActivity;
 import com.example.gridyn.potspot.adapter.HomeAdapter;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -33,7 +34,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     private View mView;
     private List<Spot> mSpotList;
     private boolean flag;
-    private Button mFindAvailable;
+    private Button mFindFirstAvailable;
 
 
     public static HomeFragment getInstance() {
@@ -48,25 +49,29 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         if(!flag) {
             mView = inflater.inflate(R.layout.fragment_home, container, false);
             flag = true;
-            mFindAvailable = (Button) mView.findViewById(R.id.btn_find_available);
+            mFindFirstAvailable = (Button) mView.findViewById(R.id.btn_find_available);
 
             initSpot();
             initRecyclerView();
             setFonts();
+            onClickFindFirstAvailable();
 
             final SupportMapFragment mapFragment = (SupportMapFragment)
                     getChildFragmentManager().findFragmentById(R.id.map);
             mapFragment.getMapAsync(this);
-
-            mFindAvailable.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Snackbar.make(mView, "find first available", Snackbar.LENGTH_LONG).show();
-                }
-            });
-
         }
         return mView;
+    }
+
+    private void onClickFindFirstAvailable() {
+        mFindFirstAvailable = (Button) mView.findViewById(R.id.btn_find_available);
+        mFindFirstAvailable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mView.getContext(), SearchResultActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void setFonts() {
@@ -75,7 +80,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         final TextView allListing = (TextView) mView.findViewById(R.id.home_all_listing);
         listingOnMap.setTypeface(Typeface.createFromAsset(assetManager, "fonts/Roboto-Regular.ttf"));
         allListing.setTypeface(Typeface.createFromAsset(assetManager, "fonts/Roboto-Regular.ttf"));
-        mFindAvailable.setTypeface(Typeface.createFromAsset(assetManager, "fonts/Roboto-Medium.ttf"));
+        mFindFirstAvailable.setTypeface(Typeface.createFromAsset(assetManager, "fonts/Roboto-Medium.ttf"));
     }
 
     @Override
@@ -99,7 +104,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setItemAnimator(itemAnimator);
-        recyclerView.onWindowFocusChanged(false);
     }
 
     private void initSpot() {

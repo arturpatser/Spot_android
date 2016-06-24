@@ -12,7 +12,8 @@
         android:background="@color/mainRed"
         android:text="@string/check_10_spots"
         android:textColor="@android:color/white"
-        android:layout_gravity="center_horizontal|bottom" />
+        android:layout_gravity="center_horizontal|bottom"
+        android:onClick="onClickCheckSpots"/>
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/sch_toolbar"
