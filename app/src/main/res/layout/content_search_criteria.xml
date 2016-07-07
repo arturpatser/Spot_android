@@ -22,7 +22,6 @@
             android:layout_height="80dp">
 
             <TextView
-                android:id="@+id/sch_radius"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
@@ -249,7 +248,7 @@
                         <android.support.v7.widget.AppCompatCheckBox
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/handicap_accesible"
+                            android:text="@string/handicap_accessible"
                             android:theme="@style/CustomCheckBox" />
 
                     </LinearLayout>

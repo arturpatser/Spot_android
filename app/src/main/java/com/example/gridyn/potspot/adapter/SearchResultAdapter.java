@@ -27,7 +27,6 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
         mSpotList = spots;
         mContext = context;
         mFragment = fragmentActivity;
-
     }
 
     @Override

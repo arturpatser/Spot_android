@@ -8,11 +8,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.gridyn.potspot.R;
 
 public class ForgotActivity extends AppCompatActivity {
+
+    private EditText mEmail;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,6 +26,8 @@ public class ForgotActivity extends AppCompatActivity {
 
         initToolbar();
         setFonts();
+
+        mEmail = (EditText) findViewById(R.id.forgot_email);
     }
 
     private void initToolbar() {
@@ -38,7 +44,13 @@ public class ForgotActivity extends AppCompatActivity {
     }
 
     public void onClickReset(View view) {
-        Snackbar.make(view, "Reset", Snackbar.LENGTH_SHORT).show();
+        String email = mEmail.getText().toString();
+
+        if(email.isEmpty()) {
+            Snackbar.make(view, "Input email", Snackbar.LENGTH_SHORT).show();
+        } else {
+            //TODO: retrofit
+        }
     }
 
     private void setFonts() {

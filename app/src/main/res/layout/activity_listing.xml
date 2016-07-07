@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/listing_header"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:orientation="vertical">
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/listing_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:layout_marginTop="@dimen/toolbar_margin_top"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/listing_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Very good backyard in the center"
+            android:textSize="20sp"
+            android:textColor="@android:color/black"/>
+
+        <android.support.v7.widget.AppCompatRatingBar
+            android:id="@+id/listing_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            style="?android:attr/ratingBarStyleSmall"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/mainGrey"
+            android:layout_margin="10dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/guests"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:id="@+id/listing_count_guests"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3 GUESTS"
+                    android:layout_gravity="center"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/backyard"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:id="@+id/listing_type_spot"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="BACKYARD"
+                    android:layout_gravity="center"
+                    android:textAllCaps="true"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/mainGrey"
+            android:layout_margin="10dp"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/listing_profile_image"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/jason" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/listing_profile_type_spot"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Backyard"/>
+
+                <TextView
+                    android:id="@+id/listing_profile_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="by Jason Statham"/>
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/listing_profile_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+        android:text="DescriptionDescriptionDescriptionDescriptionDescriptionDescription
+        DescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescription"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/mainGrey"
+            android:layout_margin="10dp"/>
+        <!--
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/list_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>-->
+
+        <android.support.v7.widget.AppCompatRatingBar
+            android:id="@id/listing_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            android:layout_gravity="center_horizontal"
+            style="?android:attr/ratingBarStyleSmall"/>
+
+        <android.support.v7.widget.ListViewCompat
+            android:id="@+id/listing_comments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_marginRight="20dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Read all reviews"
+            android:textColor="@color/mainRed"/>
+
+        <fragment
+            android:id="@+id/listing_map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            tools:context=".MapsActivity"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/edit_information"
+            android:textSize="20sp"
+            android:textColor="@android:color/white"
+            android:background="@drawable/btn_login_part"
+            android:onClick="onClickEditList"/>
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

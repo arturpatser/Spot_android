@@ -3,8 +3,8 @@ package com.example.gridyn.potspot;
 public class Person {
     private static Person instance;
     private static boolean host;
-
-    private String name;
+    private static String token;
+    private static String id;
 
     private Person() {}
 
@@ -23,15 +23,23 @@ public class Person {
         return host;
     }
 
-    public static void setHost() {
-        host = true;
+    public static void setHost(boolean host) {
+        Person.host = host;
     }
 
-    public String getName() {
-        return name;
+    public static String getToken() {
+        return token;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public static void setToken(String token) {
+        Person.token = token;
+    }
+
+    public static String getId() {
+        return id;
+    }
+
+    public static void setId(String id) {
+        Person.id = id;
     }
 }

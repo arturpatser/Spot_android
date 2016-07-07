@@ -3,6 +3,7 @@ package com.example.gridyn.potspot.activity;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -10,17 +11,28 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.gridyn.potspot.R;
 
 public class FeedbackActivity extends AppCompatActivity {
+
+    private EditText mSubject;
+    private EditText mDescription;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback);
         initToolbar();
         setFonts();
+        initFields();
+    }
+
+    private void initFields() {
+        mSubject = (EditText) findViewById(R.id.feedback_subject);
+        mDescription = (EditText) findViewById(R.id.feedback_description);
     }
 
     private void setFonts() {
@@ -54,12 +66,22 @@ public class FeedbackActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.feedback_send) {
-            View layout = getLayoutInflater().inflate(R.layout.dialog_feedback,
-                    (ViewGroup) findViewById(R.id.feedback_dialog));
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setView(layout);
-            AlertDialog alertDialog = builder.create();
-            alertDialog.show();
+            String subject = mSubject.getText().toString();
+            String description = mDescription.getText().toString();
+
+            if(subject.isEmpty() || description.isEmpty()) {
+                Snackbar.make(item.getActionView(), "Input all fields", Snackbar.LENGTH_SHORT).show();
+
+                //TODO: retrofit
+
+            } else {
+                View layout = getLayoutInflater().inflate(R.layout.dialog_feedback,
+                        (ViewGroup) findViewById(R.id.feedback_dialog));
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setView(layout);
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            }
             return true;
         } else {
             return super.onOptionsItemSelected(item);

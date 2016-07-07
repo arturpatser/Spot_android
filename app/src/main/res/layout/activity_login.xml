@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginTop="@dimen/toolbar_margin_top"/>
 
     <TextView
         android:id="@+id/tv_log_in"
@@ -40,6 +40,7 @@
         android:theme="@style/LoginEditText">
 
         <EditText
+            android:id="@+id/log_in_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
@@ -54,6 +55,7 @@
         android:theme="@style/LoginEditText">
 
         <EditText
+            android:id="@+id/log_in_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"

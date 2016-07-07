@@ -58,8 +58,60 @@
     <string name="guest">guest</string>
     <string name="additional_filters">Additional filters</string>
     <string name="tobacco_friendly">Tobacco friendly</string>
-    <string name="handicap_accesible">Handicap accesible</string>
+    <string name="handicap_accessible">Handicap accessible</string>
     <string name="heated">Heated</string>
     <string name="check_10_spots">Check 10+ spots</string>
     <string name="search_result">Search result</string>
+    <string name="edit_information">Edit information</string>
+    <string name="listing_setting">Listing setting</string>
+    <string name="edit_your_listing">Edit your listing</string>
+    <string name="title">Title</string>
+    <string name="price_rate_per_30_mins">Price rate per 30 mins</string>
+    <string name="maximum_number_of_guests">Maximum number of guests</string>
+    <string name="listing_type">Listing type</string>
+    <string name="done">Done</string>
+    <string name="delete">delete</string>
+    <string name="id_verification">ID Verification</string>
+    <string name="become_id_verification">If you want to become a host you should pass ID Verification.</string>
+    <string name="verification_instruction">1. We need good quality image of your real ID document. (id, passport, etc)
+        \n\n2. You can use camera or upload from phone gallery
+        \n\n3.After short moderation you will become a host!
+        \n\n*Confidentiality guaranteed</string>
+    <string name="camera">CAMERA</string>
+    <string name="gallery">GALLERY</string>
+    <string name="add_photos">Add photos</string>
+    <string name="live">Live</string>
+    <string name="write_title">Write Title</string>
+    <string name="give_your_listing_a_descriptive_heading">Give your listing a descriptive heading</string>
+    <string name="write_description">Write Description</string>
+    <string name="give_user_some_details_about_your_listing">Give user some details about your listing</string>
+    <string name="address">Address</string>
+    <string name="how_many_guests_you_can_accept">How many guests you can accept?</string>
+    <string name="patio_backyard_balcony_smoking_rooms">Patio, backyard, balcony, smoking rooms</string>
+    <string name="yes_no">Yes, no?</string>
+    <string name="next">Next</string>
+    <string name="about_me">About me</string>
+    <string name="gender">Gender</string>
+    <string name="member_since">Member since</string>
+    <string name="birthdate">Birthdate</string>
+    <string name="payment_information">Payment information</string>
+    <string name="verified_account">Verified account</string>
+    <string name="phone">Phone</string>
+    <string name="real_id">Real ID</string>
+    <string name="listing">Listing</string>
+    <string name="host_panel">Host panel</string>
+    <string name="edit_name">Edit name</string>
+    <string name="write_some_words">Write some words about yourself</string>
+    <string name="set">Set</string>
+    <string name="save">Save</string>
+    <string name="paypal_account">Paypal account</string>
+    <string name="credit_card">Credit card</string>
+    <string name="add_credit_card">Add credit card</string>
+    <string name="nothing_to_show">Nothing to show</string>
+    <string name="edit">edit</string>
+
+    <string-array name="gender_list">
+        <item>male</item>
+        <item>female</item>
+    </string-array>
 </resources>

@@ -1,5 +1,6 @@
 package com.example.gridyn.potspot.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -32,5 +33,10 @@ public class YourSpotsActivity extends AppCompatActivity {
     private void setBackground() {
         final LinearLayout background = (LinearLayout) findViewById(R.id.your_spot_back);
         background.setBackground(AssetsHelper.loadImageFromAsset(getApplicationContext(), "images/chairs.jpg"));
+    }
+
+    public void onClickViewSpot(View view) {
+        final Intent intent = new Intent(this, ListingActivity.class);
+        startActivity(intent);
     }
 }

@@ -1,37 +1,28 @@
 package com.example.gridyn.potspot.adapter;
 
-import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.example.gridyn.potspot.R;
 import com.example.gridyn.potspot.fragment.HomeFragment;
 import com.example.gridyn.potspot.fragment.NotificationFragment;
 import com.example.gridyn.potspot.fragment.ProfileFragment;
+import com.example.gridyn.potspot.response.UserInfoResponse;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class TabsPagerFragmentAdapter extends FragmentPagerAdapter {
 
-    private String[] tabs;
-    private Context mContext;
     private List<Fragment> mFragmentList;
 
-    public TabsPagerFragmentAdapter(FragmentManager fm, Context context) {
+    public TabsPagerFragmentAdapter(FragmentManager fm, UserInfoResponse.Message.Data messageUser) {
         super(fm);
-        mContext = context;
-        tabs = new String[]{
-            "home",
-            "notification",
-            "profile"
-        };
 
         mFragmentList = Arrays.asList(
                 HomeFragment.getInstance(),
                 NotificationFragment.getInstance(),
-                ProfileFragment.getInstance()
+                ProfileFragment.getInstance(messageUser)
                 );
     }
 

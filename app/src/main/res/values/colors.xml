@@ -6,7 +6,11 @@
     <color name="btnLoginPart">#b43b33</color>
     <color name="mainRed">#b43a35</color>
     <color name="mainGrey">#61616161</color>
+    <color name="grey21">#212121</color>
     <color name="backgroundPrice">#80616161</color>
     <color name="btnReviewGreen">#455127</color>
     <color name="btnReviewTime">#262830</color>
+
+    <color name="btnAccept">#465127</color>
+    <color name="btnReject">#9c3d38</color>
 </resources>

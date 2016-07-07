@@ -46,6 +46,9 @@ public class NotificationFragment extends Fragment {
 
     private void initSpotHost() {
         mSpotList = new ArrayList<>();
+
+        //TODO: retrofit
+
         mSpotList.add(new Spot("Andrey", "images/balcony.jpg", "Balcony"));
         mSpotList.add(new Spot("Petr", "images/chairs.jpg", "Backyard"));
         mSpotList.add(new Spot("Leha", "images/mountain.jpg", "Mountains"));
@@ -53,6 +56,9 @@ public class NotificationFragment extends Fragment {
 
     private void initSpotClient() {
         mSpotList = new ArrayList<>();
+
+        //TODO: retrofit
+
         mSpotList.add(new Spot("Title", 35, "Balcony", "images/balcony.jpg"));
         mSpotList.add(new Spot("Title", 45, "Backyard", "images/chairs.jpg"));
         mSpotList.add(new Spot("Title", 15, "Mountains", "images/mountain.jpg"));

@@ -10,6 +10,10 @@ public class Spot {
     private String description;
     private String address;
 
+    public Spot(String image) {
+        this.image = image;
+    }
+
     public Spot(String name, String image, String description) {
         this.name = name;
         this.image = image;

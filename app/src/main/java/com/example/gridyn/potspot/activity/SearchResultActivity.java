@@ -45,6 +45,7 @@ public class SearchResultActivity extends AppCompatActivity {
 
     private void initSpotList() {
         mSpotList = new ArrayList<>();
+        //TODO: retrofit
         mSpotList.add(new Spot("images/chairs.jpg", 20, "Very good backyard in the center", "Backyard", "Donwtown Toronto, Toronto ON"));
         mSpotList.add(new Spot("images/mountain.jpg", 35, "Good balcony for your party", "Backyard", "Donwtown Toronto, Toronto ON"));
     }

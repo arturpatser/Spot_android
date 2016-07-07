@@ -3,4 +3,8 @@
     <dimen name="design_navigation_icon_size">18dp</dimen>
     <dimen name="thumb_size">30dp</dimen>
     <dimen name="thumb_text_size">14sp</dimen>
+    <dimen name="toolbar_margin_top">20dp</dimen>
+
+    <dimen name="circle_tv">36dp</dimen>
+    <dimen name="some_view">30dp</dimen>
 </resources>

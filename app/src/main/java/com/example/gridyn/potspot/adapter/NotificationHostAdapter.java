@@ -1,6 +1,7 @@
 package com.example.gridyn.potspot.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.support.v4.app.FragmentActivity;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import com.example.gridyn.potspot.AssetsHelper;
 import com.example.gridyn.potspot.R;
 import com.example.gridyn.potspot.Spot;
+import com.example.gridyn.potspot.activity.NotificationDetailsActivity;
 
 import java.util.List;
 
@@ -48,6 +50,13 @@ public class NotificationHostAdapter extends RecyclerView.Adapter<NotificationHo
         holder.background.setBackground(AssetsHelper.loadImageFromAsset(mContext, spot.getImage()));
         holder.name.setText(spot.getName());
         holder.description.setText(spot.getDescription());
+        holder.details.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Intent intent = new Intent(mContext, NotificationDetailsActivity.class);
+                mContext.startActivity(intent);
+            }
+        });
 
         holder.name.setTypeface(Typeface.createFromAsset(asset, "fonts/Roboto-Medium.ttf"));
         holder.description.setTypeface(Typeface.createFromAsset(asset, "fonts/Roboto-Regular.ttf"));

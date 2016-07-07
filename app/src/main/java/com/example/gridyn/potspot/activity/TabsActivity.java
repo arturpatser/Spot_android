@@ -18,20 +18,38 @@ import android.widget.TextView;
 
 import com.example.gridyn.potspot.R;
 import com.example.gridyn.potspot.adapter.TabsPagerFragmentAdapter;
+import com.example.gridyn.potspot.response.UserInfoResponse;
 
 public class TabsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private Toolbar mToolbar;
     private DrawerLayout mDrawer;
+    private UserInfoResponse.Message.Data mMessageData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tabs);
+        initExtras();
         initToolbar();
         initTabs();
         initNav();
+    }
+
+    private void initExtras() {
+        final Intent intent = getIntent();
+        final Bundle extra = intent.getExtras();
+        mMessageData = new UserInfoResponse().new Message().new Data();
+        mMessageData.name = extra.getString("name");
+        mMessageData.address = extra.getString("address");
+        mMessageData.about = extra.getString("about");
+        mMessageData.gender = extra.getString("gender");
+        mMessageData.birthday = extra.getString("birthday");
+        mMessageData.email = extra.getString("email");
+        mMessageData.phone = extra.getString("phone");
+        mMessageData.realID = extra.getString("realID");
+
     }
 
     private void initNav() {
@@ -55,7 +73,7 @@ public class TabsActivity extends AppCompatActivity
 
     private void initTabs() {
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
-        TabsPagerFragmentAdapter adapter = new TabsPagerFragmentAdapter(getSupportFragmentManager(), getApplicationContext());
+        TabsPagerFragmentAdapter adapter = new TabsPagerFragmentAdapter(getSupportFragmentManager(), mMessageData);
         viewPager.setAdapter(adapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);

@@ -17,8 +17,11 @@ import android.widget.TextView;
 
 import com.example.gridyn.potspot.R;
 import com.example.gridyn.potspot.Spot;
+import com.example.gridyn.potspot.activity.SpaceActivity;
+import com.example.gridyn.potspot.activity.SearchCriteriaActivity;
 import com.example.gridyn.potspot.activity.SearchResultActivity;
 import com.example.gridyn.potspot.adapter.HomeAdapter;
+import com.github.clans.fab.FloatingActionButton;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -47,14 +50,14 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if(!flag) {
-            mView = inflater.inflate(R.layout.fragment_home, container, false);
             flag = true;
-            mFindFirstAvailable = (Button) mView.findViewById(R.id.btn_find_available);
+            mView = inflater.inflate(R.layout.fragment_home, container, false);
 
             initSpot();
             initRecyclerView();
-            setFonts();
+            onClickFab();
             onClickFindFirstAvailable();
+            setFonts();
 
             final SupportMapFragment mapFragment = (SupportMapFragment)
                     getChildFragmentManager().findFragmentById(R.id.map);
@@ -63,11 +66,41 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         return mView;
     }
 
+    private void initSpot() {
+        mSpotList = new ArrayList<>();
+
+        //TODO: retrofit
+
+        mSpotList.add(new Spot("Title", 35, "Balcony", "images/balcony.jpg"));
+        mSpotList.add(new Spot("Title", 45, "Backyard", "images/chairs.jpg"));
+        mSpotList.add(new Spot("Title", 15, "Mountains", "images/mountain.jpg"));
+    }
+
+    private void onClickFab() {
+        final FloatingActionButton host = (FloatingActionButton) mView.findViewById(R.id.fab_host);
+        final FloatingActionButton search = (FloatingActionButton) mView.findViewById(R.id.fab_search);
+        host.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Intent intent = new Intent(mView.getContext(), SpaceActivity.class);
+                startActivity(intent);
+            }
+        });
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Intent intent = new Intent(mView.getContext(), SearchCriteriaActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
     private void onClickFindFirstAvailable() {
         mFindFirstAvailable = (Button) mView.findViewById(R.id.btn_find_available);
         mFindFirstAvailable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //TODO: retrofit
                 Intent intent = new Intent(mView.getContext(), SearchResultActivity.class);
                 startActivity(intent);
             }
@@ -104,12 +137,5 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setItemAnimator(itemAnimator);
-    }
-
-    private void initSpot() {
-        mSpotList = new ArrayList<>();
-        mSpotList.add(new Spot("Title", 35, "Balcony", "images/balcony.jpg"));
-        mSpotList.add(new Spot("Title", 45, "Backyard", "images/chairs.jpg"));
-        mSpotList.add(new Spot("Title", 15, "Mountains", "images/mountain.jpg"));
     }
 }

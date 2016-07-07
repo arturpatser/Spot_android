@@ -36,13 +36,14 @@ public class MessageActivity extends AppCompatActivity {
         mSpotList.add(new Spot("Ethan Hunt", null, "Awesome backyard in downtown"));
         mSpotList.add(new Spot("Forrest Gump", null, "Very good balcony for your party"));
         mSpotList.add(new Spot("Jules Winnfield", null, "Simple patio for smokes"));
+
+        //TODO: retrofit
     }
 
     private void initToolbar() {
         final Toolbar toolbar = (Toolbar) findViewById(R.id.message_toolbar);
         final TextView messageTitle = (TextView) findViewById(R.id.message_title);
         messageTitle.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/Roboto-Regular.ttf"));
-        toolbar.setTitle("");
         toolbar.setNavigationIcon(R.drawable.back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,7 +51,6 @@ public class MessageActivity extends AppCompatActivity {
                 finish();
             }
         });
-//        setSupportActionBar(toolbar);
     }
 
     private void initRecyclerView() {

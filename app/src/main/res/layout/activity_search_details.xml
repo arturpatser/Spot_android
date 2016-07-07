@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="274dp">
+        <LinearLayout
+            android:id="@+id/sch_dtl_header"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/sch_dtl_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:layout_marginTop="@dimen/toolbar_margin_top"/>
+
+        </LinearLayout>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/sch_dtl_profile_image"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/jason"
+            android:layout_gravity="center_horizontal|bottom"
+            app:civ_border_width="2dp"
+            app:civ_border_color="@android:color/white"/>
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/sch_dtl_profile_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Jason Statham"
+        android:layout_gravity="center_horizontal"/>
+
+    <TextView
+        android:id="@+id/sch_dtl_profile_from"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Minsk, Belarus"
+        android:layout_gravity="center_horizontal"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/mainGrey" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp">
+
+        <TextView
+            android:id="@+id/sch_dtl_party_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="3\nParty size"
+            android:gravity="center"
+            android:textSize="20sp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:gravity="center_horizontal">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/guests"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/profile"
+                android:textAllCaps="true"
+                android:textSize="20sp"
+                android:layout_marginTop="5dp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/mainGrey" />
+
+    <TextView
+        android:id="@+id/sch_dtl_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date &amp; Time for 02/06/16 08:00 pm"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="10dp"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#f5f5f5">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="40dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp">
+
+            <Button
+                android:id="@+id/sch_dtl_accept"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/white"
+                android:textColor="@color/btnAccept"
+                android:text="@string/accept"
+                android:layout_weight="1"
+                android:onClick="onClickListingAccept"/>
+
+            <Button
+                android:id="@+id/sch_dtl_reject"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/white"
+                android:textColor="@color/btnReject"
+                android:text="@string/reject"
+                android:layout_weight="1"
+                android:onClick="onCLickListingReject"/>
+
+        </LinearLayout>
+    </FrameLayout>
+</LinearLayout>

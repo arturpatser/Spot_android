@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/dialog_calendar">
+
+    <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+        android:id="@+id/calendar_cal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:mcv_selectionColor="@color/mainRed" />
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ProfileEditText">
+        <EditText
+            android:id="@+id/calendar_year"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="What year where you born?"
+            android:inputType="number" />
+    </android.support.design.widget.TextInputLayout>
+
+</LinearLayout>

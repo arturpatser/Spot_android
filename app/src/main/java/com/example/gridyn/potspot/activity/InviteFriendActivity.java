@@ -16,6 +16,7 @@ import com.example.gridyn.potspot.R;
 public class InviteFriendActivity extends AppCompatActivity {
 
     private TextView mTitle;
+    private EditText mEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +24,7 @@ public class InviteFriendActivity extends AppCompatActivity {
         setContentView(R.layout.activity_friend);
 
         mTitle = (TextView) findViewById(R.id.friend_title);
+        mEmail = (EditText) findViewById(R.id.friend_et_email);
 
         initToolbar();
         setFonts();
@@ -52,6 +54,11 @@ public class InviteFriendActivity extends AppCompatActivity {
     }
 
     public void onClickInvite(View view) {
-        Snackbar.make(view, "Invite friend", Snackbar.LENGTH_SHORT).show();
+        String email = mEmail.getText().toString();
+        if(email.isEmpty()) {
+            Snackbar.make(view, "Input email please", Snackbar.LENGTH_SHORT).show();
+        } else {
+            //TODO: retrofit
+        }
     }
 }

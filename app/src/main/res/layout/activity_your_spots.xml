@@ -47,8 +47,9 @@
             android:background="@drawable/btn_review_green"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
-            android:text="@string/review"
+            android:text="@string/live"
             android:textColor="@android:color/white"
-            android:textSize="12sp"/>
+            android:textSize="12sp"
+            android:onClick="onClickViewSpot"/>
     </LinearLayout>
 </LinearLayout>

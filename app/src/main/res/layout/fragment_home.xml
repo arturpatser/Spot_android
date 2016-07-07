@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -69,16 +68,33 @@
 
             <!--<include layout="@layout/content_home" />-->
 
-        <com.github.clans.fab.FloatingActionButton
+
+
+        <com.github.clans.fab.FloatingActionMenu
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
-            android:src="@drawable/fab"
             android:layout_marginBottom="8dp"
             android:layout_marginRight="8dp"
-            app:layout_anchor="@id/home_recycler_view"
-            app:layout_anchorGravity="bottom|end"
-            />
+            app:menu_icon="@drawable/fab">
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fab_host"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/fab_add"
+                android:background="@color/mainRed"
+                app:fab_label="Become a Host"/>
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fab_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/search"
+                android:background="@color/mainRed"
+                app:fab_label="Search"/>
+
+        </com.github.clans.fab.FloatingActionMenu>
 
     </android.support.design.widget.CoordinatorLayout>
 

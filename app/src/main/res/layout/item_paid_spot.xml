@@ -34,6 +34,7 @@
                 android:layout_marginTop="150dp">
 
                 <TextView
+                    android:id="@+id/paid_desc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Awesome balcony for your party"
@@ -42,6 +43,7 @@
                     android:textColor="#212121"/>
 
                 <TextView
+                    android:id="@+id/paid_from"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Toronto Canada"
@@ -57,6 +59,7 @@
                     android:textColor="#616161"/>
 
                 <TextView
+                    android:id="@+id/paid_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="$25"
@@ -72,6 +75,7 @@
                     android:textColor="#616161"/>
 
                 <TextView
+                    android:id="@+id/paid_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="02/06/16 08:00 pm"
@@ -83,6 +87,7 @@
     </LinearLayout>
 
     <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/paid_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/mainRed"

@@ -16,35 +16,42 @@ import com.example.gridyn.potspot.TextThumbSeekBar;
 public class SearchCriteriaActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
 
     private TextThumbSeekBar mSeekRadius;
-    private TextView mRadius;
+    private TextView mCountGuests;
+    private RangeBar mPriceRange;
+    private TextView mInterval;
+
+    private int mDoubeInterval;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_criteria);
+        initFields();
         initToolbar();
         initPriceRange();
         initNumberOfGuests();
+    }
 
+    private void initFields() {
+        mCountGuests = (TextView) findViewById(R.id.sch_count_guests);
+        mPriceRange = (RangeBar) findViewById(R.id.sch_seek_price);
+        mInterval = (TextView) findViewById(R.id.sch_interval);
         mSeekRadius = (TextThumbSeekBar) findViewById(R.id.sch_seek_bar);
         mSeekRadius.setOnSeekBarChangeListener(this);
-
-        mRadius = (TextView) findViewById(R.id.sch_radius);
     }
 
     private void initNumberOfGuests() {
         final Button minus = (Button) findViewById(R.id.sch_minus);
         final Button plus = (Button) findViewById(R.id.sch_plus);
-        final TextView countGuests = (TextView) findViewById(R.id.sch_count_guests);
         assert minus != null;
         minus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int i = Integer.parseInt(countGuests.getText().toString());
+                int i = Integer.parseInt(mCountGuests.getText().toString());
                 if(i > 0) {
                     i--;
                 }
-                countGuests.setText(String.valueOf(i));
+                mCountGuests.setText(String.valueOf(i));
             }
         });
 
@@ -52,23 +59,21 @@ public class SearchCriteriaActivity extends AppCompatActivity implements SeekBar
         plus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int i = Integer.parseInt(countGuests.getText().toString());
+                int i = Integer.parseInt(mCountGuests.getText().toString());
                 if(i >= 0) {
                     i++;
                 }
-                countGuests.setText(String.valueOf(i));
+                mCountGuests.setText(String.valueOf(i));
             }
         });
     }
 
     private void initPriceRange() {
-        final RangeBar priceRange = (RangeBar) findViewById(R.id.sch_seek_price);
-        final TextView interval = (TextView) findViewById(R.id.sch_interval);
-        assert priceRange != null;
-        priceRange.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
+        assert mPriceRange != null;
+        mPriceRange.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
             @Override
             public void onIndexChangeListener(RangeBar rangeBar, int left, int right) {
-                interval.setText("$" + left + " - $" + right);
+                mInterval.setText("$" + left + " - $" + right);
             }
         });
 
@@ -87,7 +92,7 @@ public class SearchCriteriaActivity extends AppCompatActivity implements SeekBar
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
+        mDoubeInterval = progress;
     }
 
     @Override
@@ -101,6 +106,7 @@ public class SearchCriteriaActivity extends AppCompatActivity implements SeekBar
     }
 
     public void onClickCheckSpots(View view) {
+        //TODO: retrofit
         final Intent intent = new Intent(this, SearchResultActivity.class);
         startActivity(intent);
     }

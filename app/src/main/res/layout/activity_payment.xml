@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/payment_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/payment_information"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"/>
+        </android.support.v7.widget.Toolbar>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:text="@string/paypal_account"
+                android:gravity="center_vertical"/>
+
+            <TextView
+                android:id="@+id/payment_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="rpugase@gmail.com"
+                android:layout_marginTop="18dp"/>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:src="@drawable/cancel"
+                android:layout_gravity="end"/>
+        </FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="20dp"
+            android:onClick="onClickAddCreditCard">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/credit_card"/>
+            <TextView
+                android:id="@+id/payment_credit_card"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/add_credit_card"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_login_part"
+        android:text="@string/save"
+        android:textSize="20sp"
+        android:textColor="@android:color/white"
+        android:textAllCaps="false"
+        android:layout_gravity="bottom"
+        android:onClick="onClickSavePayment"/>
+</FrameLayout>
