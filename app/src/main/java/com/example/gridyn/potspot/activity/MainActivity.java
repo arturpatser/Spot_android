@@ -1,18 +1,29 @@
 package com.example.gridyn.potspot.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.gridyn.potspot.Constant;
 import com.example.gridyn.potspot.Person;
 import com.example.gridyn.potspot.R;
+import com.example.gridyn.potspot.service.GCMRegistrationIntentService;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 
 public class MainActivity extends AppCompatActivity {
+
+    private BroadcastReceiver mRegistrationBroadcast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +34,47 @@ public class MainActivity extends AppCompatActivity {
 
         setFonts();
         Person.getInstance();
+
+        mRegistrationBroadcast = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getAction().equals(GCMRegistrationIntentService.REGISTRATION_SUCCESS)) {
+                    String token = intent.getStringExtra("token");
+                    Log.i(Constant.LOG, "GCM token:" + token);
+                } else if (intent.getAction().equals(GCMRegistrationIntentService.REGISTRATION_ERROR)) {
+                    Log.i(Constant.LOG, "GCM registration error!!!");
+                }
+            }
+        };
+
+        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
+        if (ConnectionResult.SUCCESS != resultCode) {
+            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+                Log.i(Constant.LOG, "Google Play Service is not install/enabled in this device!");
+                GooglePlayServicesUtil.showErrorNotification(resultCode, getApplicationContext());
+            } else {
+                Log.i(Constant.LOG, "This device doesnt support for Google Play Service!");
+            }
+        } else {
+            Intent intent = new Intent(this, GCMRegistrationIntentService.class);
+            startService(intent);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcast,
+                new IntentFilter(GCMRegistrationIntentService.REGISTRATION_SUCCESS));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcast,
+                new IntentFilter(GCMRegistrationIntentService.REGISTRATION_ERROR));
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcast);
     }
 
     private void setFonts() {
@@ -41,8 +93,8 @@ public class MainActivity extends AppCompatActivity {
         assert signUp != null;
         textViewPotSpot.setTypeface(Typeface.createFromAsset(asset, "fonts/Roboto-Medium.ttf"));
         textViewUnderPotSpot.setTypeface(Typeface.createFromAsset(asset, "fonts/Roboto-Light.ttf"));
-        google.setTypeface(Typeface.createFromAsset(asset, "fonts/Roboto-Regular.ttf"));
-        facebook.setTypeface(Typeface.createFromAsset(asset, "fonts/Roboto-Regular.ttf"));
+//        google.setTypeface(Typeface.createFromAsset(asset, "fonts/Roboto-Regular.ttf"));
+//        facebook.setTypeface(Typeface.createFromAsset(asset, "fonts/Roboto-Regular.ttf"));
         logIn.setTypeface(Typeface.createFromAsset(asset, "fonts/Roboto-Regular.ttf"));
         signUp.setTypeface(Typeface.createFromAsset(asset, "fonts/Roboto-Regular.ttf"));
     }

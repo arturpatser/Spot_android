@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -37,7 +37,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:thumb="@drawable/seek_red"
-                android:max="15"/>
+                android:max="100" />
 
         </android.support.v7.widget.CardView>
 
@@ -61,7 +61,7 @@
                 android:layout_marginTop="30dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                custom:tickCount="10"
+                custom:tickCount="100"
                 custom:barColor="@android:color/white"
                 custom:thumbColorNormal="#262830"
                 custom:thumbColorPressed="#262830"
@@ -104,16 +104,20 @@
                         android:layout_marginLeft="20dp">
 
                         <android.support.v7.widget.AppCompatCheckBox
+                            android:id="@+id/sch_patio"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/patio"
-                            android:theme="@style/CustomCheckBox"/>
+                            android:theme="@style/CustomCheckBox"
+                            android:checked="true" />
 
                         <android.support.v7.widget.AppCompatCheckBox
+                            android:id="@+id/sch_backyard"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/backyard"
-                            android:theme="@style/CustomCheckBox" />
+                            android:theme="@style/CustomCheckBox"
+                            android:checked="true" />
 
                     </LinearLayout>
 
@@ -124,22 +128,26 @@
                         android:layout_marginLeft="100dp">
 
                         <android.support.v7.widget.AppCompatCheckBox
+                            android:id="@+id/sch_smoking_rooms"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/smoking_rooms"
-                            android:theme="@style/CustomCheckBox" />
+                            android:theme="@style/CustomCheckBox"
+                            android:checked="true" />
 
                         <android.support.v7.widget.AppCompatCheckBox
+                            android:id="@+id/sch_balcony"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/balcony"
-                            android:theme="@style/CustomCheckBox" />
+                            android:theme="@style/CustomCheckBox"
+                            android:checked="true" />
                     </LinearLayout>
                 </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
+                    android:layout_height="1px"
                     android:background="#e1e1e1"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
@@ -240,25 +248,31 @@
                         android:layout_marginLeft="20dp">
 
                         <android.support.v7.widget.AppCompatCheckBox
+                            android:id="@+id/sch_heated"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/heated"
-                            android:theme="@style/CustomCheckBox"/>
+                            android:theme="@style/CustomCheckBox"
+                            android:checked="true" />
 
                         <android.support.v7.widget.AppCompatCheckBox
+                            android:id="@+id/sch_handicap"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/handicap_accessible"
-                            android:theme="@style/CustomCheckBox" />
+                            android:theme="@style/CustomCheckBox"
+                            android:checked="true" />
 
                     </LinearLayout>
 
                     <android.support.v7.widget.AppCompatCheckBox
+                        android:id="@+id/sch_tobacco"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/tobacco_friendly"
                         android:theme="@style/CustomCheckBox"
-                        android:layout_marginLeft="40dp"/>
+                        android:layout_marginLeft="40dp"
+                        android:checked="true" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -267,4 +281,4 @@
 
     </LinearLayout>
 
-</ScrollView>
+</android.support.v4.widget.NestedScrollView>

@@ -11,9 +11,11 @@ import android.widget.TextView;
 import com.example.gridyn.potspot.AssetsHelper;
 import com.example.gridyn.potspot.R;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class NotificationDetailsActivity extends AppCompatActivity {
 
-    private TextView mProfileImage;
+    private CircleImageView mProfileImage;
     private TextView mProfileName;
     private TextView mProfileFrom;
     private TextView mPartySize;
@@ -33,7 +35,7 @@ public class NotificationDetailsActivity extends AppCompatActivity {
     }
 
     private void initFields() {
-        mProfileImage = (TextView) findViewById(R.id.sch_dtl_profile_image);
+        mProfileImage = (CircleImageView) findViewById(R.id.sch_dtl_profile_image);
         mProfileName = (TextView) findViewById(R.id.sch_dtl_profile_name);
         mProfileFrom = (TextView) findViewById(R.id.sch_dtl_profile_from);
         mPartySize = (TextView) findViewById(R.id.sch_dtl_party_size);

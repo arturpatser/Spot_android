@@ -11,15 +11,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.example.gridyn.potspot.R;
-import com.example.gridyn.potspot.Spot;
+import com.example.gridyn.potspot.SearchBridge;
 import com.example.gridyn.potspot.adapter.SearchResultAdapter;
+import com.example.gridyn.potspot.response.SpotSearchResponse;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SearchResultActivity extends AppCompatActivity {
 
-    private List<Spot> mSpotList;
+    private List<SpotSearchResponse.Spots> mSpotList;
     private Context mContext;
 
     @Override
@@ -27,8 +27,8 @@ public class SearchResultActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_result);
         mContext = getApplicationContext();
+        mSpotList = SearchBridge.getDataForSearchResult();
         initToolbar();
-        initSpotList();
         initRecyclerView();
     }
 
@@ -41,13 +41,6 @@ public class SearchResultActivity extends AppCompatActivity {
                 finish();
             }
         });
-    }
-
-    private void initSpotList() {
-        mSpotList = new ArrayList<>();
-        //TODO: retrofit
-        mSpotList.add(new Spot("images/chairs.jpg", 20, "Very good backyard in the center", "Backyard", "Donwtown Toronto, Toronto ON"));
-        mSpotList.add(new Spot("images/mountain.jpg", 35, "Good balcony for your party", "Backyard", "Donwtown Toronto, Toronto ON"));
     }
 
     private void initRecyclerView() {

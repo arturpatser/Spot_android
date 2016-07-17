@@ -5,35 +5,51 @@ import com.google.gson.annotations.SerializedName;
 
 public class UserUpdateQuery {
 
-    @SerializedName("Photo")
+    @SerializedName("token")
     @Expose
-    public String image;
+    public String token;
 
-    @SerializedName("AboutMe")
+    @SerializedName("name")
     @Expose
-    public String aboutMe;
+    public String name;
 
-    @SerializedName("Birthday")
+    @SerializedName("about")
+    @Expose
+    public String about;
+
+    @SerializedName("birthday")
     @Expose
     public String birthday;
 
-    @SerializedName("Gender")
+    @SerializedName("gender")
     @Expose
     public String gender;
+
+    @SerializedName("address")
+    @Expose
+    public String address;
 
     @SerializedName("phone")
     @Expose
     public String phone;
 
-    @SerializedName("Real ID")
+    @SerializedName("real_ID")
     @Expose
-    public String realId;
+    public String realID;
 
-    @SerializedName("Card")
+    @SerializedName("card_ID")
     @Expose
-    public String card;
+    public String cardID;
 
-    @SerializedName("Paypal")
+    @SerializedName("paypal_ID")
     @Expose
-    public String paypal;
+    public String paypalID;
+
+    @SerializedName("email")
+    @Expose
+    public String email;
+
+    @SerializedName("upload")
+    @Expose
+    public String[] upload = new String[1];
 }

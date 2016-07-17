@@ -14,7 +14,7 @@ public class UserInfoResponse {
 
     @SerializedName("message")
     @Expose
-    public List<Message> message = new ArrayList<Message>();
+    public List<Message> message = new ArrayList<>();
 
     public class Message {
 
@@ -86,6 +86,10 @@ public class UserInfoResponse {
             @SerializedName("googlemapsapi")
             @Expose
             public String googlemapsapi;
+
+            @SerializedName("imgs")
+            @Expose
+            public String[] imgs = new String[1];
         }
 
         public class System {

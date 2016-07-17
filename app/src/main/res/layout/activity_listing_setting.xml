@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -21,7 +21,7 @@
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="80dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         card_view:cardBackgroundColor="@android:color/white">
@@ -31,34 +31,38 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp">
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Available rules"
-                android:layout_gravity="center_horizontal"/>
+                android:text="@string/available_rules"
+                android:layout_gravity="center_horizontal" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="When your listing is live"
+                android:text="@string/when_your_listing_is_live"
                 android:layout_gravity="center_horizontal"/>
 
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="10dp"
+                android:onClick="onClickTimeFrom">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Time from"/>
+                    android:text="@string/time_from" />
 
                 <TextView
+                    android:id="@+id/listing_setting_time_from"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="13:30"
-                    android:layout_gravity="right" />
+                    android:text="@string/set"
+                    android:layout_gravity="right"
+                    android:textColor="@color/mainRed" />
             </FrameLayout>
 
             <View
@@ -70,16 +74,19 @@
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:onClick="onClickTimeTo">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Time to"/>
+                    android:text="@string/time_to" />
                 <TextView
+                    android:id="@+id/listing_setting_time_to"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="21:30"
-                    android:layout_gravity="right" />
+                    android:text="@string/set"
+                    android:layout_gravity="right"
+                    android:textColor="@color/mainRed" />
             </FrameLayout>
 
             <View
@@ -93,89 +100,73 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp">
 
-                <Button
+                <android.support.v7.widget.AppCompatCheckBox
                     android:id="@+id/btn_sunday"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="S"
-                    android:gravity="center"
-                    android:background="@drawable/dow_disable"
-                    android:layout_margin="5dp"
-                    android:onClick="onClickDayOfWeek"/>
+                    android:button="@drawable/week_sunday"
+                    android:layout_margin="5dp" />
 
-                <Button
+                <android.support.v7.widget.AppCompatCheckBox
                     android:id="@+id/btn_monday"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="M"
-                    android:gravity="center"
                     android:layout_margin="5dp"
-                    android:background="@drawable/dow_disable"
-                    android:onClick="onClickDayOfWeek"/>
+                    android:button="@drawable/week_monday" />
 
-                <Button
+                <android.support.v7.widget.AppCompatCheckBox
                     android:id="@+id/btn_tuesday"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="T"
-                    android:gravity="center"
                     android:layout_margin="5dp"
-                    android:background="@drawable/dow_disable"
-                    android:onClick="onClickDayOfWeek"/>
+                    android:button="@drawable/week_tuesday" />
 
-                <Button
+                <android.support.v7.widget.AppCompatCheckBox
                     android:id="@+id/btn_wednesday"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="W"
-                    android:gravity="center"
                     android:layout_margin="5dp"
-                    android:background="@color/mainRed"
-                    android:textColor="@android:color/white"
-                    android:onClick="onClickDayOfWeek"/>
+                    android:button="@drawable/week_wednesday" />
 
-                <Button
+                <android.support.v7.widget.AppCompatCheckBox
                     android:id="@+id/btn_thursday"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="T"
-                    android:gravity="center"
                     android:layout_margin="5dp"
-                    android:background="@color/mainRed"
-                    android:textColor="@android:color/white"
-                    android:onClick="onClickDayOfWeek"/>
+                    android:button="@drawable/week_tuesday" />
 
-                <Button
+                <android.support.v7.widget.AppCompatCheckBox
                     android:id="@+id/btn_friday"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="F"
-                    android:gravity="center"
                     android:layout_margin="5dp"
-                    android:background="@color/mainRed"
-                    android:textColor="@android:color/white"
-                    android:onClick="onClickDayOfWeek"/>
+                    android:button="@drawable/week_friday" />
 
-                <Button
+                <android.support.v7.widget.AppCompatCheckBox
                     android:id="@+id/btn_saturday"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="S"
-                    android:gravity="center"
                     android:layout_margin="5dp"
-                    android:background="@color/mainRed"
-                    android:textColor="@android:color/white"
-                    android:onClick="onClickDayOfWeek"/>
+                    android:button="@drawable/week_sunday" />
 
             </LinearLayout>
         </LinearLayout>
     </android.support.v7.widget.CardView>
 
-</LinearLayout>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@drawable/btn_login_part"
+        android:onClick="onClickSaveCreateSpot"
+        android:text="@string/save"
+        android:textColor="@android:color/white"
+        android:textSize="20sp" />
+</FrameLayout>

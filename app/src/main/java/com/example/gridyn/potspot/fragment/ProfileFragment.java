@@ -2,7 +2,9 @@ package com.example.gridyn.potspot.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -23,6 +25,7 @@ import com.example.gridyn.potspot.activity.ProfileEditActivity;
 import com.example.gridyn.potspot.response.UserCommentsResponse;
 import com.example.gridyn.potspot.response.UserInfoResponse;
 import com.example.gridyn.potspot.service.UserService;
+import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit.Call;
@@ -38,7 +41,7 @@ public class ProfileFragment extends Fragment {
     private UserService mService;
     private static UserInfoResponse.Message.Data mMessage;
 
-    private CircleImageView mAva;
+    private CircleImageView mAvatar;
     private TextView mBirthdate;
     private TextView mCardDescription;
     private TextView mCountReview;
@@ -53,7 +56,7 @@ public class ProfileFragment extends Fragment {
     private TextView mRealID;
     private LinearLayout mVerified;
     private Button mHostPanel;
-    private CardView mListing;
+    private CardView mCard;
     private TextView mSeeMore;
 
     public static ProfileFragment getInstance(UserInfoResponse.Message.Data messageUser) {
@@ -80,8 +83,46 @@ public class ProfileFragment extends Fragment {
             setUserInfo();
             getComments();
             initCard();
+            initRefresh();
         }
+
         return mView;
+    }
+
+    private void initRefresh() {
+        final SwipeRefreshLayout refresh = (SwipeRefreshLayout) mView.findViewById(R.id.profile_edit_refresh);
+        refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Call<UserInfoResponse> call = mService.getUserInfo(Person.getId());
+                call.enqueue(new Callback<UserInfoResponse>() {
+                    @Override
+                    public void onResponse(retrofit.Response<UserInfoResponse> response, Retrofit retrofit) {
+                        UserInfoResponse.Message.Data data = response.body().message.get(0).data;
+                        mName.setText(data.name);
+                        mAddress.setText(data.address);
+                        mAbout.setText(data.about);
+                        mGender.setText(data.gender);
+                        mBirthdate.setText(data.birthday);
+                        mEmail.setText(data.email);
+                        mPhone.setText(data.phone);
+                        if (data.imgs.length != 0)
+                            if (!data.imgs[0].isEmpty()) {
+                                Picasso.with(mView.getContext())
+                                        .load("http://potspot.podkolpakom.net/imgs/" + data.imgs[0])
+                                        .into(mAvatar);
+                            }
+                        refresh.setRefreshing(false);
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        Snackbar.make(getView(), Constant.CONNECTION_ERROR, Snackbar.LENGTH_SHORT).show();
+                        refresh.setRefreshing(false);
+                    }
+                });
+            }
+        });
     }
 
     private void initToolbar() {
@@ -99,6 +140,7 @@ public class ProfileFragment extends Fragment {
                 intent.putExtra("email", mMessage.email);
                 intent.putExtra("phone", mMessage.phone);
                 intent.putExtra("realID", mMessage.realID);
+                intent.putExtra("avatar", mMessage.imgs[0]);
                 startActivity(intent);
                 return true;
             }
@@ -120,6 +162,13 @@ public class ProfileFragment extends Fragment {
 
     public void setUserInfo() {
         mName.setText(mMessage.name);
+        mMemberSince.setText(Person.getMemberSince());
+
+        if (!mMessage.imgs[0].isEmpty()) {
+            Picasso.with(mView.getContext())
+                    .load("http://potspot.podkolpakom.net/imgs/" + mMessage.imgs[0])
+                    .into(mAvatar);
+        }
 
         if(!mMessage.address.isEmpty()) {
             mAddress.setText(mMessage.address);
@@ -134,7 +183,7 @@ public class ProfileFragment extends Fragment {
         }
 
         if(!mMessage.birthday.isEmpty()) {
-            mPayInfo.setText(mMessage.birthday);
+            mPayInfo.setText(mMessage.paypalID);
         }
 
         if(!mMessage.email.isEmpty()) {
@@ -153,11 +202,12 @@ public class ProfileFragment extends Fragment {
             mVerified.setVisibility(View.GONE);
             mHostPanel.setVisibility(View.GONE);
             mSeeMore.setVisibility(View.GONE);
+            mCard.setVisibility(View.GONE);
         }
     }
 
     private void initFields() {
-        mAva = (CircleImageView) mView.findViewById(R.id.profile_ava);
+        mAvatar = (CircleImageView) mView.findViewById(R.id.profile_ava);
         mBirthdate = (TextView) mView.findViewById(R.id.profile_birthdate);
         mCardDescription = (TextView) mView.findViewById(R.id.profile_card_desc);
         mCountReview = (TextView) mView.findViewById(R.id.profile_count_reviews);
@@ -173,11 +223,11 @@ public class ProfileFragment extends Fragment {
         mSeeMore = (TextView) mView.findViewById(R.id.profile_see_more);
         mVerified = (LinearLayout) mView.findViewById(R.id.profile_verified);
         mHostPanel = (Button) mView.findViewById(R.id.profile_host_panel);
-        mListing = (CardView) mView.findViewById(R.id.profile_card);
+        mCard = (CardView) mView.findViewById(R.id.profile_card);
     }
 
     private void initCard() {
-        mListing.setBackground(AssetsHelper.loadImageFromAsset(mView.getContext(), "images/chairs.jpg"));
+        mCard.setBackground(AssetsHelper.loadImageFromAsset(mView.getContext(), "images/chairs.jpg"));
     }
 
 

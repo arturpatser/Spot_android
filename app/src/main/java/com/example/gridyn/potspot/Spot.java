@@ -1,5 +1,7 @@
 package com.example.gridyn.potspot;
 
+import com.google.android.gms.maps.model.LatLng;
+
 public class Spot {
 
     private String title;
@@ -9,6 +11,7 @@ public class Spot {
     private String name;
     private String description;
     private String address;
+    private LatLng latLng;
 
     public Spot(String image) {
         this.image = image;
@@ -33,6 +36,23 @@ public class Spot {
         this.typeListing = description;
         this.title = typeListing;
         this.address = address;
+    }
+
+    public Spot(String title, Integer price, String typeListing, String image, float lat, float lng) {
+        this.title = title;
+        this.price = price;
+        this.typeListing = typeListing;
+        this.image = image;
+        latLng = new LatLng(lat, lng);
+
+    }
+
+    public LatLng getLatLng() {
+        return latLng;
+    }
+
+    public void setLatLng(LatLng latLng) {
+        this.latLng = latLng;
     }
 
     public String getTitle() {

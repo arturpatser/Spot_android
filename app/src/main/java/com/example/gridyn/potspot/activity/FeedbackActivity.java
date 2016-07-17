@@ -11,10 +11,22 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.gridyn.potspot.Constant;
+import com.example.gridyn.potspot.Person;
 import com.example.gridyn.potspot.R;
+import com.example.gridyn.potspot.query.FeedbackQuery;
+import com.example.gridyn.potspot.response.UserFeedbackResponse;
+import com.example.gridyn.potspot.service.UserService;
+
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.GsonConverterFactory;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 public class FeedbackActivity extends AppCompatActivity {
 
@@ -70,17 +82,46 @@ public class FeedbackActivity extends AppCompatActivity {
             String description = mDescription.getText().toString();
 
             if(subject.isEmpty() || description.isEmpty()) {
-                Snackbar.make(item.getActionView(), "Input all fields", Snackbar.LENGTH_SHORT).show();
-
-                //TODO: retrofit
+                Snackbar.make(findViewById(android.R.id.content), "Input all fields", Snackbar.LENGTH_SHORT).show();
 
             } else {
-                View layout = getLayoutInflater().inflate(R.layout.dialog_feedback,
-                        (ViewGroup) findViewById(R.id.feedback_dialog));
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setView(layout);
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
+
+                final Retrofit retrofit = new Retrofit.Builder()
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .baseUrl(Constant.BASE_URL)
+                        .build();
+                UserService service = retrofit.create(UserService.class);
+                FeedbackQuery query = new FeedbackQuery();
+                query.token = Person.getToken();
+                query.subject = subject;
+                query.message = description;
+                Call<UserFeedbackResponse> call = service.sendFeedback(query);
+                call.enqueue(new Callback<UserFeedbackResponse>() {
+                    @Override
+                    public void onResponse(Response<UserFeedbackResponse> response, Retrofit retrofit) {
+                        if (response.body().success) {
+                            View layout = getLayoutInflater().inflate(R.layout.dialog_feedback,
+                                    (ViewGroup) findViewById(R.id.feedback_dialog));
+                            AlertDialog.Builder builder = new AlertDialog.Builder(FeedbackActivity.this);
+                            builder.setView(layout);
+                            AlertDialog alertDialog = builder.create();
+                            alertDialog.show();
+                            final Button closeDialog = (Button) layout.findViewById(R.id.feedback_close_d);
+                            closeDialog.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    FeedbackActivity.this.finish();
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        Snackbar.make(findViewById(android.R.id.content),
+                                Constant.CONNECTION_ERROR, Snackbar.LENGTH_SHORT).show();
+                    }
+                });
             }
             return true;
         } else {

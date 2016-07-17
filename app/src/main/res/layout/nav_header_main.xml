@@ -5,15 +5,18 @@
     android:background="@drawable/menu_header"
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
     android:orientation="vertical"
-    android:gravity="bottom">
+    android:gravity="bottom"
+    android:id="@+id/nav_header">
 
     <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/nav_avatar"
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:src="@drawable/jason"
         android:layout_gravity="center_horizontal" />
 
     <TextView
+        android:id="@+id/nav_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Jason Statham"
@@ -24,6 +27,7 @@
     <!--android:paddingTop="@dimen/nav_header_vertical_spacing"-->
 
     <TextView
+        android:id="@+id/nav_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="jason.statham@gmail.com"

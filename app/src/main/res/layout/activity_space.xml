@@ -11,7 +11,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="List your space"
+            android:text="@string/list_your_space"
             android:textColor="@android:color/white"
             android:textSize="20sp"/>
     </android.support.v7.widget.Toolbar>
@@ -24,6 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
             <FrameLayout
                 android:id="@+id/space_header"
                 android:layout_width="match_parent"
@@ -35,263 +36,331 @@
                     android:text="@string/add_photos"
                     android:textColor="@color/mainRed"
                     android:background="@android:color/white"
-                    android:textAllCaps="false"/>
+                    android:textAllCaps="false"
+                    android:onClick="onClickAddPhotoSpace" />
             </FrameLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="20dp">
 
+                <TextView
+                    android:layout_width="@dimen/circle_tv"
+                    android:layout_height="@dimen/circle_tv"
+                    android:background="@drawable/circle_tv_red"
+                    android:text="1"
+                    android:gravity="center"
+                    android:textColor="@android:color/white"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp" />
                 <LinearLayout
-                    android:layout_width="50dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-
                     <TextView
-                        android:layout_width="@dimen/circle_tv"
-                        android:layout_height="@dimen/circle_tv"
-                        android:background="@drawable/circle_tv"
-                        android:text="1"
-                        android:gravity="center"
-                        android:textColor="@android:color/white"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="4dp"/>
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/write_title"
+                        android:textColor="@color/grey21" />
 
-                    <View
-                        android:layout_width="1px"
-                        android:layout_height="@dimen/some_view"
-                        android:background="@color/mainGrey"
-                        android:layout_gravity="center_horizontal"/>
-
-                    <TextView
-                        android:layout_width="@dimen/circle_tv"
-                        android:layout_height="@dimen/circle_tv"
-                        android:background="@drawable/circle_tv"
-                        android:text="2"
-                        android:gravity="center"
-                        android:textColor="@android:color/white"
-                        android:layout_gravity="center_horizontal"/>
-
-                    <View
-                        android:layout_width="1px"
-                        android:layout_height="@dimen/some_view"
-                        android:background="@color/mainGrey"
-                        android:layout_gravity="center_horizontal"/>
-
-                    <TextView
-                        android:layout_width="@dimen/circle_tv"
-                        android:layout_height="@dimen/circle_tv"
-                        android:background="@drawable/circle_tv"
-                        android:text="3"
-                        android:gravity="center"
-                        android:textColor="@android:color/white"
-                        android:layout_gravity="center_horizontal"/>
-
-                    <View
-                        android:layout_width="1px"
-                        android:layout_height="@dimen/some_view"
-                        android:background="@color/mainGrey"
-                        android:layout_gravity="center_horizontal"/>
-
-                    <TextView
-                        android:layout_width="@dimen/circle_tv"
-                        android:layout_height="@dimen/circle_tv"
-                        android:background="@drawable/circle_tv"
-                        android:text="4"
-                        android:gravity="center"
-                        android:textColor="@android:color/white"
-                        android:layout_gravity="center_horizontal"/>
-
-                    <View
-                        android:layout_width="1px"
-                        android:layout_height="@dimen/some_view"
-                        android:background="@color/mainGrey"
-                        android:layout_gravity="center_horizontal"/>
-
-                    <TextView
-                        android:layout_width="@dimen/circle_tv"
-                        android:layout_height="@dimen/circle_tv"
-                        android:background="@drawable/circle_tv"
-                        android:text="5"
-                        android:gravity="center"
-                        android:textColor="@android:color/white"
-                        android:layout_gravity="center_horizontal"/>
-
-                    <View
-                        android:layout_width="1px"
-                        android:layout_height="@dimen/some_view"
-                        android:background="@color/mainGrey"
-                        android:layout_gravity="center_horizontal"/>
-
-                    <TextView
-                        android:layout_width="@dimen/circle_tv"
-                        android:layout_height="@dimen/circle_tv"
-                        android:background="@drawable/circle_tv"
-                        android:text="6"
-                        android:gravity="center"
-                        android:textColor="@android:color/white"
-                        android:layout_gravity="center_horizontal"/>
-
-                    <View
-                        android:layout_width="1px"
-                        android:layout_height="@dimen/some_view"
-                        android:background="@color/mainGrey"
-                        android:layout_gravity="center_horizontal"/>
-
-                    <TextView
-                        android:layout_width="@dimen/circle_tv"
-                        android:layout_height="@dimen/circle_tv"
-                        android:background="@drawable/circle_tv"
-                        android:text="7"
-                        android:gravity="center"
-                        android:textColor="@android:color/white"
-                        android:layout_gravity="center_horizontal"/>
-
-                    <View
-                        android:layout_width="1px"
-                        android:layout_height="@dimen/some_view"
-                        android:background="@color/mainGrey"
-                        android:layout_gravity="center_horizontal"/>
-
-                    <TextView
-                        android:layout_width="@dimen/circle_tv"
-                        android:layout_height="@dimen/circle_tv"
-                        android:background="@drawable/circle_tv"
-                        android:text="8"
-                        android:gravity="center"
-                        android:textColor="@android:color/white"
-                        android:layout_gravity="center_horizontal"/>
-
-                    <View
-                        android:layout_width="1px"
-                        android:layout_height="@dimen/some_view"
-                        android:background="@color/mainGrey"
-                        android:layout_gravity="center_horizontal"/>
-
-                    <TextView
-                        android:layout_width="@dimen/circle_tv"
-                        android:layout_height="@dimen/circle_tv"
-                        android:background="@drawable/circle_tv"
-                        android:text="9"
-                        android:gravity="center"
-                        android:textColor="@android:color/white"
-                        android:layout_gravity="center_horizontal"/>
-
+                    <EditText
+                        android:id="@+id/space_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:theme="@style/ProfileEditText"
+                        android:hint="@string/give_your_listing_a_descriptive_heading" />
                 </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:layout_width="@dimen/circle_tv"
+                    android:layout_height="@dimen/circle_tv"
+                    android:background="@drawable/circle_tv"
+                    android:text="2"
+                    android:gravity="center"
+                    android:textColor="@android:color/white"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/write_description"
+                        android:textColor="@color/grey21" />
+
+                    <EditText
+                        android:id="@+id/space_desc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:theme="@style/ProfileEditText"
+                        android:hint="@string/give_user_some_details_about_your_listing" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:layout_width="@dimen/circle_tv"
+                    android:layout_height="@dimen/circle_tv"
+                    android:background="@drawable/circle_tv_red"
+                    android:text="3"
+                    android:gravity="center"
+                    android:textColor="@android:color/white"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/write_title"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/give_your_listing_a_descriptive_heading"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/write_description"
-                        android:layout_marginTop="20dp"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/give_user_some_details_about_your_listing"/>
-
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/address"
-                        android:layout_marginTop="20dp"/>
+                        android:textColor="@color/grey21" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <EditText
+                        android:id="@+id/space_address"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="318 Wellington Street West. Toronto"/>
+                        android:theme="@style/ProfileEditText"
+                        android:hint="318 Wellington Street West. Toronto" />
+                </LinearLayout>
+            </LinearLayout>
 
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:layout_width="@dimen/circle_tv"
+                    android:layout_height="@dimen/circle_tv"
+                    android:background="@drawable/circle_tv_red"
+                    android:text="4"
+                    android:gravity="center"
+                    android:textColor="@android:color/white"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/price_rate_per_30_mins"
-                        android:layout_marginTop="20dp"/>
+                        android:textColor="@color/grey21" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <EditText
+                        android:id="@+id/space_price"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="$10"/>
+                        android:theme="@style/ProfileEditText"
+                        android:hint="$10"
+                        android:inputType="number" />
+                </LinearLayout>
+            </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:layout_width="@dimen/circle_tv"
+                    android:layout_height="@dimen/circle_tv"
+                    android:background="@drawable/circle_tv"
+                    android:text="5"
+                    android:gravity="center"
+                    android:textColor="@android:color/white"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/maximum_number_of_guests"
-                        android:layout_marginTop="20dp"/>
+                        android:textColor="@color/grey21" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <EditText
+                        android:id="@+id/space_guests"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/how_many_guests_you_can_accept"/>
+                        android:theme="@style/ProfileEditText"
+                        android:hint="@string/how_many_guests_you_can_accept"
+                        android:inputType="number" />
+                </LinearLayout>
+            </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:layout_width="@dimen/circle_tv"
+                    android:layout_height="@dimen/circle_tv"
+                    android:background="@drawable/circle_tv"
+                    android:text="6"
+                    android:gravity="center"
+                    android:textColor="@android:color/white"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/listing_type"
-                        android:layout_marginTop="20dp"/>
+                        android:textColor="@color/grey21" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <android.support.v7.widget.AppCompatSpinner
+                        android:id="@+id/space_listing_type"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/patio_backyard_balcony_smoking_rooms"/>
+                        android:entries="@array/listing_type" />
+                </LinearLayout>
+            </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp">
+
+                <TextView
+                    android:layout_width="@dimen/circle_tv"
+                    android:layout_height="@dimen/circle_tv"
+                    android:background="@drawable/circle_tv"
+                    android:text="7"
+                    android:gravity="center"
+                    android:textColor="@android:color/white"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/tobacco_friendly"
-                        android:layout_marginTop="20dp"/>
+                        android:textColor="@color/grey21" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <android.support.v7.widget.AppCompatSpinner
+                        android:id="@+id/space_tobacco"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/yes_no"/>
+                        android:entries="@array/yes_or_no" />
+                </LinearLayout>
+            </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp">
+
+                <TextView
+                    android:layout_width="@dimen/circle_tv"
+                    android:layout_height="@dimen/circle_tv"
+                    android:background="@drawable/circle_tv"
+                    android:text="8"
+                    android:gravity="center"
+                    android:textColor="@android:color/white"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/heated"
-                        android:layout_marginTop="20dp"/>
+                        android:textColor="@color/grey21" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <android.support.v7.widget.AppCompatSpinner
+                        android:id="@+id/space_heated"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/yes_no"/>
+                        android:entries="@array/yes_or_no" />
+                </LinearLayout>
+            </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp">
+
+                <TextView
+                    android:layout_width="@dimen/circle_tv"
+                    android:layout_height="@dimen/circle_tv"
+                    android:background="@drawable/circle_tv"
+                    android:text="9"
+                    android:gravity="center"
+                    android:textColor="@android:color/white"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/handicap_accessible"
-                        android:layout_marginTop="20dp"/>
+                        android:textColor="@color/grey21" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <android.support.v7.widget.AppCompatSpinner
+                        android:id="@+id/space_handicap"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/yes_no"/>
+                        android:entries="@array/yes_or_no" />
                 </LinearLayout>
             </LinearLayout>
+
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/btn_login_part"
                 android:text="@string/next"
                 android:textColor="@android:color/white"
-                android:textSize="20sp"/>
+                android:textSize="20sp"
+                android:layout_marginTop="20dp"
+                android:onClick="onClickCreateSpot" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </LinearLayout>

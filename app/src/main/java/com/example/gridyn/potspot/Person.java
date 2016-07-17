@@ -1,10 +1,11 @@
 package com.example.gridyn.potspot;
 
-public class Person {
+public final class Person {
     private static Person instance;
     private static boolean host;
     private static String token;
     private static String id;
+    private static String memberSince;
 
     private Person() {}
 
@@ -41,5 +42,17 @@ public class Person {
 
     public static void setId(String id) {
         Person.id = id;
+    }
+
+    public static void setInstance(Person instance) {
+        Person.instance = instance;
+    }
+
+    public static String getMemberSince() {
+        return memberSince;
+    }
+
+    public static void setMemberSince(String memberSince) {
+        Person.memberSince = memberSince;
     }
 }

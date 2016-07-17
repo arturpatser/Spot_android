@@ -18,38 +18,9 @@
             android:textSize="20sp"/>
 
     </android.support.v7.widget.Toolbar>
-    <LinearLayout
-        android:id="@+id/your_spot_back"
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/your_spot_recycler"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:text="Very good backyard"
-            android:textColor="@android:color/white"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="25dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:text="Backyard Downtown Toronto"
-            android:textColor="@android:color/white"
-            android:layout_gravity="center_horizontal" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="34dp"
-            android:background="@drawable/btn_review_green"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:text="@string/live"
-            android:textColor="@android:color/white"
-            android:textSize="12sp"
-            android:onClick="onClickViewSpot"/>
-    </LinearLayout>
+        android:layout_height="match_parent" />
 </LinearLayout>

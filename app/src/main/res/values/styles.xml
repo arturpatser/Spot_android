@@ -49,16 +49,6 @@
         <item name="textAllCaps">true</item>
     </style>
 
-    <style name="DisableDay" parent="AppTheme">
-        <item name="android:background">@drawable/dow_disable</item>
-        <item name="android:textColor">@color/mainGrey</item>
-    </style>
-
-    <style name="EnableDay" parent="AppTheme">
-        <item name="android:background">@color/mainRed</item>
-        <item name="android:textColor">@android:color/white</item>
-    </style>
-
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

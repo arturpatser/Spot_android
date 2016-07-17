@@ -109,9 +109,32 @@
     <string name="add_credit_card">Add credit card</string>
     <string name="nothing_to_show">Nothing to show</string>
     <string name="edit">edit</string>
+    <string name="refresh">refresh</string>
+    <string name="list_your_space">List your space</string>
+    <string name="available_rules">Available rules</string>
+    <string name="when_your_listing_is_live">When your listing is live</string>
+    <string name="time_from">Time from</string>
+    <string name="time_to">Time to</string>
+    <string name="read_more">Read More</string>
+    <string name="date_and_time">date and time</string>
+    <string name="visit_date">Visit Date</string>
+    <string name="visit_time">Visit Time</string>
+    <string name="by">by </string>
 
     <string-array name="gender_list">
         <item>male</item>
         <item>female</item>
+    </string-array>
+
+    <string-array name="listing_type">
+        <item>Patio</item>
+        <item>Backyard</item>
+        <item>Balcony</item>
+        <item>Smoking rooms</item>
+    </string-array>
+
+    <string-array name="yes_or_no">
+        <item>Yes</item>
+        <item>No</item>
     </string-array>
 </resources>

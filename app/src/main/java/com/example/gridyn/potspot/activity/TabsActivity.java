@@ -14,11 +14,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.gridyn.potspot.Constant;
 import com.example.gridyn.potspot.R;
 import com.example.gridyn.potspot.adapter.TabsPagerFragmentAdapter;
 import com.example.gridyn.potspot.response.UserInfoResponse;
+import com.squareup.picasso.Picasso;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class TabsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -35,11 +40,24 @@ public class TabsActivity extends AppCompatActivity
         initToolbar();
         initTabs();
         initNav();
+        initHeader();
+    }
+
+    private void initHeader() {
+        final View viewHeader = getLayoutInflater()
+                .inflate(R.layout.nav_header_main, (ViewGroup) findViewById(R.id.nav_header), false);
+        final CircleImageView avatar = (CircleImageView) viewHeader.findViewById(R.id.nav_avatar);
+        final TextView name = (TextView) viewHeader.findViewById(R.id.nav_name);
+        final TextView email = (TextView) viewHeader.findViewById(R.id.nav_email);
+        Picasso.with(getApplicationContext())
+                .load(Constant.URL_IMAGE + mMessageData.imgs[0])
+                .into(avatar);
+        name.setText(mMessageData.name);
+        email.setText(mMessageData.email);
     }
 
     private void initExtras() {
-        final Intent intent = getIntent();
-        final Bundle extra = intent.getExtras();
+        final Bundle extra = getIntent().getExtras();
         mMessageData = new UserInfoResponse().new Message().new Data();
         mMessageData.name = extra.getString("name");
         mMessageData.address = extra.getString("address");
@@ -49,6 +67,7 @@ public class TabsActivity extends AppCompatActivity
         mMessageData.email = extra.getString("email");
         mMessageData.phone = extra.getString("phone");
         mMessageData.realID = extra.getString("realID");
+        mMessageData.imgs[0] = extra.getString("avatar");
 
     }
 
@@ -111,7 +130,7 @@ public class TabsActivity extends AppCompatActivity
                 intent = new Intent(this, PaidSpotsActivity.class);
                 break;
             case R.id.nav_my_spot:
-                intent = new Intent(this, YourSpotsActivity.class);
+                intent = new Intent(this, MySpotsActivity.class);
                 break;
             case R.id.nav_friends:
                 intent = new Intent(this, InviteFriendActivity.class);

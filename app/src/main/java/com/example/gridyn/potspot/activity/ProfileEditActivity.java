@@ -24,6 +24,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.gridyn.potspot.BitmapHelper;
 import com.example.gridyn.potspot.Constant;
 import com.example.gridyn.potspot.FastBlur;
 import com.example.gridyn.potspot.Person;
@@ -33,6 +34,7 @@ import com.example.gridyn.potspot.response.UserUpdateResponse;
 import com.example.gridyn.potspot.service.UserService;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 
@@ -45,7 +47,7 @@ import retrofit.Retrofit;
 
 public class ProfileEditActivity extends AppCompatActivity {
 
-    private CircleImageView mAvarar;
+    private CircleImageView mAvatar;
     private TextView mName;
     private UserService mService;
     private TextView mBirthDay;
@@ -53,6 +55,18 @@ public class ProfileEditActivity extends AppCompatActivity {
     private TextView mEmail;
     private TextView mPhone;
     private TextView mAboutMe;
+    private Spinner mGenderSpinner;
+
+    private String mExtraName;
+    private String mExtraAbout;
+    private String mExtraGender;
+    private String mExtraBirthday;
+    private String mExtraEmail;
+    private String mExtraPhone;
+    private String mExtraAvatar;
+
+    private String mEncodedAvatar;
+
     private final String[] MONTH = new String[]{
             "January",
             "February",
@@ -84,11 +98,11 @@ public class ProfileEditActivity extends AppCompatActivity {
     }
 
     private void setGender() {
-        final Spinner spinner = (Spinner) findViewById(R.id.profile_edit_gender_spinner);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        mGenderSpinner = (Spinner) findViewById(R.id.profile_edit_gender_spinner);
+        mGenderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mGender = spinner.getSelectedItem().toString();
+                mGender = mGenderSpinner.getSelectedItem().toString();
             }
 
             @Override
@@ -100,42 +114,55 @@ public class ProfileEditActivity extends AppCompatActivity {
 
     private void initFields() {
         final Bundle extra = getIntent().getExtras();
-        mAvarar = (CircleImageView) findViewById(R.id.profile_edit_image);
+        mAvatar = (CircleImageView) findViewById(R.id.profile_edit_image);
         mBirthDay = (TextView) findViewById(R.id.profile_edit_birthday);
         mEmail = (TextView) findViewById(R.id.profile_edit_tv_email);
         mName = (TextView) findViewById(R.id.profile_edit_name);
         mAboutMe = (TextView) findViewById(R.id.profile_edit_tv_about_me);
         mPhone = (TextView) findViewById(R.id.profile_edit_tv_phone);
+        mGenderSpinner = (Spinner) findViewById(R.id.profile_edit_gender_spinner);
 
-        String name  = extra.getString("name");
-        String about = extra.getString("about");
-        String gender = extra.getString("gender");
-        String birthday = extra.getString("birthday");
-        String email = extra.getString("email");
-        String phone = extra.getString("phone");
+        mExtraName = extra.getString("name");
+        mExtraAbout = extra.getString("about");
+        mExtraGender = extra.getString("gender");
+        mExtraBirthday = extra.getString("birthday");
+        mExtraEmail = extra.getString("email");
+        mExtraPhone = extra.getString("phone");
+        mExtraAvatar = extra.getString("avatar");
 
-        if(!name.isEmpty()) {
-            mName.setText(name);
+
+        if (!mExtraName.isEmpty()) {
+            mName.setText(mExtraName);
         }
 
-        if(!about.isEmpty()) {
-            mAboutMe.setText(about);
+        if (!mExtraAbout.isEmpty()) {
+            mAboutMe.setText(mExtraAbout);
         }
 
-        if(!gender.isEmpty()) {
-            //TODO: select gender
+        if (!mExtraGender.isEmpty()) {
+            if (mExtraGender.equals("male")) {
+                mGenderSpinner.setSelection(0);
+            } else if (mExtraGender.equals("female")) {
+                mGenderSpinner.setSelection(1);
+            }
         }
 
-        if(!birthday.isEmpty()) {
-            mBirthDay.setText(birthday);
+        if (!mExtraBirthday.isEmpty()) {
+            mBirthDay.setText(mExtraBirthday);
         }
 
-        if(!email.isEmpty()) {
-            mEmail.setText(email);
+        if (!mExtraEmail.isEmpty()) {
+            mEmail.setText(mExtraEmail);
         }
 
-        if(!phone.isEmpty()) {
-            mPhone.setText(phone);
+        if (!mExtraPhone.isEmpty()) {
+            mPhone.setText(mExtraPhone);
+        }
+
+        if (!mExtraAvatar.isEmpty()) {
+            Picasso.with(getApplicationContext())
+                    .load(Constant.URL_IMAGE + mExtraAvatar)
+                    .into(mAvatar);
         }
     }
 
@@ -225,26 +252,65 @@ public class ProfileEditActivity extends AppCompatActivity {
     }
 
     public void onClickSaveEditProfile(final View view) {
-        UserUpdateQuery query = new UserUpdateQuery();
+        String about = mAboutMe.getText().toString().trim();
+        String birthday = mBirthDay.getText().toString();
+        String gender = mGender;
+        String phone = mPhone.getText().toString().trim();
+        String email = mEmail.getText().toString().trim();
+        String name = mName.getText().toString();
 
-        Call<UserUpdateResponse> call = mService.updateUser(Person.getToken(), query);
+        UserUpdateQuery query = new UserUpdateQuery();
+        query.token = Person.getToken();
+
+        if (!mExtraAbout.equals(about)) {
+            query.about = about;
+        }
+
+        if (!mExtraBirthday.equals(birthday)) {
+            query.birthday = birthday;
+        }
+
+        if (!mExtraGender.equals(gender)) {
+            query.gender = gender;
+        }
+
+        if (!mExtraPhone.equals(phone)) {
+            query.phone = phone;
+        }
+
+        if (!mExtraEmail.equals(email)) {
+            query.email = email;
+        }
+
+        if (!mExtraName.equals(name)) {
+            query.name = name;
+        }
+
+        if (mEncodedAvatar != null) {
+            query.upload[0] = Constant.URL_BASE64 + mEncodedAvatar;
+        }
+
+        Call<UserUpdateResponse> call = mService.updateUser(query);
         call.enqueue(new Callback<UserUpdateResponse>() {
             @Override
             public void onResponse(Response<UserUpdateResponse> response, Retrofit retrofit) {
-                UserUpdateResponse res = response.body();
-                if(res.success) {
-
-                } else {
-                    Snackbar.make(view, "Incorrect fields", Snackbar.LENGTH_SHORT).show();
+                if (response.body() != null) {
+                    UserUpdateResponse res = response.body();
+                    if (res.success) {
+                        Log.i("profileEdit", "Ответ ушёл");
+                        finish();
+                    } else {
+                        Snackbar.make(view, "Incorrect fields", Snackbar.LENGTH_SHORT).show();
+                    }
                 }
             }
 
+
             @Override
             public void onFailure(Throwable t) {
-
+                Snackbar.make(view, Constant.CONNECTION_ERROR, Snackbar.LENGTH_SHORT).show();
             }
         });
-        finish();
     }
 
     public void onClickEmail(View view) {
@@ -359,14 +425,14 @@ public class ProfileEditActivity extends AppCompatActivity {
     }
 
     public void onClickProfileEditAvatar(View view) {
-        View editAvatarView = getLayoutInflater().inflate(R.layout.dialog_edit_avatar,
-                (ViewGroup) findViewById(R.id.dialog_edit_avatar));
+        final View editAvatarView = getLayoutInflater().inflate(R.layout.dialog_image,
+                (ViewGroup) findViewById(R.id.dialog_image));
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(editAvatarView);
         final AlertDialog dialog = builder.create();
         dialog.show();
 
-        ListView list = (ListView) editAvatarView.findViewById(R.id.dialog_edit_avatar);
+        ListView list = (ListView) editAvatarView.findViewById(R.id.dialog_image);
         list.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
                 new String[]{"Camera", "Gallery"}));
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -374,14 +440,14 @@ public class ProfileEditActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(position == Constant.CAMERA) {
                     Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(cameraIntent, Constant.CAMERA_RESULT);
+                    startActivityForResult(cameraIntent, Constant.CAMERA);
                     dialog.cancel();
                 }
                 else if(position == Constant.GALLERY) {
                     Intent intent = new Intent();
                     intent.setType("image/*");
                     intent.setAction(Intent.ACTION_GET_CONTENT);
-                    startActivityForResult(intent, Constant.GALLERY_RESULT);
+                    startActivityForResult(intent, Constant.GALLERY);
                     dialog.cancel();
                 }
             }
@@ -390,15 +456,18 @@ public class ProfileEditActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == Constant.CAMERA_RESULT && data != null) {
-                Bitmap thumbnailBitmap = (Bitmap) data.getExtras().get("data");
-                mAvarar.setImageBitmap(thumbnailBitmap);
-        }
-        else if(requestCode == Constant.GALLERY_RESULT && data != null) {
+        if (requestCode == Constant.CAMERA && data != null) {
+            final Bitmap thumbnailBitmap = BitmapHelper.scaleBitmap((Bitmap) data.getExtras().get("data"));
+            mAvatar.setImageBitmap(thumbnailBitmap);
+            mEncodedAvatar = BitmapHelper.encodeToString(thumbnailBitmap);
+        } else if (requestCode == Constant.GALLERY && data != null) {
             try {
-                    Uri selectedImage = data.getData();
-                    Bitmap thumbnailBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
-                    mAvarar.setImageBitmap(thumbnailBitmap);
+                Uri selectedImage = data.getData();
+                final Bitmap thumbnailBitmap = BitmapHelper
+                        .scaleBitmap(MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage));
+                mAvatar.setImageBitmap(thumbnailBitmap);
+                mEncodedAvatar = BitmapHelper.encodeToString(thumbnailBitmap);
+                Log.i("profileEdit", "EncodedAvatar: \n\n" + mEncodedAvatar);
             } catch (IOException e) {
                 e.printStackTrace();
             }

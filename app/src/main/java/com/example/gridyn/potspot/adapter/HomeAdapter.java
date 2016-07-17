@@ -11,9 +11,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.gridyn.potspot.AssetsHelper;
+import com.example.gridyn.potspot.Constant;
 import com.example.gridyn.potspot.R;
 import com.example.gridyn.potspot.Spot;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -48,7 +49,9 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.Holder>{
         holder.mTypeListing.setTypeface(Typeface.createFromAsset(mContext.getAssets(), "fonts/Roboto-Regular.ttf"));
         holder.mPrice.setTypeface(Typeface.createFromAsset(mContext.getAssets(), "fonts/Roboto-Medium.ttf"));
 
-        holder.mImageView.setImageDrawable(AssetsHelper.loadImageFromAsset(mContext, spot.getImage()));
+        Picasso.with(mContext)
+                .load(Constant.URL_IMAGE + spot.getImage())
+                .into(holder.mHeader);
     }
 
     @Override
@@ -62,14 +65,14 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.Holder>{
         private TextView mTypeListing;
         private TextView mPrice;
         private CardView mCardView;
-        private ImageView mImageView;
+        private ImageView mHeader;
 
         public Holder(View itemView) {
             super(itemView);
             mTitle = (TextView) itemView.findViewById(R.id.home_title);
             mTypeListing = (TextView) itemView.findViewById(R.id.home_type_listing);
             mPrice = (TextView) itemView.findViewById(R.id.home_price);
-            mImageView = (ImageView) itemView.findViewById(R.id.home_post);
+            mHeader = (ImageView) itemView.findViewById(R.id.home_post);
             mCardView = (CardView) itemView.findViewById(R.id.home_card);
         }
     }

@@ -20,6 +20,8 @@ import com.example.gridyn.potspot.response.UserInfoResponse;
 import com.example.gridyn.potspot.response.UserLoginResponse;
 import com.example.gridyn.potspot.service.UserService;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -143,7 +145,6 @@ public class LoginActivity extends AppCompatActivity {
                 Log.i("profile", String.valueOf(response.code()));
                 UserInfoResponse res = response.body();
                 UserInfoResponse.Message message = res.message.get(0);
-                Log.i("profile", message.data.name);
                 Person.setHost(message.system.isVerified);
                 intent.putExtra("name", message.data.name);
                 intent.putExtra("address", message.data.address);
@@ -153,6 +154,13 @@ public class LoginActivity extends AppCompatActivity {
                 intent.putExtra("email", message.data.email);
                 intent.putExtra("phone", message.data.phone);
                 intent.putExtra("realID", message.data.realID);
+                try {
+                    intent.putExtra("avatar", message.data.imgs[0]);
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    intent.putExtra("avatar", "1467900842_861022d0b23fd85bdd9877a6c74036fc.jpg");
+                }
+                Person.setMemberSince(new SimpleDateFormat("MMMM yyyy")
+                        .format(new Date((long) message.system.timeCreated * 1000)));
                 startActivity(intent);
             }
 
