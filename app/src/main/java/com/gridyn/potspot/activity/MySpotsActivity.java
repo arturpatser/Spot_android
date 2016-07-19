@@ -1,6 +1,5 @@
 package com.gridyn.potspot.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +15,7 @@ import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
 import com.gridyn.potspot.Spot;
 import com.gridyn.potspot.adapter.YourSpotAdapter;
-import com.gridyn.potspot.response.SpotInfoResponse;
+import com.gridyn.potspot.response.MySpotResponse;
 import com.gridyn.potspot.service.UserService;
 
 import java.util.ArrayList;
@@ -50,11 +49,19 @@ public class MySpotsActivity extends AppCompatActivity {
                 .build();
 
         UserService service = retrofit.create(UserService.class);
-        Call<SpotInfoResponse> call = service.getSpots(Person.getId());
-        call.enqueue(new Callback<SpotInfoResponse>() {
+        Call<MySpotResponse> call = service.getSpots(Person.getId());
+        call.enqueue(new Callback<MySpotResponse>() {
             @Override
-            public void onResponse(Response<SpotInfoResponse> response, Retrofit retrofit) {
-
+            public void onResponse(Response<MySpotResponse> response, Retrofit retrofit) {
+                List<MySpotResponse.Message.Spot> data = response.body().message.get(0).spots;
+//                Log.i(Constant.LOG, data.get(0).id.$id + " " + data.get(0).data.name + " " + data.get(0).data.address);
+//                for (MySpotResponse.Message.Spot spot : data) {
+                if (response.body().success) {
+                    if (data.size() != 0) {
+                        mSpotList.add(new Spot(data.get(0).id.$id, data.get(0).data.name, data.get(0).data.address));
+                    }
+                }
+//                }
             }
 
             @Override
@@ -65,7 +72,7 @@ public class MySpotsActivity extends AppCompatActivity {
     }
 
     private void initRecycler() {
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.home_recycler_view);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.your_spot_recycler);
         YourSpotAdapter adapter = new YourSpotAdapter(mSpotList, getApplicationContext());
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), 1, LinearLayoutManager.VERTICAL, false);
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
@@ -88,7 +95,7 @@ public class MySpotsActivity extends AppCompatActivity {
     }
 
     public void onClickViewSpot(View view) {
-        final Intent intent = new Intent(this, ListingActivity.class);
-        startActivity(intent);
+//        final Intent intent = new Intent(this, ListingActivity.class);
+//        startActivity(intent);
     }
 }

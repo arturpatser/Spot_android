@@ -40,11 +40,11 @@ public class CreateSpotQuery {
     @Expose
     public String type;
 
-    @SerializedName("badges")
+    @SerializedName("badge")
     @Expose
     public List<String> badges = new ArrayList<>();
 
     @SerializedName("time")
     @Expose
-    public Double[] time = new Double[2];
+    public Integer[] time = new Integer[2];
 }

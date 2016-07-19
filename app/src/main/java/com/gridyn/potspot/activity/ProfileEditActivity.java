@@ -143,10 +143,12 @@ public class ProfileEditActivity extends AppCompatActivity {
     }
 
     public void onClickEditRealID(View view) {
-        if (!mWaitingForVerify) {
+        if (!mWaitingForVerify && !Person.isHost()) {
             final Intent intent = new Intent(this, VerificationActivity.class);
             startActivity(intent);
-        } else {
+        } else if (Person.isHost()) {
+            Snackbar.make(findViewById(android.R.id.content), "You are already a host", Snackbar.LENGTH_LONG).show();
+        } else if (mWaitingForVerify) {
             Snackbar.make(findViewById(android.R.id.content), "Your request is processed", Snackbar.LENGTH_LONG).show();
         }
     }

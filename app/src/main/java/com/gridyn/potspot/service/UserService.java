@@ -3,7 +3,7 @@ package com.gridyn.potspot.service;
 import com.gridyn.potspot.query.EnableHostQuery;
 import com.gridyn.potspot.query.FeedbackQuery;
 import com.gridyn.potspot.query.UserUpdateQuery;
-import com.gridyn.potspot.response.SpotInfoResponse;
+import com.gridyn.potspot.response.MySpotResponse;
 import com.gridyn.potspot.response.UserCommentCreateResponse;
 import com.gridyn.potspot.response.UserCommentDeleteResponse;
 import com.gridyn.potspot.response.UserCommentsResponse;
@@ -55,5 +55,5 @@ public interface UserService {
     Call<UserFeedbackResponse> sendFeedback(@Body FeedbackQuery feedback);
 
     @POST("user/{id}/spots")
-    Call<SpotInfoResponse> getSpots(@Path("id") String idOfUser);
+    Call<MySpotResponse> getSpots(@Path("id") String idOfUser);
 }

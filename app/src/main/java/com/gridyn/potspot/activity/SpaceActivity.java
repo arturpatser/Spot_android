@@ -219,9 +219,22 @@ public class SpaceActivity extends AppCompatActivity {
 
     public void onClickCreateSpot(View view) {
         final Intent intent = new Intent(this, ListingSettingActivity.class);
-        intent.putExtra("title", mTitle.getText().toString().trim());
+
+        if (mTitle.getText().toString().trim().length() > 3) {
+            intent.putExtra("title", mTitle.getText().toString().trim());
+        } else {
+            Snackbar.make(view, "Title must be at least 3 chars long.", Snackbar.LENGTH_LONG).show();
+            return;
+        }
+
+        if (mAddress.getText().toString().trim().length() > 3) {
+            intent.putExtra("address", mAddress.getText().toString().trim());
+        } else {
+            Snackbar.make(view, "Address must be at least 3 chars long.", Snackbar.LENGTH_LONG).show();
+            return;
+        }
+
         intent.putExtra("description", mDescription.getText().toString().trim());
-        intent.putExtra("address", mAddress.getText().toString().trim());
         intent.putExtra("price", mPrice.getText().toString().trim());
         intent.putExtra("maxGuests", mGuests.getText().toString().trim());
         if (mListingType != null) {
@@ -233,7 +246,7 @@ public class SpaceActivity extends AppCompatActivity {
         intent.putExtra("heated", mHeated);
         intent.putExtra("handicap", mHandicap);
         if (isEmptyFields()) {
-            Snackbar.make(view, "Input red fields", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(view, "Input red fields", Snackbar.LENGTH_LONG).show();
         } else {
             startActivity(intent);
         }

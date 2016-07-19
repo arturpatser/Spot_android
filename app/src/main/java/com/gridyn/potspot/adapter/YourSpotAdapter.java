@@ -35,9 +35,13 @@ public class YourSpotAdapter extends RecyclerView.Adapter<YourSpotAdapter.Holder
     public void onBindViewHolder(Holder holder, int position) {
         Spot spot = mSpot.get(position);
 
-        Picasso.with(mContext).load(Constant.URL_IMAGE + spot.getImage()).into(holder.background);
+        Picasso.with(mContext).load(Constant.URL_IMAGE + Constant.BASE_IMAGE).into(holder.background);
         holder.name.setText(spot.getName());
         holder.address.setText(spot.getAddress());
+        if (mSpot.size() == 0) {
+            holder.name.setText("Nothing to show");
+
+        }
     }
 
     @Override

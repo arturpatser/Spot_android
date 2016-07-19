@@ -34,6 +34,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mEmail;
     private EditText mPassword;
     private UserService mService;
+    private boolean isReg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,10 +43,18 @@ public class LoginActivity extends AppCompatActivity {
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 
+        ifReg();
         initToolbar();
         setFonts();
         initRetrofit();
         initFields();
+    }
+
+    private void ifReg() {
+        isReg = getIntent().getExtras().getBoolean("isReg");
+        if (isReg) {
+            Snackbar.make(findViewById(android.R.id.content), "Account recorded", Snackbar.LENGTH_LONG).show();
+        }
     }
 
     private void initFields() {

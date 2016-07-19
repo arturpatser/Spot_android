@@ -49,9 +49,9 @@ public class NotificationFragment extends Fragment {
 
         //TODO: retrofit
 
-        mSpotList.add(new Spot("Andrey", "images/balcony.jpg", "Balcony"));
+      /*  mSpotList.add(new Spot("Andrey", "images/balcony.jpg", "Balcony"));
         mSpotList.add(new Spot("Petr", "images/chairs.jpg", "Backyard"));
-        mSpotList.add(new Spot("Leha", "images/mountain.jpg", "Mountains"));
+        mSpotList.add(new Spot("Leha", "images/mountain.jpg", "Mountains"));*/
     }
 
     private void initSpotClient() {
@@ -59,9 +59,9 @@ public class NotificationFragment extends Fragment {
 
         //TODO: retrofit
 
-        mSpotList.add(new Spot("Title", 35, "Balcony", "images/balcony.jpg"));
+      /*  mSpotList.add(new Spot("Title", 35, "Balcony", "images/balcony.jpg"));
         mSpotList.add(new Spot("Title", 45, "Backyard", "images/chairs.jpg"));
-        mSpotList.add(new Spot("Title", 15, "Mountains", "images/mountain.jpg"));
+        mSpotList.add(new Spot("Title", 15, "Mountains", "images/mountain.jpg"));*/
     }
 
     private void initRecyclerViewHost() {

@@ -100,7 +100,9 @@ public class SignUpActivity extends AppCompatActivity {
                     Log.i("signup", "Response status code: " + response.code());
 
                     if (res.success) {
-                        startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
+                        final Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
+                        intent.putExtra("isReg", true);
+                        startActivity(intent);
                         finish();
                     } else {
                         Snackbar.make(view, "Input data is not correct.", Snackbar.LENGTH_SHORT).show();

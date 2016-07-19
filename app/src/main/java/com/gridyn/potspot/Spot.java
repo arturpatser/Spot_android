@@ -4,6 +4,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class Spot {
 
+    private String id;
     private String title;
     private Integer price;
     private String typeListing;
@@ -17,10 +18,10 @@ public class Spot {
         this.image = image;
     }
 
-    public Spot(String name, String image, String description) {
+    public Spot(String id, String name, String address) {
+        this.id = id;
         this.name = name;
-        this.image = image;
-        this.description = description;
+        this.address = address;
     }
 
     public Spot(String title, Integer price, String typeListing, String image) {
@@ -105,5 +106,9 @@ public class Spot {
 
     public String getAddress() {
         return address;
+    }
+
+    public String getId() {
+        return id;
     }
 }

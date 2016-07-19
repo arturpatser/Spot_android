@@ -10,14 +10,14 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
 import com.gridyn.potspot.query.CreateSpotQuery;
 import com.gridyn.potspot.response.SpotCreateResponse;
 import com.gridyn.potspot.service.SpotService;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
@@ -167,8 +167,11 @@ public class ListingSettingActivity extends AppCompatActivity {
         }
 
         if (mHourFrom != null && mMinuteFrom != null && mHourTo != null && mMinuteTo != null) {
-            query.time[0] = Double.parseDouble(mHourFrom) + (Double.parseDouble(mMinuteFrom) / 100);
-            query.time[1] = Double.parseDouble(mHourTo) + (Double.parseDouble(mMinuteTo) / 100);
+//            query.time[0] = Double.parseDouble(mHourFrom) + (Double.parseDouble(mMinuteFrom) / 100);
+//            query.time[1] = Double.parseDouble(mHourTo) + (Double.parseDouble(mMinuteTo) / 100);
+            query.time[0] = Integer.parseInt(mHourFrom + mMinuteFrom);
+            query.time[1] = Integer.parseInt(mHourTo + mMinuteTo);
+
         } else {
             Snackbar.make(findViewById(android.R.id.content), "Set time please", Snackbar.LENGTH_SHORT).show();
             view.setVisibility(View.VISIBLE);
@@ -182,6 +185,7 @@ public class ListingSettingActivity extends AppCompatActivity {
         call.enqueue(new Callback<SpotCreateResponse>() {
             @Override
             public void onResponse(final Response<SpotCreateResponse> response, Retrofit retrofit) {
+                Log.i(Constant.LOG, new Gson().toJson(response.body()));
                 if (response.body().success) {
                     Log.i(Constant.LOG, String.valueOf(response.code()));
                     Log.i(Constant.LOG, "listing setting success true");

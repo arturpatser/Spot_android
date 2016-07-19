@@ -33,9 +33,9 @@ public class MessageActivity extends AppCompatActivity {
 
     private void initSpots() {
         mSpotList = new ArrayList<>();
-        mSpotList.add(new Spot("Ethan Hunt", null, "Awesome backyard in downtown"));
+     /*   mSpotList.add(new Spot("Ethan Hunt", null, "Awesome backyard in downtown"));
         mSpotList.add(new Spot("Forrest Gump", null, "Very good balcony for your party"));
-        mSpotList.add(new Spot("Jules Winnfield", null, "Simple patio for smokes"));
+        mSpotList.add(new Spot("Jules Winnfield", null, "Simple patio for smokes"));*/
 
         //TODO: retrofit
     }

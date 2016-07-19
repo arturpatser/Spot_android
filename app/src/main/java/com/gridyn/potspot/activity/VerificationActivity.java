@@ -19,8 +19,6 @@ import com.gridyn.potspot.query.EnableHostQuery;
 import com.gridyn.potspot.response.UserEnableHostResponse;
 import com.gridyn.potspot.service.UserService;
 
-import java.io.IOException;
-
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.GsonConverterFactory;
@@ -74,23 +72,23 @@ public class VerificationActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Constant.CAMERA && data != null) {
-            final Bitmap thumbnailBitmap = BitmapHelper.scaleBitmap((Bitmap) data.getExtras().get("data"));
-            mEncodedImage = Constant.URL_BASE64 + BitmapHelper.encodeToString(thumbnailBitmap);
-            Log.i("verification", mEncodedImage);
-            sendRequest();
-        } else if (requestCode == Constant.GALLERY && data != null) {
-            Uri selectedImage = data.getData();
-            final Bitmap thumbnailBitmap;
-            try {
+        try {
+            if (requestCode == Constant.CAMERA && data != null) {
+                final Bitmap thumbnailBitmap = BitmapHelper.scaleBitmap((Bitmap) data.getExtras().get("data"));
+                mEncodedImage = Constant.URL_BASE64 + BitmapHelper.encodeToString(thumbnailBitmap);
+                Log.i("verification", mEncodedImage);
+                sendRequest();
+            } else if (requestCode == Constant.GALLERY && data != null) {
+                Uri selectedImage = data.getData();
+                final Bitmap thumbnailBitmap;
                 thumbnailBitmap = BitmapHelper
                         .scaleBitmap(MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage));
                 mEncodedImage = Constant.URL_BASE64 + BitmapHelper.encodeToString(thumbnailBitmap);
                 Log.i("verification", mEncodedImage);
                 sendRequest();
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
