@@ -3,6 +3,7 @@ package com.gridyn.potspot.service;
 import com.gridyn.potspot.query.EnableHostQuery;
 import com.gridyn.potspot.query.FeedbackQuery;
 import com.gridyn.potspot.query.UserUpdateQuery;
+import com.gridyn.potspot.response.SpotInfoResponse;
 import com.gridyn.potspot.response.UserCommentCreateResponse;
 import com.gridyn.potspot.response.UserCommentDeleteResponse;
 import com.gridyn.potspot.response.UserCommentsResponse;
@@ -25,8 +26,8 @@ public interface UserService {
     @POST("user/create")
     Call<UserCreateResponse> createUser(@Body Map<String, String> user);
 
-    @POST("user/{token}")
-    Call<UserInfoResponse> getUserInfo(@Path("token") String token);
+    @POST("user/{id}")
+    Call<UserInfoResponse> getUserInfo(@Path("id") String token);
 
     @POST("user/login")
     Call<UserLoginResponse> loginUser(@Body Map<String, String> data);
@@ -34,8 +35,8 @@ public interface UserService {
     @POST("user/update")
     Call<UserUpdateResponse> updateUser(@Body UserUpdateQuery dataForUpdate);
 
-    @POST("user/{token}/comments")
-    Call<UserCommentsResponse> getComments(@Path("token") String token);
+    @POST("user/{id}/comments")
+    Call<UserCommentsResponse> getComments(@Path("id") String token);
 
     @POST("user/{token}/comment/create")
     Call<UserCommentCreateResponse> createComment(@Path("token") String token,
@@ -52,4 +53,7 @@ public interface UserService {
 
     @POST("feedback/add")
     Call<UserFeedbackResponse> sendFeedback(@Body FeedbackQuery feedback);
+
+    @POST("user/{id}/spots")
+    Call<SpotInfoResponse> getSpots(@Path("id") String idOfUser);
 }

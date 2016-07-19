@@ -20,8 +20,6 @@ import com.gridyn.potspot.response.UserInfoResponse;
 import com.gridyn.potspot.response.UserLoginResponse;
 import com.gridyn.potspot.service.UserService;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -95,10 +93,10 @@ public class LoginActivity extends AppCompatActivity {
 
     public void onClickLogIn(final View view) {
         final Map<String, String> map = new HashMap<>();
-//        map.put("email", mEmail.getText().toString().trim());
-//        map.put("password", mPassword.getText().toString().trim());
-        map.put("email", "rpugase@gmail.com");
-        map.put("password", "qwerty123");
+        map.put("email", mEmail.getText().toString().trim());
+        map.put("password", mPassword.getText().toString().trim());
+//        map.put("email", "rpugase@gmail.com");
+//        map.put("password", "qwerty123");
 
         Call<UserLoginResponse> call = mService.loginUser(map);
 
@@ -108,6 +106,7 @@ public class LoginActivity extends AppCompatActivity {
                 UserLoginResponse res = response.body();
 
                 if (res.success) {
+                    Log.i(Constant.LOG, "onResponse: true");
                     Person.setToken(res.message.get(0).token);
                     Person.setId(res.message.get(1).id);
                     getUserInfo();
@@ -147,26 +146,18 @@ public class LoginActivity extends AppCompatActivity {
                 UserInfoResponse.Message message = res.message.get(0);
                 Person.setHost(message.system.isVerified);
                 intent.putExtra("name", message.data.name);
-                intent.putExtra("address", message.data.address);
-                intent.putExtra("about", message.data.about);
-                intent.putExtra("gender", message.data.gender);
-                intent.putExtra("birthday", message.data.birthday);
                 intent.putExtra("email", message.data.email);
-                intent.putExtra("phone", message.data.phone);
-                intent.putExtra("realID", message.data.realID);
                 try {
                     intent.putExtra("avatar", message.data.imgs[0]);
                 } catch (ArrayIndexOutOfBoundsException e) {
-                    intent.putExtra("avatar", "1467900842_861022d0b23fd85bdd9877a6c74036fc.jpg");
+                    intent.putExtra("avatar", Constant.BASE_IMAGE);
                 }
-                Person.setMemberSince(new SimpleDateFormat("MMMM yyyy")
-                        .format(new Date((long) message.system.timeCreated * 1000)));
                 startActivity(intent);
             }
 
             @Override
             public void onFailure(Throwable t) {
-//                Snackbar.make(getView(), Constant.CONNECTION_ERROR, Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(android.R.id.content), Constant.CONNECTION_ERROR, Snackbar.LENGTH_SHORT).show();
             }
         });
     }

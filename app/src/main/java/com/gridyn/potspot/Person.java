@@ -5,7 +5,6 @@ public final class Person {
     private static boolean host;
     private static String token;
     private static String id;
-    private static String memberSince;
 
     private Person() {
     }
@@ -47,13 +46,5 @@ public final class Person {
 
     public static void setInstance(Person instance) {
         Person.instance = instance;
-    }
-
-    public static String getMemberSince() {
-        return memberSince;
-    }
-
-    public static void setMemberSince(String memberSince) {
-        Person.memberSince = memberSince;
     }
 }

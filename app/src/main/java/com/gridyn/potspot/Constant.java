@@ -8,6 +8,7 @@ public interface Constant {
     String FONT_ROBOTO_LIGHT = "fonts/Roboto-Light.ttf";
     String BASE_URL = "http://potspot.podkolpakom.net/API/";
     String URL_IMAGE = "http://potspot.podkolpakom.net/imgs/";
+    String BASE_IMAGE = "1467900842_861022d0b23fd85bdd9877a6c74036fc.jpg";
     String URL_BASE64 = "data:image/jpeg;base64,";
     String CONNECTION_ERROR = "Connection error";
     String SP = "settings";
@@ -17,4 +18,6 @@ public interface Constant {
     String LOG = "log";
     long UPDATE_LOCATION_SECONDS = 10000;
     float UPDATE_LOCATION_DISTANCE = 10;
+
+    String NOT_SPECIFIED = "Not Specified";
 }

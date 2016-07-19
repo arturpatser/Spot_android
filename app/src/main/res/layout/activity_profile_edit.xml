@@ -28,7 +28,6 @@
                 android:id="@+id/profile_edit_image"
                 android:layout_width="64dp"
                 android:layout_height="64dp"
-                android:src="@drawable/jason"
                 android:layout_gravity="bottom|center_horizontal"
                 android:onClick="onClickProfileEditAvatar"
                 app:civ_border_color="@android:color/white"
@@ -48,7 +47,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="Jason Stathham"
                 android:layout_marginTop="10dp"/>
 
             <TextView

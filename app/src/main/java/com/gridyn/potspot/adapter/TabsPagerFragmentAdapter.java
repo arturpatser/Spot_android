@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import com.gridyn.potspot.fragment.HomeFragment;
 import com.gridyn.potspot.fragment.NotificationFragment;
 import com.gridyn.potspot.fragment.ProfileFragment;
-import com.gridyn.potspot.response.UserInfoResponse;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,13 +15,13 @@ public class TabsPagerFragmentAdapter extends FragmentPagerAdapter {
 
     private List<Fragment> mFragmentList;
 
-    public TabsPagerFragmentAdapter(FragmentManager fm, UserInfoResponse.Message.Data messageUser) {
+    public TabsPagerFragmentAdapter(FragmentManager fm) {
         super(fm);
 
         mFragmentList = Arrays.asList(
                 HomeFragment.getInstance(),
                 NotificationFragment.getInstance(),
-                ProfileFragment.getInstance(messageUser)
+                ProfileFragment.getInstance()
         );
     }
 

@@ -14,13 +14,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.R;
 import com.gridyn.potspot.adapter.TabsPagerFragmentAdapter;
-import com.gridyn.potspot.response.UserInfoResponse;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -30,13 +28,12 @@ public class TabsActivity extends AppCompatActivity
 
     private Toolbar mToolbar;
     private DrawerLayout mDrawer;
-    private UserInfoResponse.Message.Data mMessageData;
+    private View mHeaderView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tabs);
-        initExtras();
         initToolbar();
         initTabs();
         initNav();
@@ -44,31 +41,15 @@ public class TabsActivity extends AppCompatActivity
     }
 
     private void initHeader() {
-        final View viewHeader = getLayoutInflater()
-                .inflate(R.layout.nav_header_main, (ViewGroup) findViewById(R.id.nav_header), false);
-        final CircleImageView avatar = (CircleImageView) viewHeader.findViewById(R.id.nav_avatar);
-        final TextView name = (TextView) viewHeader.findViewById(R.id.nav_name);
-        final TextView email = (TextView) viewHeader.findViewById(R.id.nav_email);
-        Picasso.with(getApplicationContext())
-                .load(Constant.URL_IMAGE + mMessageData.imgs[0])
-                .into(avatar);
-        name.setText(mMessageData.name);
-        email.setText(mMessageData.email);
-    }
-
-    private void initExtras() {
         final Bundle extra = getIntent().getExtras();
-        mMessageData = new UserInfoResponse().new Message().new Data();
-        mMessageData.name = extra.getString("name");
-        mMessageData.address = extra.getString("address");
-        mMessageData.about = extra.getString("about");
-        mMessageData.gender = extra.getString("gender");
-        mMessageData.birthday = extra.getString("birthday");
-        mMessageData.email = extra.getString("email");
-        mMessageData.phone = extra.getString("phone");
-        mMessageData.realID = extra.getString("realID");
-        mMessageData.imgs[0] = extra.getString("avatar");
-
+        final CircleImageView avatar = (CircleImageView) mHeaderView.findViewById(R.id.nav_avatar);
+        final TextView name = (TextView) mHeaderView.findViewById(R.id.nav_name);
+        final TextView email = (TextView) mHeaderView.findViewById(R.id.nav_email);
+        Picasso.with(getApplicationContext())
+                .load(Constant.URL_IMAGE + extra.getString("avatar"))
+                .into(avatar);
+        name.setText(extra.getString("name"));
+        email.setText(extra.getString("email"));
     }
 
     private void initNav() {
@@ -79,6 +60,7 @@ public class TabsActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        mHeaderView = navigationView.inflateHeaderView(R.layout.nav_header_main);
         navigationView.setNavigationItemSelectedListener(this);
     }
 
@@ -92,7 +74,7 @@ public class TabsActivity extends AppCompatActivity
 
     private void initTabs() {
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
-        TabsPagerFragmentAdapter adapter = new TabsPagerFragmentAdapter(getSupportFragmentManager(), mMessageData);
+        TabsPagerFragmentAdapter adapter = new TabsPagerFragmentAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);

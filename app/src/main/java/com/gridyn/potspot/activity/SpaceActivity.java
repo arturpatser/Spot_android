@@ -24,7 +24,6 @@ import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.FastBlur;
 import com.gridyn.potspot.R;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -201,21 +200,22 @@ public class SpaceActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Constant.CAMERA && data != null) {
-            final Bitmap thumbnailBitmap = BitmapHelper.scaleBitmap((Bitmap) data.getExtras().get("data"));
-            mEncodedImage = BitmapHelper.encodeToString(thumbnailBitmap);
-        } else if (requestCode == Constant.GALLERY && data != null) {
-            try {
+        try {
+            if (requestCode == Constant.CAMERA && data != null) {
+                final Bitmap thumbnailBitmap = BitmapHelper.scaleBitmap((Bitmap) data.getExtras().get("data"));
+                mEncodedImage = BitmapHelper.encodeToString(thumbnailBitmap);
+            } else if (requestCode == Constant.GALLERY && data != null) {
                 Uri selectedImage = data.getData();
                 final Bitmap thumbnailBitmap = BitmapHelper
                         .scaleBitmap(MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage));
                 mEncodedImage = BitmapHelper.encodeToString(thumbnailBitmap);
                 Log.i("profileEdit", "EncodedAvatar: \n\n" + mEncodedImage);
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
+
 
     public void onClickCreateSpot(View view) {
         final Intent intent = new Intent(this, ListingSettingActivity.class);

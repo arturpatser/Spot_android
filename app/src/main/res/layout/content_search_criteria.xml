@@ -29,7 +29,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="10dp"/>
 
-            <com.example.gridyn.potspot.TextThumbSeekBar
+            <com.gridyn.potspot.TextThumbSeekBar
                 android:id="@+id/sch_seek_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
                 android:layout_marginTop="30dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                custom:tickCount="100"
+                custom:tickCount="101"
                 custom:barColor="@android:color/white"
                 custom:thumbColorNormal="#262830"
                 custom:thumbColorPressed="#262830"

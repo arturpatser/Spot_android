@@ -12,11 +12,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.gridyn.potspot.Constant;
+import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
 import com.gridyn.potspot.Spot;
 import com.gridyn.potspot.adapter.YourSpotAdapter;
 import com.gridyn.potspot.response.SpotInfoResponse;
-import com.gridyn.potspot.service.SpotService;
+import com.gridyn.potspot.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,12 +49,12 @@ public class MySpotsActivity extends AppCompatActivity {
                 .baseUrl(Constant.BASE_URL)
                 .build();
 
-        SpotService service = retrofit.create(SpotService.class);
-        Call<SpotInfoResponse> call = service.getSpot(getIntent().getExtras().getString("id"));
+        UserService service = retrofit.create(UserService.class);
+        Call<SpotInfoResponse> call = service.getSpots(Person.getId());
         call.enqueue(new Callback<SpotInfoResponse>() {
             @Override
             public void onResponse(Response<SpotInfoResponse> response, Retrofit retrofit) {
-                //TODO
+
             }
 
             @Override

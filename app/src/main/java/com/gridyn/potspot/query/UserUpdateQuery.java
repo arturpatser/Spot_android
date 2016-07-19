@@ -3,6 +3,9 @@ package com.gridyn.potspot.query;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class UserUpdateQuery {
 
     @SerializedName("token")
@@ -51,5 +54,5 @@ public class UserUpdateQuery {
 
     @SerializedName("upload")
     @Expose
-    public String[] upload = new String[1];
+    public List<String> upload = new ArrayList<>();
 }

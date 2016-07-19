@@ -123,6 +123,9 @@ public class UserInfoResponse {
             @SerializedName("IP_Updated")
             @Expose
             public String iPUpdated;
+            @SerializedName("waitingForVerify")
+            @Expose
+            public boolean waitingForVerify;
         }
     }
 }

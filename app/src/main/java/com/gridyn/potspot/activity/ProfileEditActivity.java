@@ -10,9 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
 import android.text.InputType;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,19 +22,20 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.gridyn.potspot.BitmapHelper;
 import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.FastBlur;
 import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
 import com.gridyn.potspot.query.UserUpdateQuery;
+import com.gridyn.potspot.response.UserInfoResponse;
 import com.gridyn.potspot.response.UserUpdateResponse;
 import com.gridyn.potspot.service.UserService;
-import com.prolificinteractive.materialcalendarview.CalendarDay;
-import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.squareup.picasso.Picasso;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
-import java.io.IOException;
+import java.util.Calendar;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit.Call;
@@ -44,6 +43,9 @@ import retrofit.Callback;
 import retrofit.GsonConverterFactory;
 import retrofit.Response;
 import retrofit.Retrofit;
+
+import static com.gridyn.potspot.Constant.BASE_IMAGE;
+import static com.gridyn.potspot.Constant.URL_IMAGE;
 
 public class ProfileEditActivity extends AppCompatActivity {
 
@@ -57,16 +59,9 @@ public class ProfileEditActivity extends AppCompatActivity {
     private TextView mAboutMe;
     private Spinner mGenderSpinner;
 
-    private String mExtraName;
-    private String mExtraAbout;
-    private String mExtraGender;
-    private String mExtraBirthday;
-    private String mExtraEmail;
-    private String mExtraPhone;
-    private String mExtraAvatar;
-
+    private boolean mWaitingForVerify;
+    private boolean flagForAvatar;
     private String mEncodedAvatar;
-
     private final String[] MONTH = new String[]{
             "January",
             "February",
@@ -113,7 +108,6 @@ public class ProfileEditActivity extends AppCompatActivity {
     }
 
     private void initFields() {
-        final Bundle extra = getIntent().getExtras();
         mAvatar = (CircleImageView) findViewById(R.id.profile_edit_image);
         mBirthDay = (TextView) findViewById(R.id.profile_edit_birthday);
         mEmail = (TextView) findViewById(R.id.profile_edit_tv_email);
@@ -121,49 +115,6 @@ public class ProfileEditActivity extends AppCompatActivity {
         mAboutMe = (TextView) findViewById(R.id.profile_edit_tv_about_me);
         mPhone = (TextView) findViewById(R.id.profile_edit_tv_phone);
         mGenderSpinner = (Spinner) findViewById(R.id.profile_edit_gender_spinner);
-
-        mExtraName = extra.getString("name");
-        mExtraAbout = extra.getString("about");
-        mExtraGender = extra.getString("gender");
-        mExtraBirthday = extra.getString("birthday");
-        mExtraEmail = extra.getString("email");
-        mExtraPhone = extra.getString("phone");
-        mExtraAvatar = extra.getString("avatar");
-
-
-        if (!mExtraName.isEmpty()) {
-            mName.setText(mExtraName);
-        }
-
-        if (!mExtraAbout.isEmpty()) {
-            mAboutMe.setText(mExtraAbout);
-        }
-
-        if (!mExtraGender.isEmpty()) {
-            if (mExtraGender.equals("male")) {
-                mGenderSpinner.setSelection(0);
-            } else if (mExtraGender.equals("female")) {
-                mGenderSpinner.setSelection(1);
-            }
-        }
-
-        if (!mExtraBirthday.isEmpty()) {
-            mBirthDay.setText(mExtraBirthday);
-        }
-
-        if (!mExtraEmail.isEmpty()) {
-            mEmail.setText(mExtraEmail);
-        }
-
-        if (!mExtraPhone.isEmpty()) {
-            mPhone.setText(mExtraPhone);
-        }
-
-        if (!mExtraAvatar.isEmpty()) {
-            Picasso.with(getApplicationContext())
-                    .load(Constant.URL_IMAGE + mExtraAvatar)
-                    .into(mAvatar);
-        }
     }
 
     private void initRetrofit() {
@@ -192,8 +143,12 @@ public class ProfileEditActivity extends AppCompatActivity {
     }
 
     public void onClickEditRealID(View view) {
-        final Intent intent = new Intent(this, VerificationActivity.class);
-        startActivity(intent);
+        if (!mWaitingForVerify) {
+            final Intent intent = new Intent(this, VerificationActivity.class);
+            startActivity(intent);
+        } else {
+            Snackbar.make(findViewById(android.R.id.content), "Your request is processed", Snackbar.LENGTH_LONG).show();
+        }
     }
 
     private void initHeader() {
@@ -203,107 +158,61 @@ public class ProfileEditActivity extends AppCompatActivity {
     }
 
     public void onClickBirthday(final View view) {
-        final View calendarView = getLayoutInflater().inflate(R.layout.dialog_calendar,
-                (ViewGroup) findViewById(R.id.dialog_calendar));
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        final EditText year = (EditText) calendarView.findViewById(R.id.calendar_year);
-        final MaterialCalendarView calendar = (MaterialCalendarView) calendarView.findViewById(R.id.calendar_cal);
-        year.setText("19");
-        builder.setView(calendarView);
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        final Calendar calendar = Calendar.getInstance();
+        DatePickerDialog.OnDateSetListener callback = new DatePickerDialog.OnDateSetListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                final CalendarDay calendarDay = calendar.getCurrentDate();
-                final String birthday = calendar.getSelectedDate().getDay() + " "
-                        + MONTH[calendar.getSelectedDate().getMonth()]
-                        + " " + calendar.getSelectedDate().getYear();
+            public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+                final String birthday =
+                        dayOfMonth + " "
+                                + MONTH[monthOfYear]
+                                + " " + year;
                 mBirthDay.setText(birthday);
             }
-        });
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        AlertDialog dialog = builder.create();
-        dialog.show();
-
-        year.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {/*NOP*/}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                if (s.length() == 4) {
-                    calendar.state().edit()
-                            .setMinimumDate(CalendarDay.from(Integer.parseInt(s.toString()) - 1, 1, 1))
-                            .setMaximumDate(CalendarDay.from(Integer.parseInt(s.toString()), 12, 30))
-                            .commit();
-                    Log.i("calendar", "Year: " + s);
-
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
+        };
+        final DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(
+                callback, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.setAccentColor(getResources().getColor(R.color.mainRed));
+        datePickerDialog.show(getFragmentManager(), "DatePickerDialog");
     }
 
     public void onClickSaveEditProfile(final View view) {
-        String about = mAboutMe.getText().toString().trim();
-        String birthday = mBirthDay.getText().toString();
-        String gender = mGender;
-        String phone = mPhone.getText().toString().trim();
-        String email = mEmail.getText().toString().trim();
-        String name = mName.getText().toString();
-
-        UserUpdateQuery query = new UserUpdateQuery();
+        final UserUpdateQuery query = new UserUpdateQuery();
         query.token = Person.getToken();
-
-        if (!mExtraAbout.equals(about)) {
-            query.about = about;
+        if (!mAboutMe.getText().toString().trim().equals("Set")) {
+            query.about = mAboutMe.getText().toString().trim();
         }
-
-        if (!mExtraBirthday.equals(birthday)) {
-            query.birthday = birthday;
+        if (!mBirthDay.getText().toString().trim().equals("Set")) {
+            query.birthday = mBirthDay.getText().toString();
         }
-
-        if (!mExtraGender.equals(gender)) {
-            query.gender = gender;
+        query.gender = mGender;
+        if (!mPhone.getText().toString().trim().equals("Set")) {
+            query.phone = mPhone.getText().toString().trim();
         }
-
-        if (!mExtraPhone.equals(phone)) {
-            query.phone = phone;
-        }
-
-        if (!mExtraEmail.equals(email)) {
-            query.email = email;
-        }
-
-        if (!mExtraName.equals(name)) {
-            query.name = name;
-        }
+        query.email = mEmail.getText().toString().trim();
+        query.name = mName.getText().toString().trim();
 
         if (mEncodedAvatar != null) {
-            query.upload[0] = Constant.URL_BASE64 + mEncodedAvatar;
+            query.upload.add(0, Constant.URL_BASE64 + mEncodedAvatar);
+            if (query.upload.size() > 1) {
+                for (int i = 1; i < query.upload.size(); i++) {
+                    query.upload.remove(i);
+                }
+            }
         }
 
         Call<UserUpdateResponse> call = mService.updateUser(query);
         call.enqueue(new Callback<UserUpdateResponse>() {
             @Override
             public void onResponse(Response<UserUpdateResponse> response, Retrofit retrofit) {
-                if (response.body() != null) {
-                    UserUpdateResponse res = response.body();
-                    if (res.success) {
-                        Log.i("profileEdit", "Ответ ушёл");
-                        finish();
-                    } else {
-                        Snackbar.make(view, "Incorrect fields", Snackbar.LENGTH_SHORT).show();
-                    }
+                Log.i(Constant.LOG, "Response code: " + response.code());
+                Log.i(Constant.LOG, "JSON QUERY\n" + new Gson().toJson(query));
+                UserUpdateResponse res = response.body();
+                if (res.success) {
+                    Log.i(Constant.LOG, "Ответ ушёл");
+                    finish();
+                } else {
+                    Snackbar.make(view, "Incorrect fields", Snackbar.LENGTH_SHORT).show();
                 }
             }
 
@@ -324,7 +233,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         if (!mEmail.getText().toString().equals(getResources().getString(R.string.email))) {
             builder.setTitle(R.string.email);
         }
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (!inputField.getText().toString().isEmpty()) {
@@ -332,7 +241,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                 }
             }
         });
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
@@ -353,7 +262,7 @@ public class ProfileEditActivity extends AppCompatActivity {
             inputField.setText(mPhone.getText().toString());
         }
         builder.setTitle(R.string.phone);
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (!inputField.getText().toString().isEmpty()) {
@@ -361,7 +270,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                 }
             }
         });
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
@@ -381,7 +290,7 @@ public class ProfileEditActivity extends AppCompatActivity {
             inputField.setText(mAboutMe.getText().toString());
         }
         builder.setTitle(R.string.about_me);
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (!inputField.getText().toString().isEmpty()) {
@@ -389,7 +298,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                 }
             }
         });
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
@@ -407,7 +316,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         final EditText inputField = (EditText) dialogView.findViewById(R.id.profile_edit_input_field);
         inputField.setText(mName.getText().toString());
         builder.setTitle(R.string.your_name);
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (!inputField.getText().toString().isEmpty()) {
@@ -415,7 +324,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                 }
             }
         });
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
@@ -457,21 +366,76 @@ public class ProfileEditActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Constant.CAMERA && data != null) {
-            final Bitmap thumbnailBitmap = BitmapHelper.scaleBitmap((Bitmap) data.getExtras().get("data"));
-            mAvatar.setImageBitmap(thumbnailBitmap);
-            mEncodedAvatar = BitmapHelper.encodeToString(thumbnailBitmap);
-        } else if (requestCode == Constant.GALLERY && data != null) {
-            try {
+        try {
+            if (requestCode == Constant.CAMERA && data != null) {
+                final Bitmap thumbnailBitmap = BitmapHelper.scaleBitmap((Bitmap) data.getExtras().get("data"));
+                mAvatar.setImageBitmap(thumbnailBitmap);
+                mEncodedAvatar = BitmapHelper.encodeToString(thumbnailBitmap);
+            } else if (requestCode == Constant.GALLERY && data != null) {
                 Uri selectedImage = data.getData();
                 final Bitmap thumbnailBitmap = BitmapHelper
                         .scaleBitmap(MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage));
                 mAvatar.setImageBitmap(thumbnailBitmap);
                 mEncodedAvatar = BitmapHelper.encodeToString(thumbnailBitmap);
                 Log.i("profileEdit", "EncodedAvatar: \n\n" + mEncodedAvatar);
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Call<UserInfoResponse> call = mService.getUserInfo(Person.getId());
+        call.enqueue(new Callback<UserInfoResponse>() {
+            @Override
+            public void onResponse(retrofit.Response<UserInfoResponse> response, Retrofit retrofit) {
+                UserInfoResponse.Message message = response.body().message.get(0);
+                mName.setText(message.data.name);
+                if (!message.data.about.isEmpty()) {
+                    mAboutMe.setText(message.data.about);
+                } else {
+                    mAboutMe.setText("Set");
+                }
+                if (message.data.gender.equals("female")) {
+                    mGenderSpinner.setSelection(1);
+                } else {
+                    mGenderSpinner.setSelection(0);
+                }
+                if (!message.data.birthday.isEmpty()) {
+                    mBirthDay.setText(message.data.birthday);
+                } else {
+                    mBirthDay.setText("Set");
+                }
+                mEmail.setText(message.data.email);
+                if (!message.data.about.isEmpty()) {
+                    mPhone.setText(message.data.phone);
+                } else {
+                    mPhone.setText("Set");
+                }
+                mWaitingForVerify = message.system.waitingForVerify;
+                if (!flagForAvatar) {
+                    flagForAvatar = true;
+                    if (message.data.imgs.length != 0) {
+                        if (!message.data.imgs[0].isEmpty()) {
+                            Picasso.with(getApplicationContext())
+                                    .load(Constant.URL_IMAGE + message.data.imgs[0])
+                                    .into(mAvatar);
+                        }
+                    } else {
+                        Picasso.with(getApplicationContext())
+                                .load(URL_IMAGE + BASE_IMAGE)
+                                .into(mAvatar);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Snackbar.make(findViewById(android.R.id.content), Constant.CONNECTION_ERROR, Snackbar.LENGTH_SHORT).show();
+            }
+        });
     }
 }

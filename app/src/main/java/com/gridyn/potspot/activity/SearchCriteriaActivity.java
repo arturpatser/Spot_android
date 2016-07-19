@@ -209,10 +209,11 @@ public class SearchCriteriaActivity extends AppCompatActivity implements OnMapRe
 
     private void initPriceRange() {
         final TextView interval = (TextView) findViewById(R.id.sch_interval);
-        interval.setText("$" + 0 + " - $" + 100);
-        ;
+        mStartPriceRange = 0;
+        mEndPriceRange = 101;
+        interval.setText("$" + mStartPriceRange + " - $" + (mEndPriceRange - 1));
+
         final RangeBar mPriceRange = (RangeBar) findViewById(R.id.sch_seek_price);
-        ;
         mPriceRange.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
             @Override
             public void onIndexChangeListener(RangeBar rangeBar, int left, int right) {
