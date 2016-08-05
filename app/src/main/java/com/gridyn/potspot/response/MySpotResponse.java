@@ -46,7 +46,6 @@ public class MySpotResponse {
                 @SerializedName("address")
                 @Expose
                 public String address;
-
             }
         }
     }

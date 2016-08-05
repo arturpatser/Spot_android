@@ -160,7 +160,7 @@ public class DescriptionSpotActivity extends AppCompatActivity {
             public void onResponse(Response<SpotInfoResponse> response, Retrofit retrofit) {
                 if (response.body().success) {
                     Log.i(LOG, new Gson().toJson(response.body()));
-                    SpotInfoResponse.Spot spot = response.body().message.get(0).spots.get(1);
+                    SpotInfoResponse.Message.Spot spot = response.body().message.get(0).spots.get(1);
 
                     Picasso.with(mContext)
                             .load(URL_IMAGE + spot.imgs.get(0))
@@ -185,6 +185,19 @@ public class DescriptionSpotActivity extends AppCompatActivity {
                         case "balcony":
                             mTypeImg.setImageDrawable(getResources().getDrawable(R.drawable.balcony));
                             break;
+                        case "Backyard":
+                            mTypeImg.setImageDrawable(getResources().getDrawable(R.drawable.backyard));
+                            break;
+                        case "Patio":
+                            mTypeImg.setImageDrawable(getResources().getDrawable(R.drawable.patio));
+                            break;
+                        case "SmokingRooms":
+                            mTypeImg.setImageDrawable(getResources().getDrawable(R.drawable.other_type_of_spot));
+                            break;
+                        case "Balcony":
+                            mTypeImg.setImageDrawable(getResources().getDrawable(R.drawable.balcony));
+                            break;
+
                     }
                     mUserName.setText(" " + spot.username);
                     mBook.setText("Book for $" + spot.price);

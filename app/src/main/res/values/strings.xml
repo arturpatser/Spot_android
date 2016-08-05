@@ -120,6 +120,10 @@
     <string name="visit_date">Visit Date</string>
     <string name="visit_time">Visit Time</string>
     <string name="by">by </string>
+    <string name="sign_out">Sign_out</string>
+    <string name="message_hint">Say anithing</string>
+    <string name="send">Send</string>
+    <string name="type_a_message">Type a message</string>
 
     <string-array name="gender_list">
         <item>male</item>

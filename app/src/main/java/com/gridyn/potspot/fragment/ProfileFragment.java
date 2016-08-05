@@ -19,13 +19,18 @@ import com.gridyn.potspot.AssetsHelper;
 import com.gridyn.potspot.FastBlur;
 import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
+import com.gridyn.potspot.SelectPageUtil;
+import com.gridyn.potspot.activity.MySpotsActivity;
 import com.gridyn.potspot.activity.ProfileEditActivity;
+import com.gridyn.potspot.activity.VerificationActivity;
 import com.gridyn.potspot.response.UserInfoResponse;
 import com.gridyn.potspot.service.UserService;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit.Call;
@@ -64,6 +69,7 @@ public class ProfileFragment extends Fragment {
     private TextView mSeeMore;
     private TextView mTVListing;
     private int mCountComment = 0;
+    private boolean mWaitingForVerify;
 
     public static ProfileFragment getInstance() {
         Bundle args = new Bundle();
@@ -85,8 +91,8 @@ public class ProfileFragment extends Fragment {
             initHeader();
             initRetrofit();
             goneView();
+            onClickButton();
 //            getComments();
-            initCard();
         }
         return mView;
     }
@@ -120,7 +126,6 @@ public class ProfileFragment extends Fragment {
     public void goneView() {
         if (!Person.isHost()) {
             mVerified.setVisibility(View.GONE);
-            mHostPanel.setVisibility(View.GONE);
             mSeeMore.setVisibility(View.GONE);
             mCard.setVisibility(View.GONE);
             mTVListing.setVisibility(View.GONE);
@@ -151,12 +156,8 @@ public class ProfileFragment extends Fragment {
         mVerified = (LinearLayout) mView.findViewById(R.id.profile_verified);
         mHostPanel = (Button) mView.findViewById(R.id.profile_host_panel);
         mCard = (CardView) mView.findViewById(R.id.profile_card);
-    }
-
-    private void initCard() {
         mCard.setBackground(AssetsHelper.loadImageFromAsset(mView.getContext(), "images/chairs.jpg"));
     }
-
 
     public void getComments() {
       /*  Call<UserCommentsResponse> call = mService.getComments(Person.getId());
@@ -173,6 +174,7 @@ public class ProfileFragment extends Fragment {
         });*/
     }
 
+
     private void initHeader() {
         final FrameLayout header = (FrameLayout) mView.findViewById(R.id.profile_header);
         FastBlur.setBackgroundBlur(header, mView.getContext(), "images/chairs.jpg", mView.getResources());
@@ -181,7 +183,9 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Call<UserInfoResponse> call = mService.getUserInfo(Person.getId());
+        Map<String, String> mapToken = new HashMap<>();
+        mapToken.put("token", Person.getToken());
+        Call<UserInfoResponse> call = mService.getUserInfo(Person.getId(), mapToken);
         call.enqueue(new Callback<UserInfoResponse>() {
             @Override
             public void onResponse(retrofit.Response<UserInfoResponse> response, Retrofit retrofit) {
@@ -218,7 +222,7 @@ public class ProfileFragment extends Fragment {
                 } else {
                     mPayInfo.setText(NOT_SPECIFIED);
                 }
-
+                mWaitingForVerify = message.system.waitingForVerify;
                 mMemberSince.setText(new SimpleDateFormat("MMMM yyyy")
                         .format(new Date((long) message.system.timeCreated * 1000)));
                 if (message.data.imgs.length != 0) {
@@ -237,6 +241,37 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onFailure(Throwable t) {
                 Snackbar.make(getView(), CONNECTION_ERROR, Snackbar.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        SelectPageUtil.selectProfile();
+    }
+
+    private void onClickButton() {
+        mHostPanel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Person.isHost()) {
+                    final Intent intent = new Intent(getContext(), MySpotsActivity.class);
+                    startActivity(intent);
+                } else if (mWaitingForVerify) {
+                    Snackbar.make(getView(), "Your request is processed", Snackbar.LENGTH_LONG).show();
+                } else if (!Person.isHost()) {
+                    Snackbar.make(getView(), "Account is not verified", Snackbar.LENGTH_INDEFINITE)
+                            .setAction("goto verify", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    final Intent intent = new Intent(getContext(), VerificationActivity.class);
+                                    startActivity(intent);
+                                }
+                            })
+                            .setActionTextColor(getResources().getColor(R.color.mainRed))
+                            .show();
+                }
             }
         });
     }

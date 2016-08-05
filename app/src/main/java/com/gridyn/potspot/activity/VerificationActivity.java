@@ -101,7 +101,18 @@ public class VerificationActivity extends AppCompatActivity {
             @Override
             public void onResponse(Response<UserEnableHostResponse> response, Retrofit retrofit) {
                 if (response.body().success) {
-                    Snackbar.make(findViewById(android.R.id.content), "Wait answer from server!", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Your ID is under review now", Snackbar.LENGTH_LONG).show();
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Thread.sleep(3000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            finish();
+                        }
+                    }).start();
                 } else {
                     Snackbar.make(findViewById(android.R.id.content), "Try again", Snackbar.LENGTH_LONG).show();
                 }

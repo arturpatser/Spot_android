@@ -1,6 +1,8 @@
 package com.gridyn.potspot.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 
 import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.R;
+import com.gridyn.potspot.SelectPageUtil;
 import com.gridyn.potspot.adapter.TabsPagerFragmentAdapter;
 import com.squareup.picasso.Picasso;
 
@@ -29,6 +32,7 @@ public class TabsActivity extends AppCompatActivity
     private Toolbar mToolbar;
     private DrawerLayout mDrawer;
     private View mHeaderView;
+    private TextView mTitleToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,23 +69,21 @@ public class TabsActivity extends AppCompatActivity
     }
 
     private void initToolbar() {
-        final TextView titleToolbar = (TextView) findViewById(R.id.toolbar_title);
+        mTitleToolbar = (TextView) findViewById(R.id.toolbar_title);
+        mTitleToolbar.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/Roboto-Medium.ttf"));
         mToolbar = (Toolbar) findViewById(R.id.toolbar_tabs);
-        titleToolbar.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/Roboto-Medium.ttf"));
         mToolbar.setTitle("");
         setSupportActionBar(mToolbar);
     }
 
     private void initTabs() {
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        SelectPageUtil.init(tabLayout, mTitleToolbar);
         TabsPagerFragmentAdapter adapter = new TabsPagerFragmentAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
-        tabLayout.getTabAt(0).setIcon(R.drawable.home);
-        tabLayout.getTabAt(1).setIcon(R.drawable.notification);
-        tabLayout.getTabAt(2).setIcon(R.drawable.profile);
     }
 
     public void onClickDetails(View view) {
@@ -120,6 +122,15 @@ public class TabsActivity extends AppCompatActivity
             case R.id.nav_feedback:
                 intent = new Intent(this, FeedbackActivity.class);
                 break;
+            case R.id.nav_log_out:
+                intent = new Intent(this, MainActivity.class);
+                SharedPreferences settings = getSharedPreferences(Constant.APP_PREFERENCES, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putBoolean(Constant.AP_LOG_IN, false);
+                editor.apply();
+                startActivity(intent);
+                finish();
+                return true;
         }
 
         if (intent != null) {

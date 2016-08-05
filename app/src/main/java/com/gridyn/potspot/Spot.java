@@ -111,4 +111,25 @@ public class Spot {
     public String getId() {
         return id;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Spot spot = (Spot) o;
+
+        if (!id.equals(spot.id)) return false;
+        if (!name.equals(spot.name)) return false;
+        return description.equals(spot.description);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + name.hashCode();
+        result = 31 * result + description.hashCode();
+        return result;
+    }
 }

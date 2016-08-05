@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
+import com.gridyn.potspot.SelectPageUtil;
 import com.gridyn.potspot.Spot;
 import com.gridyn.potspot.adapter.NotificationClientAdapter;
 import com.gridyn.potspot.adapter.NotificationHostAdapter;
@@ -86,5 +87,11 @@ public class NotificationFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setItemAnimator(itemAnimator);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        SelectPageUtil.selectNotification();
     }
 }

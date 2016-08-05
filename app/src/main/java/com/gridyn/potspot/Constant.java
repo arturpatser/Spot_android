@@ -18,6 +18,9 @@ public interface Constant {
     String LOG = "log";
     long UPDATE_LOCATION_SECONDS = 10000;
     float UPDATE_LOCATION_DISTANCE = 10;
-
     String NOT_SPECIFIED = "Not Specified";
+    String APP_PREFERENCES = "settings";
+    String AP_EMAIL = "email";
+    String AP_PASSWORD = "password";
+    String AP_LOG_IN = "log_out";
 }

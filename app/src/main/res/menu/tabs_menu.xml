@@ -31,6 +31,9 @@
             android:id="@+id/nav_feedback"
             android:icon="@android:drawable/sym_action_chat"
             android:title="@string/nd_give_feedback" />
-    </group>
 
+        <item
+            android:id="@+id/nav_log_out"
+            android:title="@string/sign_out" />
+    </group>
 </menu>

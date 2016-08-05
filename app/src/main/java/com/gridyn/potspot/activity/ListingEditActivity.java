@@ -1,37 +1,158 @@
 package com.gridyn.potspot.activity;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 
+import com.google.gson.GsonBuilder;
+import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.FastBlur;
+import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
 import com.gridyn.potspot.Spot;
 import com.gridyn.potspot.adapter.ListingEditAdapter;
+import com.gridyn.potspot.query.UpdateSpotQuery;
+import com.gridyn.potspot.response.SpotInfoResponse;
+import com.gridyn.potspot.response.SpotUpdateResponse;
+import com.gridyn.potspot.service.SpotService;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.GsonConverterFactory;
+import retrofit.Response;
+import retrofit.Retrofit;
+
 public class ListingEditActivity extends AppCompatActivity {
 
     private List<Spot> mSpotList;
+    private EditText mTitle;
+    private EditText mDescription;
+    private EditText mAddress;
+    private EditText mPrice;
+    private EditText mGuests;
+    private Spinner mListingTypeSpinner;
+    private Spinner mTobaccoSpinner;
+    private Spinner mHeatedSpinner;
+    private Spinner mHandicapSpinner;
+    private SpotService mService;
+/*    private String mListingType;
+    private String mTobacco;
+    private String mHeated;
+    private String mHandicap;*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listing_edit);
+
+        initFields();
+        initRetrofit();
+        loadFields();
         initSpotList();
         initToolbar();
         initRecycler();
         setHeaderBackground();
+    }
+
+    private void initFields() {
+        mTitle = (EditText) findViewById(R.id.list_edit_title);
+        mDescription = (EditText) findViewById(R.id.list_edit_desc);
+        mAddress = (EditText) findViewById(R.id.list_edit_address);
+        mPrice = (EditText) findViewById(R.id.list_edit_price);
+        mGuests = (EditText) findViewById(R.id.list_edit_guests);
+        mListingTypeSpinner = (Spinner) findViewById(R.id.list_edit_listing_type);
+        mTobaccoSpinner = (Spinner) findViewById(R.id.list_edit_tobacco);
+        mHeatedSpinner = (Spinner) findViewById(R.id.list_edit_heated);
+        mHandicapSpinner = (Spinner) findViewById(R.id.list_edit_handicap);
+    }
+
+    private void initRetrofit() {
+        final Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(Constant.BASE_URL)
+                .build();
+
+        mService = retrofit.create(SpotService.class);
+    }
+
+    private void loadFields() {
+        Call<SpotInfoResponse> call = mService.getSpot(getIntent().getExtras().getString("id"));
+        call.enqueue(new Callback<SpotInfoResponse>() {
+            @Override
+            public void onResponse(Response<SpotInfoResponse> response, Retrofit retrofit) {
+                SpotInfoResponse.Message.Spot spot = response.body().message.get(0).spots.get(1);
+                mTitle.setText(spot.name);
+                mDescription.setText(spot.about);
+                mAddress.setText(spot.address);
+                mPrice.setText(String.valueOf(spot.price));
+                mGuests.setText(String.valueOf(spot.maxGuests));
+
+                mTobaccoSpinner.setSelection(1);
+                mHeatedSpinner.setSelection(1);
+                mHandicapSpinner.setSelection(1);
+
+                for (String badge : spot.badge) {
+                    if (badge.equals(getResources().getString(R.string.tobacco_friendly))) {
+                        mTobaccoSpinner.setSelection(0);
+                    }
+                    if (badge.equals(getResources().getString(R.string.heated))) {
+                        mHeatedSpinner.setSelection(0);
+                    }
+                    if (badge.equals(getResources().getString(R.string.handicap_accessible))) {
+                        mHandicapSpinner.setSelection(0);
+                    }
+                }
+
+                switch (spot.type) {
+                    case "patio":
+                        mListingTypeSpinner.setSelection(0);
+                        break;
+                    case "backyard":
+                        mListingTypeSpinner.setSelection(1);
+                        break;
+                    case "balcony":
+                        mListingTypeSpinner.setSelection(2);
+                        break;
+                    case "smokingRooms":
+                        mListingTypeSpinner.setSelection(3);
+                        break;
+                    case "Patio":
+                        mListingTypeSpinner.setSelection(0);
+                        break;
+                    case "Backyard":
+                        mListingTypeSpinner.setSelection(1);
+                        break;
+                    case "Balcony":
+                        mListingTypeSpinner.setSelection(2);
+                        break;
+                    case "SmokingRooms":
+                        mListingTypeSpinner.setSelection(3);
+                        break;
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Snackbar.make(findViewById(android.R.id.content), Constant.CONNECTION_ERROR, Snackbar.LENGTH_LONG)
+                        .show();
+            }
+        });
     }
 
     private void setHeaderBackground() {
@@ -93,6 +214,73 @@ public class ListingEditActivity extends AppCompatActivity {
     }
 
     public void onCLickDoneListing(View view) {
-        finish();
+        final UpdateSpotQuery query = new UpdateSpotQuery();
+        query.id = getIntent().getExtras().getString("id");
+        query.token = Person.getToken();
+        query.name = mTitle.getText().toString().trim();
+        query.about = mDescription.getText().toString().trim();
+        query.address = mAddress.getText().toString().trim();
+        query.price = Integer.valueOf(mPrice.getText().toString().trim());
+        query.maxGuests = Integer.valueOf(mGuests.getText().toString().trim());
+
+        mListingTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String[] choose = getResources().getStringArray(R.array.listing_type);
+                query.type = choose[position];
+            }
+
+            public void onNothingSelected(AdapterView<?> parent) {/*NOP*/}
+        });
+
+        mTobaccoSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) {
+                    query.badges.add(getResources().getString(R.string.tobacco_friendly));
+                }
+            }
+
+            public void onNothingSelected(AdapterView<?> parent) {/*NOP*/}
+        });
+        mHeatedSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) {
+                    query.badges.add(getResources().getString(R.string.heated));
+                }
+            }
+
+            public void onNothingSelected(AdapterView<?> parent) {/*NOP*/}
+        });
+        mHandicapSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) {
+                    query.badges.add(getResources().getString(R.string.handicap_accessible));
+                }
+            }
+
+            public void onNothingSelected(AdapterView<?> parent) {/*NOP*/}
+        });
+
+        GsonBuilder builder = new GsonBuilder();
+        builder.setPrettyPrinting();
+        Log.i(Constant.LOG, "JSON EDIT PROFILE: \n " + builder.create().toJson(query));
+
+        Call<SpotUpdateResponse> call = mService.updateSpot(query);
+        call.enqueue(new Callback<SpotUpdateResponse>() {
+            @Override
+            public void onResponse(Response<SpotUpdateResponse> response, Retrofit retrofit) {
+                Log.i(Constant.LOG, "ListingEditActivity: " + response.body().success);
+                finish();
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Snackbar.make(findViewById(android.R.id.content), Constant.CONNECTION_ERROR, Snackbar.LENGTH_LONG)
+                        .show();
+            }
+        });
     }
 }

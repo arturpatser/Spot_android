@@ -21,9 +21,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.github.clans.fab.FloatingActionButton;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
+import com.gridyn.potspot.SelectPageUtil;
 import com.gridyn.potspot.Spot;
 import com.gridyn.potspot.activity.SearchCriteriaActivity;
 import com.gridyn.potspot.activity.SearchResultActivity;
@@ -33,13 +41,6 @@ import com.gridyn.potspot.adapter.HomeAdapter;
 import com.gridyn.potspot.query.SearchCriteriaQuery;
 import com.gridyn.potspot.response.SpotSearchResponse;
 import com.gridyn.potspot.service.SpotService;
-import com.github.clans.fab.FloatingActionButton;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -232,5 +233,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         canvas1.drawText(spot.getPrice().toString(), 30, 40, color);
 
         return bmp;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        SelectPageUtil.selectHome();
     }
 }

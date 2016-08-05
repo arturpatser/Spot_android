@@ -1,6 +1,8 @@
 package com.gridyn.potspot.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -87,9 +89,9 @@ public class SignUpActivity extends AppCompatActivity {
         if (name.isEmpty() || email.isEmpty() || password.isEmpty()) {
             Snackbar.make(view, "Input all fields", Snackbar.LENGTH_SHORT).show();
         } else {
-            mapJson.put("name", mName.getText().toString());
-            mapJson.put("email", mEmail.getText().toString());
-            mapJson.put("password", mPassword.getText().toString());
+            mapJson.put("name", name);
+            mapJson.put("email", email);
+            mapJson.put("password", password);
 
             Call<UserCreateResponse> call = mService.createUser(mapJson);
 
@@ -100,6 +102,10 @@ public class SignUpActivity extends AppCompatActivity {
                     Log.i("signup", "Response status code: " + response.code());
 
                     if (res.success) {
+                        final SharedPreferences settings = getSharedPreferences(Constant.APP_PREFERENCES, Context.MODE_PRIVATE);
+                        final SharedPreferences.Editor editor = settings.edit();
+                        editor.putString(Constant.AP_EMAIL, email);
+                        editor.apply();
                         final Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
                         intent.putExtra("isReg", true);
                         startActivity(intent);
@@ -124,9 +130,15 @@ public class SignUpActivity extends AppCompatActivity {
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    finish();
+                    startActivity(new Intent(SignUpActivity.this, MainActivity.class));
                 }
             });
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
     }
 }

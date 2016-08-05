@@ -1,16 +1,19 @@
 package com.gridyn.potspot.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gridyn.potspot.R;
 import com.gridyn.potspot.Spot;
+import com.gridyn.potspot.activity.ChatActivity;
 
 import java.util.List;
 
@@ -47,6 +50,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.Holder> 
         holder.name.setText(spot.getName());
         holder.description.setText(spot.getDescription());
         holder.lastMessage.setText("test");
+        holder.messageItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Intent intent = new Intent(mContext, ChatActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                mContext.startActivity(intent);
+            }
+        });
 
     }
 
@@ -62,6 +73,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.Holder> 
         private TextView description;
         private TextView lastMessage;
         private TextView time;
+        private RelativeLayout messageItem;
 
         public Holder(View itemView) {
             super(itemView);
@@ -70,6 +82,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.Holder> 
             description = (TextView) itemView.findViewById(R.id.message_description);
             lastMessage = (TextView) itemView.findViewById(R.id.message_last);
             time = (TextView) itemView.findViewById(R.id.message_time);
+            messageItem = (RelativeLayout) itemView.findViewById(R.id.message_item);
         }
     }
 

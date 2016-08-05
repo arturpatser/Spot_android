@@ -36,6 +36,8 @@ import com.squareup.picasso.Picasso;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit.Call;
@@ -118,7 +120,7 @@ public class ProfileEditActivity extends AppCompatActivity {
     }
 
     private void initRetrofit() {
-        Retrofit retrofit = new Retrofit.Builder()
+        final Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(Constant.BASE_URL)
                 .build();
@@ -226,41 +228,13 @@ public class ProfileEditActivity extends AppCompatActivity {
         });
     }
 
-    public void onClickEmail(View view) {
-        final View dialogView = getLayoutInflater()
-                .inflate(R.layout.dialog_input_field, (ViewGroup) findViewById(R.id.dialog_input_field));
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        final EditText inputField = (EditText) dialogView.findViewById(R.id.profile_edit_input_field);
-        inputField.setText(mEmail.getText().toString());
-        if (!mEmail.getText().toString().equals(getResources().getString(R.string.email))) {
-            builder.setTitle(R.string.email);
-        }
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (!inputField.getText().toString().isEmpty()) {
-                    mEmail.setText(inputField.getText().toString().trim());
-                }
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        builder.setView(dialogView);
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
     public void onClickPhone(View view) {
         final View dialogView = getLayoutInflater()
                 .inflate(R.layout.dialog_input_field, (ViewGroup) findViewById(R.id.dialog_input_field));
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final EditText inputField = (EditText) dialogView.findViewById(R.id.profile_edit_input_field);
         inputField.setInputType(InputType.TYPE_CLASS_PHONE);
-        if (!mPhone.getText().toString().equals(getResources().getString(R.string.phone))) {
+        if (!mPhone.getText().toString().equals(getResources().getString(R.string.set))) {
             inputField.setText(mPhone.getText().toString());
         }
         builder.setTitle(R.string.phone);
@@ -288,7 +262,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                 .inflate(R.layout.dialog_input_field, (ViewGroup) findViewById(R.id.dialog_input_field));
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final EditText inputField = (EditText) dialogView.findViewById(R.id.profile_edit_input_field);
-        if (!mAboutMe.getText().toString().equals(getResources().getString(R.string.write_some_words))) {
+        if (!mAboutMe.getText().toString().equals(getResources().getString(R.string.set))) {
             inputField.setText(mAboutMe.getText().toString());
         }
         builder.setTitle(R.string.about_me);
@@ -390,7 +364,9 @@ public class ProfileEditActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        Call<UserInfoResponse> call = mService.getUserInfo(Person.getId());
+        Map<String, String> mapToken = new HashMap<>();
+        mapToken.put("token", Person.getToken());
+        Call<UserInfoResponse> call = mService.getUserInfo(Person.getId(), mapToken);
         call.enqueue(new Callback<UserInfoResponse>() {
             @Override
             public void onResponse(retrofit.Response<UserInfoResponse> response, Retrofit retrofit) {

@@ -1,5 +1,6 @@
 package com.gridyn.potspot.activity;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +31,7 @@ import retrofit.Retrofit;
 public class MySpotsActivity extends AppCompatActivity {
 
     private List<Spot> mSpotList;
+    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,10 +39,13 @@ public class MySpotsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_your_spots);
         initSpotList();
         initToolbar();
-        initRecycler();
     }
 
     private void initSpotList() {
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setMessage("Loading...");
+        mProgressDialog.show();
         mSpotList = new ArrayList<>();
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -50,6 +55,7 @@ public class MySpotsActivity extends AppCompatActivity {
 
         UserService service = retrofit.create(UserService.class);
         Call<MySpotResponse> call = service.getSpots(Person.getId());
+
         call.enqueue(new Callback<MySpotResponse>() {
             @Override
             public void onResponse(Response<MySpotResponse> response, Retrofit retrofit) {
@@ -59,6 +65,10 @@ public class MySpotsActivity extends AppCompatActivity {
                 if (response.body().success) {
                     if (data.size() != 0) {
                         mSpotList.add(new Spot(data.get(0).id.$id, data.get(0).data.name, data.get(0).data.address));
+                        initRecycler();
+                        if (mProgressDialog.isShowing()) {
+                            mProgressDialog.dismiss();
+                        }
                     }
                 }
 //                }
@@ -66,6 +76,9 @@ public class MySpotsActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Throwable t) {
+                if (mProgressDialog.isShowing()) {
+                    mProgressDialog.dismiss();
+                }
                 Snackbar.make(findViewById(android.R.id.content), Constant.CONNECTION_ERROR, Snackbar.LENGTH_SHORT).show();
             }
         });
@@ -92,10 +105,5 @@ public class MySpotsActivity extends AppCompatActivity {
                 finish();
             }
         });
-    }
-
-    public void onClickViewSpot(View view) {
-//        final Intent intent = new Intent(this, ListingActivity.class);
-//        startActivity(intent);
     }
 }

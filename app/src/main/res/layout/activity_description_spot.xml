@@ -131,7 +131,8 @@
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/desc_spot_avatar"
                         android:layout_width="48dp"
-                        android:layout_height="48dp" />
+                        android:layout_height="48dp"
+                        android:src="@drawable/guests" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"

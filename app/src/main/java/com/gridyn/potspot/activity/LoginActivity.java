@@ -1,6 +1,8 @@
 package com.gridyn.potspot.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -34,7 +36,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mEmail;
     private EditText mPassword;
     private UserService mService;
-    private boolean isReg;
+    private SharedPreferences mSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,22 +46,22 @@ public class LoginActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 
         ifReg();
+        initFields();
         initToolbar();
         setFonts();
         initRetrofit();
-        initFields();
     }
 
     private void ifReg() {
-        isReg = getIntent().getExtras().getBoolean("isReg");
-        if (isReg) {
-            Snackbar.make(findViewById(android.R.id.content), "Account recorded", Snackbar.LENGTH_LONG).show();
+        if (getIntent().getExtras().getBoolean("isReg")) {
+            Snackbar.make(findViewById(android.R.id.content), "Registration successful", Snackbar.LENGTH_LONG).show();
         }
     }
 
     private void initFields() {
         mEmail = (EditText) findViewById(R.id.log_in_email);
         mPassword = (EditText) findViewById(R.id.log_in_password);
+        mSettings = getSharedPreferences(Constant.APP_PREFERENCES, Context.MODE_PRIVATE);
     }
 
     private void initRetrofit() {
@@ -94,7 +96,7 @@ public class LoginActivity extends AppCompatActivity {
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    finish();
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 }
             });
         }
@@ -107,6 +109,7 @@ public class LoginActivity extends AppCompatActivity {
 //        map.put("email", "rpugase@gmail.com");
 //        map.put("password", "qwerty123");
 
+
         Call<UserLoginResponse> call = mService.loginUser(map);
 
         call.enqueue(new Callback<UserLoginResponse>() {
@@ -116,8 +119,14 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (res.success) {
                     Log.i(Constant.LOG, "onResponse: true");
-                    Person.setToken(res.message.get(0).token);
                     Person.setId(res.message.get(1).id);
+                    Person.setToken(res.message.get(0).token);
+                    final SharedPreferences.Editor editor = mSettings.edit();
+                    editor.putString(Constant.AP_EMAIL, mEmail.getText().toString().trim());
+                    editor.putString(Constant.AP_PASSWORD, mPassword.getText().toString().trim());
+                    editor.putBoolean(Constant.AP_LOG_IN, true);
+                    editor.apply();
+                    Log.i(Constant.LOG, "Token: " + res.message.get(0).token + "\nid: " + res.message.get(1).id);
                     getUserInfo();
                 } else {
                     Snackbar.make(view, "Incorrect email or password", Snackbar.LENGTH_SHORT).show();
@@ -126,7 +135,8 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Throwable t) {
-                Snackbar.make(view, Constant.CONNECTION_ERROR, Snackbar.LENGTH_SHORT).show();
+                Log.i(Constant.LOG, t.toString());
+                Snackbar.make(view, Constant.CONNECTION_ERROR + " bla-bla", Snackbar.LENGTH_SHORT).show();
             }
         });
     }
@@ -137,14 +147,10 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        finish();
-    }
-
     public void getUserInfo() {
-        Call<UserInfoResponse> call = mService.getUserInfo(Person.getId());
+        Map<String, String> mapToken = new HashMap<>();
+        mapToken.put("token", Person.getToken());
+        Call<UserInfoResponse> call = mService.getUserInfo(Person.getId(), mapToken);
 
         call.enqueue(new Callback<UserInfoResponse>() {
             @Override
@@ -169,5 +175,20 @@ public class LoginActivity extends AppCompatActivity {
                 Snackbar.make(findViewById(android.R.id.content), Constant.CONNECTION_ERROR, Snackbar.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (mSettings.contains(Constant.AP_EMAIL)) {
+            mEmail.setText(mSettings.getString(Constant.AP_EMAIL, ""));
+        }
     }
 }

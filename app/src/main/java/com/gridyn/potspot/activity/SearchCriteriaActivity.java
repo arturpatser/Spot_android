@@ -96,6 +96,7 @@ public class SearchCriteriaActivity extends AppCompatActivity implements OnMapRe
     @Override
     public void onMapReady(GoogleMap map) {
         mMap = map;
+        showCurrentLocation(mLocation);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLat, mLng), 11));
         drawCircle();
     }
@@ -239,12 +240,12 @@ public class SearchCriteriaActivity extends AppCompatActivity implements OnMapRe
     public void onClickCheckSpots(View view) {
         SearchCriteriaQuery.Distance distance = new SearchCriteriaQuery.Distance();
 
-//        distance.lat = mLat;
-//        distance.lng = mLng;
-//        distance.radius = mRadiusInterval;
-        distance.lat = 55.755786;
-        distance.lng = 37.617633;
-        distance.radius = 100000;
+        distance.lat = mLat;
+        distance.lng = mLng;
+        distance.radius = mRadiusInterval;
+//        distance.lat = 61.8141429;
+//        distance.lng = -112.9769033;
+//        distance.radius = 100000000;
         SearchCriteriaQuery query = new SearchCriteriaQuery();
         query.badges = getBudges();
         query.maxGuest = getGuests(Integer.parseInt(mCountGuests.getText().toString()));

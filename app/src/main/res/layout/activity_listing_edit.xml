@@ -62,89 +62,127 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/title"/>
+                    android:text="@string/write_title"
+                    android:textColor="@color/grey21" />
+
+                <EditText
+                    android:id="@+id/list_edit_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:theme="@style/ProfileEditText"
+                    android:hint="@string/give_your_listing_a_descriptive_heading" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Very good backyard"/>
+                    android:text="@string/write_description"
+                    android:textColor="@color/grey21"
+                    android:layout_marginTop="30dp" />
+
+                <EditText
+                    android:id="@+id/list_edit_desc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:theme="@style/ProfileEditText"
+                    android:hint="@string/give_user_some_details_about_your_listing" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/description"
-                    android:layout_marginTop="20dp"/>
+                    android:text="@string/address"
+                    android:textColor="@color/grey21"
+                    android:layout_marginTop="30dp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <EditText
+                    android:id="@+id/list_edit_address"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Welcome to my backyard! My backyard will..."/>
+                    android:theme="@style/ProfileEditText"
+                    android:hint="318 Wellington Street West. Toronto" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/price_rate_per_30_mins"
-                    android:layout_marginTop="20dp"/>
+                    android:textColor="@color/grey21"
+                    android:layout_marginTop="30dp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <EditText
+                    android:id="@+id/list_edit_price"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="$10"/>
+                    android:theme="@style/ProfileEditText"
+                    android:hint="$10"
+                    android:inputType="number" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/maximum_number_of_guests"
-                    android:layout_marginTop="20dp"/>
+                    android:textColor="@color/grey21"
+                    android:layout_marginTop="30dp" />
+
+                <EditText
+                    android:id="@+id/list_edit_guests"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:theme="@style/ProfileEditText"
+                    android:hint="@string/how_many_guests_you_can_accept"
+                    android:inputType="number" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="3"/>
+                    android:text="@string/listing_type"
+                    android:textColor="@color/grey21"
+                    android:layout_marginTop="30dp" />
+
+                <android.support.v7.widget.AppCompatSpinner
+                    android:id="@+id/list_edit_listing_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/listing_type" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:text="@string/listing_type"/>
+                    android:text="@string/tobacco_friendly"
+                    android:textColor="@color/grey21"
+                    android:layout_marginTop="30dp" />
+
+                <android.support.v7.widget.AppCompatSpinner
+                    android:id="@+id/list_edit_tobacco"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/yes_or_no" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Backyard"/>
+                    android:text="@string/heated"
+                    android:textColor="@color/grey21"
+                    android:layout_marginTop="30dp" />
+
+                <android.support.v7.widget.AppCompatSpinner
+                    android:id="@+id/list_edit_heated"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/yes_or_no" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:text="@string/tobacco_friendly"/>
+                    android:text="@string/handicap_accessible"
+                    android:textColor="@color/grey21"
+                    android:layout_marginTop="30dp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <android.support.v7.widget.AppCompatSpinner
+                    android:id="@+id/list_edit_handicap"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="yes"/>
+                    android:entries="@array/yes_or_no" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:text="@string/heated"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="yes"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:text="@string/handicap_accessible"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="yes"/>
             </LinearLayout>
 
             <Button

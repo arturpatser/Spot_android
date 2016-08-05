@@ -27,7 +27,7 @@ public interface UserService {
     Call<UserCreateResponse> createUser(@Body Map<String, String> user);
 
     @POST("user/{id}")
-    Call<UserInfoResponse> getUserInfo(@Path("id") String token);
+    Call<UserInfoResponse> getUserInfo(@Path("id") String id, @Body Map<String, String> token);
 
     @POST("user/login")
     Call<UserLoginResponse> loginUser(@Body Map<String, String> data);

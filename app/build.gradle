@@ -35,4 +35,6 @@ dependencies {
     compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
     compile 'me.srodrigo:androidhintspinner:1.0.0'
     compile 'com.wdullaer:materialdatetimepicker:2.3.0'
+    compile 'com.parse:parse-android:1.13.0'
+    compile 'com.parse:parseinterceptors:0.0.2'
 }

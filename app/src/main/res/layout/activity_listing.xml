@@ -8,32 +8,38 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/listing_header"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:orientation="vertical">
+            android:layout_height="200dp">
+
+            <ImageView
+                android:id="@+id/listing_header"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop" />
+
             <android.support.v7.widget.Toolbar
                 android:id="@+id/listing_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:layout_marginTop="@dimen/toolbar_margin_top"/>
-        </LinearLayout>
+        </FrameLayout>
 
         <TextView
             android:id="@+id/listing_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Very good backyard in the center"
             android:textSize="20sp"
+            android:layout_marginLeft="10dp"
             android:textColor="@android:color/black"/>
 
         <android.support.v7.widget.AppCompatRatingBar
-            android:id="@+id/listing_rating"
+            android:id="@+id/listing_rating_up"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:numStars="5"
+            android:layout_marginLeft="10dp"
             style="?android:attr/ratingBarStyleSmall"/>
 
         <View
@@ -52,8 +58,8 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:src="@drawable/guests"
                     android:layout_gravity="center"/>
                 <TextView
@@ -71,14 +77,13 @@
                 android:orientation="vertical">
                 <ImageView
                     android:id="@+id/listing_type_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:layout_gravity="center"/>
                 <TextView
                     android:id="@+id/listing_type_spot"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="BACKYARD"
                     android:layout_gravity="center"
                     android:textAllCaps="true"/>
             </LinearLayout>
@@ -94,29 +99,43 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp">
+
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/listing_profile_image"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:src="@drawable/jason" />
+                android:src="@drawable/guests" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="5dp">
 
                 <TextView
                     android:id="@+id/listing_profile_type_spot"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Backyard"/>
+                    android:textSize="14sp"
+                    android:textColor="@color/mainGrey" />
 
-                <TextView
-                    android:id="@+id/listing_profile_name"
+                <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="by Jason Statham"/>
+                    android:layout_height="wrap_content">
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/by" />
+
+                    <TextView
+                        android:id="@+id/listing_profile_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:textColor="@color/mainRed" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 
@@ -124,14 +143,6 @@
             android:id="@+id/listing_profile_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-        android:text="DescriptionDescriptionDescriptionDescriptionDescriptionDescription
-        DescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescription"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/mainGrey"
             android:layout_margin="10dp"/>
         <!--
             <android.support.v7.widget.RecyclerView
@@ -139,8 +150,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>-->
 
-        <android.support.v7.widget.AppCompatRatingBar
-            android:id="@id/listing_rating"
+        <LinearLayout
+            android:id="@+id/listing_comments_part"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/mainGrey"
+                android:layout_margin="10dp" />
+
+            <android.support.v7.widget.AppCompatRatingBar
+                android:id="@+id/listing_rating_down"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:numStars="5"
@@ -153,13 +176,18 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_marginRight="20dp"/>
+            <!--
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Read all reviews"
-            android:textColor="@color/mainRed"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="Read all reviews"
+                        android:layout_marginLeft="10dp"
+                        android:clickable="true"
+                        android:textColor="@color/mainRed"/>
 
+            -->
+        </LinearLayout>
         <fragment
             android:id="@+id/listing_map"
             android:name="com.google.android.gms.maps.SupportMapFragment"
