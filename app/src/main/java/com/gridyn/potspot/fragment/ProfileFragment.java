@@ -217,6 +217,7 @@ public class ProfileFragment extends Fragment {
                 } else {
                     mPhone.setText(NOT_SPECIFIED);
                 }
+                if (message.data.paypalID != null && message.data.cardID != null)
                 if (!message.data.paypalID.isEmpty() && !message.data.cardID.isEmpty()) {
                     mPayInfo.setText("Card and Paypal");
                 } else if (!message.data.paypalID.isEmpty()) {
@@ -238,10 +239,10 @@ public class ProfileFragment extends Fragment {
                     }
                 } else {
                     Picasso.with(getContext())
-                            .load(URL_IMAGE + BASE_IMAGE)
+                            .load(BASE_IMAGE)
                             .into(mAvatar);
                 }
-                if (message.data.spot != null) {
+                if (message.data.spot != null && message.data.spot.size() != 0) {
                     loadSpotInfo(message);
                 } else {
                     mCard.setVisibility(View.GONE);

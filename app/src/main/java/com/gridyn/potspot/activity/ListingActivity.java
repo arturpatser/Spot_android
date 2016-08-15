@@ -222,7 +222,7 @@ public class ListingActivity extends AppCompatActivity {
                                 .into(mHeader);
                     } else {
                         Picasso.with(getApplicationContext())
-                                .load(Constant.URL_IMAGE + Constant.BASE_IMAGE)
+                                .load(Constant.BASE_IMAGE)
                                 .into(mHeader);
                     }
                     if (spot.userImgs.size() != 0) {

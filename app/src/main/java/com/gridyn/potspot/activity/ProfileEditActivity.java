@@ -405,7 +405,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                         }
                     } else {
                         Picasso.with(getApplicationContext())
-                                .load(URL_IMAGE + BASE_IMAGE)
+                                .load(BASE_IMAGE)
                                 .into(mAvatar);
                     }
                 }

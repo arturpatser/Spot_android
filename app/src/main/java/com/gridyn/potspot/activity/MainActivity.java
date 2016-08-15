@@ -232,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     intent.putExtra("avatar", message.data.imgs.get(0));
                 } catch (IndexOutOfBoundsException e) {
-                    intent.putExtra("avatar", Constant.URL_IMAGE + Constant.BASE_IMAGE);
+                    intent.putExtra("avatar", Constant.BASE_IMAGE);
                 }
                 if (mProgressDialog.isShowing()) {
                     mProgressDialog.dismiss();

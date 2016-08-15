@@ -8,7 +8,7 @@ public interface Constant {
     String FONT_ROBOTO_LIGHT = "fonts/Roboto-Light.ttf";
     String BASE_URL = "http://potspot.podkolpakom.net/API/";
     String URL_IMAGE = "http://potspot.podkolpakom.net/imgs/";
-    String BASE_IMAGE = "1467900842_861022d0b23fd85bdd9877a6c74036fc.jpg";
+    String BASE_IMAGE = "https://vk.com/images/camera_200.png";
     String URL_BASE64 = "data:image/jpeg;base64,";
     String CONNECTION_ERROR = "Connection error";
     String SP = "settings";
