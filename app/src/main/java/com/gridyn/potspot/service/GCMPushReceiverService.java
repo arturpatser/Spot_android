@@ -10,15 +10,21 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.gridyn.potspot.Constant;
-import com.gridyn.potspot.activity.MainActivity;
 import com.google.android.gms.gcm.GcmListenerService;
+import com.gridyn.potspot.activity.MainActivity;
+
+import static com.gridyn.potspot.Constant.LOG;
+import static com.gridyn.potspot.Constant.MESSAGE_ACTION;
 
 public class GCMPushReceiverService extends GcmListenerService {
     @Override
     public void onMessageReceived(String s, Bundle bundle) {
         sendNotification(bundle.getString("message"));
-        Log.i(Constant.LOG, bundle.getString("message"));
+        Log.i(LOG, "GCM message: " + bundle.getString("message"));
+        Intent intent = new Intent(MESSAGE_ACTION);
+        intent.putExtra("message", bundle.getString("message"));
+        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+        sendBroadcast(intent);
     }
 
     private void sendNotification(String message) {

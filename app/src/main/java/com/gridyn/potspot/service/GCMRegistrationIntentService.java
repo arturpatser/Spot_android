@@ -5,10 +5,11 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import com.gridyn.potspot.Constant;
-import com.gridyn.potspot.R;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
+import com.gridyn.potspot.Constant;
+import com.gridyn.potspot.Person;
+import com.gridyn.potspot.R;
 
 public class GCMRegistrationIntentService extends IntentService {
 
@@ -33,6 +34,7 @@ public class GCMRegistrationIntentService extends IntentService {
             Log.i(Constant.LOG, "token:" + token);
             registrationComplete = new Intent(REGISTRATION_SUCCESS);
             registrationComplete.putExtra("token", token);
+            Person.setAndroidId(token);
         } catch (Exception e) {
             registrationComplete = new Intent(REGISTRATION_ERROR);
         }

@@ -393,13 +393,14 @@ public class ProfileEditActivity extends AppCompatActivity {
                 } else {
                     mPhone.setText("Set");
                 }
-                mWaitingForVerify = message.system.waitingForVerify;
+//                mWaitingForVerify = message.system.waitingForVerify;
+                mWaitingForVerify = false; //TODO: исправить mWaitingForVerify
                 if (!flagForAvatar) {
                     flagForAvatar = true;
-                    if (message.data.imgs.length != 0) {
-                        if (!message.data.imgs[0].isEmpty()) {
+                    if (message.data.imgs.size() != 0) {
+                        if (!message.data.imgs.get(0).isEmpty()) {
                             Picasso.with(getApplicationContext())
-                                    .load(Constant.URL_IMAGE + message.data.imgs[0])
+                                    .load(Constant.URL_IMAGE + message.data.imgs.get(0))
                                     .into(mAvatar);
                         }
                     } else {

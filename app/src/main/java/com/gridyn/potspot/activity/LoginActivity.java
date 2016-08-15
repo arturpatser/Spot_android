@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
@@ -106,6 +107,9 @@ public class LoginActivity extends AppCompatActivity {
         final Map<String, String> map = new HashMap<>();
         map.put("email", mEmail.getText().toString().trim());
         map.put("password", mPassword.getText().toString().trim());
+        map.put("android_id", Person.getAndroidId());
+
+        Log.i(Constant.LOG, "onClickLogIn: " + new Gson().toJson(map));
 //        map.put("email", "rpugase@gmail.com");
 //        map.put("password", "qwerty123");
 
@@ -136,7 +140,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(Throwable t) {
                 Log.i(Constant.LOG, t.toString());
-                Snackbar.make(view, Constant.CONNECTION_ERROR + " bla-bla", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(view, Constant.CONNECTION_ERROR + ": user/login", Snackbar.LENGTH_SHORT).show();
             }
         });
     }
@@ -163,8 +167,8 @@ public class LoginActivity extends AppCompatActivity {
                 intent.putExtra("name", message.data.name);
                 intent.putExtra("email", message.data.email);
                 try {
-                    intent.putExtra("avatar", message.data.imgs[0]);
-                } catch (ArrayIndexOutOfBoundsException e) {
+                    intent.putExtra("avatar", message.data.imgs.get(0));
+                } catch (IndexOutOfBoundsException e) {
                     intent.putExtra("avatar", Constant.BASE_IMAGE);
                 }
                 startActivity(intent);
@@ -172,7 +176,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Throwable t) {
-                Snackbar.make(findViewById(android.R.id.content), Constant.CONNECTION_ERROR, Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(android.R.id.content), Constant.CONNECTION_ERROR + ": user/{id}", Snackbar.LENGTH_SHORT).show();
             }
         });
     }

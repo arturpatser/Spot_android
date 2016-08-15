@@ -5,6 +5,7 @@ public final class Person {
     private static boolean host;
     private static String token;
     private static String id;
+    private static String androidId;
 
     private Person() {
     }
@@ -44,7 +45,11 @@ public final class Person {
         Person.id = id;
     }
 
-    public static void setInstance(Person instance) {
-        Person.instance = instance;
+    public static String getAndroidId() {
+        return androidId;
+    }
+
+    public static void setAndroidId(String androidId) {
+        Person.androidId = androidId;
     }
 }

@@ -1,29 +1,44 @@
 package com.gridyn.potspot.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.MessageUtil;
+import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
-import com.gridyn.potspot.adapter.ChatListAdapter;
+import com.gridyn.potspot.adapter.ChatAdapter;
 import com.gridyn.potspot.model.Message;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.gridyn.potspot.query.SendMessageQuery;
+import com.gridyn.potspot.response.SendMessageResponse;
+import com.gridyn.potspot.service.ChatService;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.GsonConverterFactory;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 public class ChatActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -32,7 +47,7 @@ public class ChatActivity extends AppCompatActivity {
     private EditText mInputMsg;
 
     // Chat messages list adapter
-    private ChatListAdapter adapter;
+    private ChatAdapter adapter;
     private List<Message> listMessages;
     private ListView listViewMessages;
 
@@ -41,20 +56,60 @@ public class ChatActivity extends AppCompatActivity {
     // Client name
     private String name = null;
 
-    // JSON flags to identify the kind of JSON response
-    private static final String TAG_SELF = "self", TAG_NEW = "new",
-            TAG_MESSAGE = "message", TAG_EXIT = "exit";
+    private ChatService mService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
+        initRetrofit();
         initFields();
+        initRecyclerView();
         initToolbar();
         initProfile();
+        loadHistory();
         receiveMessage();
+    }
 
+    private void receiveMessage() {
+        final BroadcastReceiver registrationBroadcast = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+/*                if (intent.getAction().equals(GCMRegistrationIntentService.REGISTRATION_SUCCESS)) {
+                    String token = intent.getStringExtra("token");
+                    Log.i(Constant.LOG, "GCM token:" + token);
+                    sendMessageToServer(token, false);
+                } else if (intent.getAction().equals(GCMRegistrationIntentService.REGISTRATION_ERROR)) {
+                    Log.i(Constant.LOG, "GCM registration error!!!");
+                }*/
+                String message = intent.getStringExtra("message");
+                sendMessageToServer(message, false);
+            }
+        };
+
+        registerReceiver(registrationBroadcast, new IntentFilter(Constant.MESSAGE_ACTION));
+    }
+
+    private void initRetrofit() {
+        final Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(Constant.BASE_URL)
+                .build();
+
+        mService = retrofit.create(ChatService.class);
+    }
+
+    private void initRecyclerView() {
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.chat_recycler);
+        adapter = new ChatAdapter(this, listMessages);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), 1, LinearLayoutManager.VERTICAL, false);
+        RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
+
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(gridLayoutManager);
+        recyclerView.setItemAnimator(itemAnimator);
+        recyclerView.scrollToPosition(listMessages.size() - 1);
     }
 
     private void initFields() {
@@ -62,16 +117,16 @@ public class ChatActivity extends AppCompatActivity {
         mInputMsg = (EditText) findViewById(R.id.chat_input);
         utils = new MessageUtil(getApplicationContext());
         listMessages = new ArrayList<Message>();
-        adapter = new ChatListAdapter(this, listMessages);
-        listViewMessages = (ListView) findViewById(R.id.chat_msg);
-        listViewMessages.setAdapter(adapter);
+//        adapter = new ChatListAdapter(this, listMessages);
+//        listViewMessages = (ListView) findViewById(R.id.chat_msg);
+//        listViewMessages.setAdapter(adapter);
 
     }
 
     private void initToolbar() {
         final Toolbar toolbar = (Toolbar) findViewById(R.id.chat_toolbar);
         final TextView title = (TextView) findViewById(R.id.chat_title);
-        title.setText("hui");
+        title.setText("Name");
         toolbar.setNavigationIcon(R.drawable.back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,92 +139,21 @@ public class ChatActivity extends AppCompatActivity {
     private void initProfile() {
 //        Intent intent = getIntent();
 //        name = intent.getStringExtra("name");
-//        name = intent.getStringExtra("name");
-//        name = intent.getStringExtra("name");
     }
 
-    private void receiveMessage() {
-        sendMessageToServer("message", false);
+    private void loadHistory() {
     }
 
     private void sendMessageToServer(String message, boolean isSelf) {
         //TODO: to send message to web server
 
-        Message msg = null;
+        Message msg;
         if (isSelf) {
             msg = new Message("Dyuha", mInputMsg.getText().toString().trim(), true);
         } else {
             msg = new Message("Dyuha", message, false);
         }
         appendMessage(msg);
-    }
-
-    /**
-     * Parsing the JSON message received from server The intent of message will
-     * be identified by JSON node 'flag'. flag = self, message belongs to the
-     * person. flag = new, a new person joined the conversation. flag = message,
-     * a new message received from server. flag = exit, somebody left the
-     * conversation.
-     */
-    private void parseMessage(final String msg) {
-
-        try {
-            JSONObject jObj = new JSONObject(msg);
-
-            // JSON node 'flag'
-            String flag = jObj.getString("flag");
-
-            // if flag is 'self', this JSON contains session id
-            if (flag.equalsIgnoreCase(TAG_SELF)) {
-
-                String sessionId = jObj.getString("sessionId");
-
-                // Save the session id in shared preferences
-                utils.storeSessionId(sessionId);
-
-                Log.e(TAG, "Your session id: " + utils.getSessionId());
-
-            } else if (flag.equalsIgnoreCase(TAG_NEW)) {
-                // If the flag is 'new', new person joined the room
-                String name = jObj.getString("name");
-                String message = jObj.getString("message");
-
-                // number of people online
-                String onlineCount = jObj.getString("onlineCount");
-
-                showToast(name + message + ". Currently " + onlineCount
-                        + " people online!");
-
-            } else if (flag.equalsIgnoreCase(TAG_MESSAGE)) {
-                // if the flag is 'message', new message received
-                String fromName = name;
-                String message = jObj.getString("message");
-                String sessionId = jObj.getString("sessionId");
-                boolean isSelf = true;
-
-                // Checking if the message was sent by you
-                if (!sessionId.equals(utils.getSessionId())) {
-                    fromName = jObj.getString("name");
-                    isSelf = false;
-                }
-
-                Message m = new Message(fromName, message, isSelf);
-
-                // Appending the message to chat list
-                appendMessage(m);
-
-            } else if (flag.equalsIgnoreCase(TAG_EXIT)) {
-                // If the flag is 'exit', somebody left the conversation
-                String name = jObj.getString("name");
-                String message = jObj.getString("message");
-
-                showToast(name + message);
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
     }
 
     @Override
@@ -183,7 +167,6 @@ public class ChatActivity extends AppCompatActivity {
      */
     private void appendMessage(final Message m) {
         runOnUiThread(new Runnable() {
-
             @Override
             public void run() {
                 listMessages.add(m);
@@ -191,23 +174,11 @@ public class ChatActivity extends AppCompatActivity {
                 adapter.notifyDataSetChanged();
 
                 // Playing device's notification
-                playBeep();
+//                playBeep();
             }
         });
     }
 
-    private void showToast(final String message) {
-
-        runOnUiThread(new Runnable() {
-
-            @Override
-            public void run() {
-                Toast.makeText(getApplicationContext(), message,
-                        Toast.LENGTH_LONG).show();
-            }
-        });
-
-    }
 
     public void playBeep() {
 
@@ -234,13 +205,26 @@ public class ChatActivity extends AppCompatActivity {
         return new String(hexChars);
     }
 
-    public void onClickSendMessage(View view) {
-        // Sending message to web socket server
-        sendMessageToServer(utils.getSendMessageJSON(mInputMsg.getText()
-                .toString()), true);
+    public void onClickSendMessage(final View view) {
+        if (!mInputMsg.getText().toString().isEmpty()) {
+            final SendMessageQuery query = new SendMessageQuery();
+            query.token = Person.getToken();
+            query.message = mInputMsg.getText().toString().trim();
+            Call<SendMessageResponse> call = mService.sendMessage("userId", query);
+            call.enqueue(new Callback<SendMessageResponse>() {
+                @Override
+                public void onResponse(Response<SendMessageResponse> response, Retrofit retrofit) {
+                    if (response.body().success) {
+                        sendMessageToServer(query.message, true);
+                        mInputMsg.setText(null);
+                    }
+                }
 
-        // Clearing the input filed once message was sent
-        mInputMsg.setText(null);
-
+                @Override
+                public void onFailure(Throwable t) {
+                    Snackbar.make(view, Constant.CONNECTION_ERROR, Snackbar.LENGTH_LONG).show();
+                }
+            });
+        }
     }
 }

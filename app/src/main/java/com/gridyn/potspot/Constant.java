@@ -23,4 +23,5 @@ public interface Constant {
     String AP_EMAIL = "email";
     String AP_PASSWORD = "password";
     String AP_LOG_IN = "log_out";
+    String MESSAGE_ACTION = "com.gridyn.potspot.NEW_MESSAGE";
 }

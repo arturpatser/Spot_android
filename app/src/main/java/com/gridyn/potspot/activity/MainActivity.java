@@ -1,5 +1,8 @@
 package com.gridyn.potspot.activity;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,9 +11,11 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +24,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.gson.Gson;
 import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
@@ -44,18 +50,41 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        onGoogleMessageService();
         ifLoginTrue();
+    }
+
+    private void onGoogleMessageService() {
         mRegistrationBroadcast = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (intent.getAction().equals(GCMRegistrationIntentService.REGISTRATION_SUCCESS)) {
+               /* if (intent.getAction().equals(GCMRegistrationIntentService.REGISTRATION_SUCCESS)) {
                     String token = intent.getStringExtra("token");
                     Log.i(Constant.LOG, "GCM token:" + token);
                 } else if (intent.getAction().equals(GCMRegistrationIntentService.REGISTRATION_ERROR)) {
                     Log.i(Constant.LOG, "GCM registration error!!!");
+                }*/
+                try {
+                    Uri notification = RingtoneManager
+                            .getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                    Ringtone r = RingtoneManager.getRingtone(getApplicationContext(),
+                            notification);
+                    r.play();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+                PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(context, ChatActivity.class), PendingIntent.FLAG_ONE_SHOT);
+                Notification.Builder builder = new Notification.Builder(getApplicationContext())
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setContentText(intent.getStringExtra("message"))
+                        .setContentIntent(pendingIntent);
+
+                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                notificationManager.notify(1010, builder.build());
             }
         };
+
+        registerReceiver(mRegistrationBroadcast, new IntentFilter(Constant.MESSAGE_ACTION));
 
         int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
         if (ConnectionResult.SUCCESS != resultCode) {
@@ -91,6 +120,9 @@ public class MainActivity extends AppCompatActivity {
             if (settings.contains(Constant.AP_PASSWORD)) {
                 map.put("password", settings.getString(Constant.AP_PASSWORD, ""));
             }
+            map.put("android_id", Person.getAndroidId());
+
+            Log.i(Constant.LOG, "ifLoginTrue: " + new Gson().toJson(map));
 
             final UserService service = retrofit.create(UserService.class);
             Call<UserLoginResponse> call = service.loginUser(map);
@@ -114,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
                     if (mProgressDialog.isShowing()) {
                         mProgressDialog.dismiss();
                     }
-                    Snackbar.make(findViewById(android.R.id.content), Constant.CONNECTION_ERROR, Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(android.R.id.content), Constant.CONNECTION_ERROR + ": user/login", Snackbar.LENGTH_SHORT).show();
                 }
             });
         } else {
@@ -130,17 +162,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcast,
-                new IntentFilter(GCMRegistrationIntentService.REGISTRATION_SUCCESS));
-        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcast,
-                new IntentFilter(GCMRegistrationIntentService.REGISTRATION_ERROR));
-
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcast);
+//        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcast);
     }
 
     private void setFonts() {
@@ -201,10 +228,11 @@ public class MainActivity extends AppCompatActivity {
                 Person.setHost(message.system.isVerified);
                 intent.putExtra("name", message.data.name);
                 intent.putExtra("email", message.data.email);
+                Log.i(Constant.LOG, "android id from the server: " + message.system.androidId);
                 try {
-                    intent.putExtra("avatar", message.data.imgs[0]);
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    intent.putExtra("avatar", Constant.BASE_IMAGE);
+                    intent.putExtra("avatar", message.data.imgs.get(0));
+                } catch (IndexOutOfBoundsException e) {
+                    intent.putExtra("avatar", Constant.URL_IMAGE + Constant.BASE_IMAGE);
                 }
                 if (mProgressDialog.isShowing()) {
                     mProgressDialog.dismiss();
@@ -217,7 +245,7 @@ public class MainActivity extends AppCompatActivity {
                 if (mProgressDialog.isShowing()) {
                     mProgressDialog.dismiss();
                 }
-                Snackbar.make(findViewById(android.R.id.content), Constant.CONNECTION_ERROR, Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(android.R.id.content), Constant.CONNECTION_ERROR + ": user/{id}", Snackbar.LENGTH_SHORT).show();
             }
         });
     }

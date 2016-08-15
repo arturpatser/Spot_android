@@ -92,6 +92,7 @@ public class SignUpActivity extends AppCompatActivity {
             mapJson.put("name", name);
             mapJson.put("email", email);
             mapJson.put("password", password);
+            mapJson.put("country", "Canada");
 
             Call<UserCreateResponse> call = mService.createUser(mapJson);
 

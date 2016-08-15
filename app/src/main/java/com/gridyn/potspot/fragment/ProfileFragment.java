@@ -52,7 +52,9 @@ public class ProfileFragment extends Fragment {
 
     private CircleImageView mAvatar;
     private TextView mBirthdate;
-    private TextView mCardDescription;
+    private TextView mSpotName;
+    private TextView mSpotAddress;
+    private TextView mSpotPrice;
     private TextView mCountReview;
     private TextView mAddress;
     private TextView mGender;
@@ -140,7 +142,9 @@ public class ProfileFragment extends Fragment {
     private void initFields() {
         mAvatar = (CircleImageView) mView.findViewById(R.id.profile_ava);
         mBirthdate = (TextView) mView.findViewById(R.id.profile_birthdate);
-        mCardDescription = (TextView) mView.findViewById(R.id.profile_card_name);
+        mSpotName = (TextView) mView.findViewById(R.id.profile_card_name);
+        mSpotAddress = (TextView) mView.findViewById(R.id.profile_card_address);
+        mSpotPrice = (TextView) mView.findViewById(R.id.profile_card_price);
         mCountReview = (TextView) mView.findViewById(R.id.profile_count_reviews);
         mAddress = (TextView) mView.findViewById(R.id.profile_address);
         mGender = (TextView) mView.findViewById(R.id.profile_gender);
@@ -222,13 +226,14 @@ public class ProfileFragment extends Fragment {
                 } else {
                     mPayInfo.setText(NOT_SPECIFIED);
                 }
-                mWaitingForVerify = message.system.waitingForVerify;
+//                mWaitingForVerify = message.system.waitingForVerify;
+                mWaitingForVerify = false; //TODO: исправить mWaitingForVerify
                 mMemberSince.setText(new SimpleDateFormat("MMMM yyyy")
                         .format(new Date((long) message.system.timeCreated * 1000)));
-                if (message.data.imgs.length != 0) {
-                    if (!message.data.imgs[0].isEmpty()) {
+                if (message.data.imgs.size() != 0) {
+                    if (!message.data.imgs.get(0).isEmpty()) {
                         Picasso.with(mView.getContext())
-                                .load(URL_IMAGE + message.data.imgs[0])
+                                .load(URL_IMAGE + message.data.imgs.get(0))
                                 .into(mAvatar);
                     }
                 } else {
@@ -236,7 +241,21 @@ public class ProfileFragment extends Fragment {
                             .load(URL_IMAGE + BASE_IMAGE)
                             .into(mAvatar);
                 }
+                if (message.data.spot != null) {
+                    loadSpotInfo(message);
+                } else {
+                    mCard.setVisibility(View.GONE);
+                    mTVListing.setVisibility(View.GONE);
+                }
             }
+
+            private void loadSpotInfo(UserInfoResponse.Message message) {
+                final UserInfoResponse.Message.Data.Spot.Data_ spot = message.data.spot.get(0).data;
+                mSpotName.setText(spot.name);
+                mSpotAddress.setText(spot.address);
+                mSpotPrice.setText(spot.price.toString());
+            }
+
 
             @Override
             public void onFailure(Throwable t) {
