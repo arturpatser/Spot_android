@@ -7,4 +7,7 @@
 
     <dimen name="circle_tv">36dp</dimen>
     <dimen name="some_view">30dp</dimen>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
 </resources>

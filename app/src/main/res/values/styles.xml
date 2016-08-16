@@ -4,6 +4,8 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimaryDark">@android:color/transparent</item>
         <item name="colorAccent">@android:color/white</item>
+        <item name="colorControlActivated">@color/mainRed</item>
+        <item name="colorControlHighlight">@color/mainRed</item>
     </style>
 
     <style name="AppTheme.Other" parent="AppTheme">
@@ -52,5 +54,11 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="RedStorkeEditText">
+
+
+
+    </style>
 
 </resources>
