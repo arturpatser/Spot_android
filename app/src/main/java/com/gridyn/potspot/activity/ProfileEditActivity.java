@@ -27,12 +27,16 @@ import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.FastBlur;
 import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
+import com.gridyn.potspot.model.events.VerifyPhoneEvent;
 import com.gridyn.potspot.query.UserUpdateQuery;
 import com.gridyn.potspot.response.UserInfoResponse;
 import com.gridyn.potspot.response.UserUpdateResponse;
 import com.gridyn.potspot.service.UserService;
 import com.squareup.picasso.Picasso;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -360,10 +364,27 @@ public class ProfileEditActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe
+    public void handleEvent(VerifyPhoneEvent event) {
+
+        if (event.verified) {
+
+            mPhone.setText(event.phone);
+        }
+
+        EventBus.getDefault().removeStickyEvent(event);
+    }
 
     @Override
     public void onStart() {
         super.onStart();
+        EventBus.getDefault().register(this);
         Map<String, String> mapToken = new HashMap<>();
         mapToken.put("token", Person.getToken());
         Call<UserInfoResponse> call = mService.getUserInfo(Person.getId(), mapToken);

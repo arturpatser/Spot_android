@@ -16,9 +16,13 @@ import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
 import com.gridyn.potspot.databinding.FragmentEnterCodeBinding;
+import com.gridyn.potspot.model.events.VerifyPhoneEvent;
 import com.gridyn.potspot.query.PhoneConfirmQuery;
 import com.gridyn.potspot.response.PhoneConfirmResponse;
 import com.gridyn.potspot.service.UserService;
+import com.gridyn.potspot.utils.FragmentUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -57,8 +61,6 @@ public class EnterCodeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setHasOptionsMenu(true);
-
         if (getArguments() != null) {
 
             rightPart = getArguments().getString(ARG_RIGHT_PART);
@@ -66,6 +68,8 @@ public class EnterCodeFragment extends Fragment {
 
             Log.d(TAG, "onCreate: received phone = " + leftPart + " " + rightPart);
         }
+
+        initRetrofit();
     }
 
     @Override
@@ -81,13 +85,23 @@ public class EnterCodeFragment extends Fragment {
 
         binding.setLeftPart(leftPart);
         binding.setRightPart(rightPart);
+        binding.setOnChangeClick(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                FragmentUtils.closeFragment(getContext(), TAG);
+            }
+        });
+
+        setHasOptionsMenu(true);
 
         return rootView;
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.verify_phone_number, menu);
+        menu.clear();
+        inflater.inflate(R.menu.confirm_phone_number, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -104,7 +118,7 @@ public class EnterCodeFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (item.getItemId() == R.id.verify) {
+        if (item.getItemId() == R.id.confirm) {
 
             Log.d(TAG, "onOptionsItemSelected: send code clicked");
 
@@ -114,30 +128,36 @@ public class EnterCodeFragment extends Fragment {
             phoneConfirmQuery.setToken(Person.getToken());
             phoneConfirmQuery.setCode(code.getText().toString());
 
-            Call<PhoneConfirmResponse> call = mService.confirmPhone(phoneConfirmQuery);
+            if (!code.getText().toString().isEmpty()) {
 
-            call.enqueue(new Callback<PhoneConfirmResponse>() {
-                @Override
-                public void onResponse(Response<PhoneConfirmResponse> response, Retrofit retrofit) {
+                Call<PhoneConfirmResponse> call = mService.confirmPhone(phoneConfirmQuery);
 
-                    PhoneConfirmResponse resp = response.body();
+                call.enqueue(new Callback<PhoneConfirmResponse>() {
+                    @Override
+                    public void onResponse(Response<PhoneConfirmResponse> response, Retrofit retrofit) {
 
-                    if (resp != null && resp.success) {
+                        PhoneConfirmResponse resp = response.body();
 
+                        Log.d(TAG, "onResponse: " + resp);
 
-                    } else {
+                        if (resp != null && resp.success) {
 
+                            EventBus.getDefault().post(new VerifyPhoneEvent(true, leftPart.concat(rightPart)));
 
+                            getActivity().finish();
+                        } else {
+
+                            Log.e(TAG, "error = " );
+                        }
                     }
-                }
 
-                @Override
-                public void onFailure(Throwable t) {
+                    @Override
+                    public void onFailure(Throwable t) {
 
-                    Log.e(TAG, "onFailure: error while confirm code = " + Log.getStackTraceString(t));
-                }
-            });
-
+                        Log.e(TAG, "onFailure: error while confirm code = " + Log.getStackTraceString(t));
+                    }
+                });
+            }
             return true;
         } else {
             return super.onOptionsItemSelected(item);

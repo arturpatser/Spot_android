@@ -10,6 +10,10 @@
             name="rightPart"
             type="String" />
 
+        <variable
+            name="onChangeClick"
+            type="android.view.View.OnClickListener" />
+
     </data>
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -62,6 +66,7 @@
             android:textColor="@color/mainRed"
             android:id="@+id/textView5"
             android:gravity="center"
+            android:onClick="@{onChangeClick}"
             android:layout_marginTop="4dp" />
     </LinearLayout>
 </FrameLayout>

@@ -21,7 +21,9 @@ import com.gridyn.potspot.utils.FragmentUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit.Call;
+import retrofit.Callback;
 import retrofit.GsonConverterFactory;
+import retrofit.Response;
 import retrofit.Retrofit;
 
 public class VerifyPhoneNumber extends AppCompatActivity {
@@ -52,7 +54,9 @@ public class VerifyPhoneNumber extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 finish();
+
             }
         });
     }
@@ -80,8 +84,8 @@ public class VerifyPhoneNumber extends AppCompatActivity {
 
             Log.d(TAG, "onOptionsItemSelected: verify clicked");
 
-            String left = leftPart.getText().toString();
-            String right = rightPart.getText().toString();
+            final String left = leftPart.getText().toString();
+            final String right = rightPart.getText().toString();
 
             if (!left.isEmpty() && !right.isEmpty()) {
 
@@ -91,35 +95,34 @@ public class VerifyPhoneNumber extends AppCompatActivity {
 
                 Call<PhoneVerifyResponse> call = mService.verifyPhone(phoneVerifyQuery);
 
-                EnterCodeFragment enterCodeFragment = EnterCodeFragment.newInstance(left, right);
+                call.enqueue(new Callback<PhoneVerifyResponse>() {
+                    @Override
+                    public void onResponse(Response<PhoneVerifyResponse> response, Retrofit retrofit) {
 
-                FragmentUtils.openFragment(enterCodeFragment, R.id.root_frame, EnterCodeFragment.TAG,
-                        this, true);
+                        PhoneVerifyResponse resp = response.body();
 
-//                call.enqueue(new Callback<PhoneVerifyResponse>() {
-//                    @Override
-//                    public void onResponse(Response<PhoneVerifyResponse> response, Retrofit retrofit) {
-//
-//                        PhoneVerifyResponse resp = response.body();
-//
-//                        Log.d(TAG, "onResponse: " + resp);
-//
-//                        if (resp.success) {
-//
-//                            //TODO show code confirm layout
-//
-//                        } else {
-//
-//                            //TODO show error while send data
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Throwable t) {
-//
-//                        Log.e(TAG, "onFailure: server error while send code = " + Log.getStackTraceString(t));
-//                    }
-//                });
+                        Log.d(TAG, "onResponse: " + resp);
+
+                        if (resp.success) {
+
+                            //TODO show code confirm layout
+
+                            EnterCodeFragment enterCodeFragment = EnterCodeFragment.newInstance(left, right);
+
+                            FragmentUtils.openFragment(enterCodeFragment, R.id.root_frame, EnterCodeFragment.TAG,
+                                    VerifyPhoneNumber.this, true);
+                        } else {
+
+                            //TODO show error while send data
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+
+                        Log.e(TAG, "onFailure: server error while send code = " + Log.getStackTraceString(t));
+                    }
+                });
             }
             return true;
         } else {
