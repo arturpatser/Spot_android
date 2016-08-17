@@ -2,9 +2,11 @@ package com.gridyn.potspot.service;
 
 import com.gridyn.potspot.query.EnableHostQuery;
 import com.gridyn.potspot.query.FeedbackQuery;
+import com.gridyn.potspot.query.PhoneConfirmQuery;
 import com.gridyn.potspot.query.PhoneVerifyQuery;
 import com.gridyn.potspot.query.UserUpdateQuery;
 import com.gridyn.potspot.response.MySpotResponse;
+import com.gridyn.potspot.response.PhoneConfirmResponse;
 import com.gridyn.potspot.response.PhoneVerifyResponse;
 import com.gridyn.potspot.response.UserCommentCreateResponse;
 import com.gridyn.potspot.response.UserCommentDeleteResponse;
@@ -61,4 +63,7 @@ public interface UserService {
 
     @POST("user/phone/verify")
     Call<PhoneVerifyResponse> verifyPhone(@Body PhoneVerifyQuery phoneVerifyQuery);
+
+    @POST("user/phone/confirm")
+    Call<PhoneConfirmResponse> confirmPhone(@Body PhoneConfirmQuery phoneConfirmQuery);
 }

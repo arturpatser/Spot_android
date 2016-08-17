@@ -1,0 +1,68 @@
+<layout>
+
+    <data>
+
+        <variable
+            name="leftPart"
+            type="String" />
+
+        <variable
+            name="rightPart"
+            type="String" />
+
+    </data>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:clickable="true"
+    tools:context="com.gridyn.potspot.fragment.EnterCodeFragment">
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/activity_vertical_margin">
+
+        <EditText
+            style="@style/FeedbackEditText"
+            android:inputType="phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLength="9"
+            android:id="@+id/code"
+            android:hint="@string/code" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/sms_code_text"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:id="@+id/textView3"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@{leftPart + ' ' + rightPart}"
+            android:id="@+id/textView4"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:layout_marginTop="40dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/change_number"
+            android:textColor="@color/mainRed"
+            android:id="@+id/textView5"
+            android:gravity="center"
+            android:layout_marginTop="4dp" />
+    </LinearLayout>
+</FrameLayout>
+</layout>

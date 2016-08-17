@@ -6,10 +6,10 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 /**
- * Created by dmytro_vodnik on 8/16/16.
+ * Created by dmytro_vodnik on 8/17/16.
  * working on potspot project
  */
-public class PhoneVerifyResponse {
+public class PhoneConfirmResponse {
 
     @SerializedName("success")
     @Expose
