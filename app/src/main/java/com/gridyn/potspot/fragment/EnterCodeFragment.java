@@ -3,6 +3,8 @@ package com.gridyn.potspot.fragment;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +23,7 @@ import com.gridyn.potspot.query.PhoneConfirmQuery;
 import com.gridyn.potspot.response.PhoneConfirmResponse;
 import com.gridyn.potspot.service.UserService;
 import com.gridyn.potspot.utils.FragmentUtils;
+import com.gridyn.potspot.utils.WindowUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,6 +44,9 @@ public class EnterCodeFragment extends Fragment {
 
     @BindView(R.id.code)
     EditText code;
+
+    @BindView(R.id.root)
+    CoordinatorLayout root;
 
     public EnterCodeFragment() {
         // Required empty public constructor
@@ -129,6 +135,7 @@ public class EnterCodeFragment extends Fragment {
             if (!code.getText().toString().isEmpty()) {
 
                 Call<PhoneConfirmResponse> call = mService.confirmPhone(phoneConfirmQuery);
+                WindowUtils.hideKeyboardFrom(getContext(), code);
 
                 call.enqueue(new Callback<PhoneConfirmResponse>() {
                     @Override
@@ -147,6 +154,8 @@ public class EnterCodeFragment extends Fragment {
                         } else {
 
                             Log.e(TAG, "error = " );
+
+                            Snackbar.make(root, getString(R.string.invalid_code), Snackbar.LENGTH_SHORT).show();
                         }
                     }
 
@@ -154,6 +163,8 @@ public class EnterCodeFragment extends Fragment {
                     public void onFailure(Throwable t) {
 
                         Log.e(TAG, "onFailure: error while confirm code = " + Log.getStackTraceString(t));
+
+                        Snackbar.make(root, getString(R.string.error_connection), Snackbar.LENGTH_SHORT).show();
                     }
                 });
             }

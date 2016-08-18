@@ -3,6 +3,8 @@ package com.gridyn.potspot.activity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +19,7 @@ import com.gridyn.potspot.query.PhoneVerifyQuery;
 import com.gridyn.potspot.response.PhoneVerifyResponse;
 import com.gridyn.potspot.service.UserService;
 import com.gridyn.potspot.utils.FragmentUtils;
+import com.gridyn.potspot.utils.WindowUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,8 +58,26 @@ public class VerifyPhoneNumber extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                finish();
+            finish();
+            }
+        });
 
+        leftPart.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                if (s.length() == 3)
+                    rightPart.requestFocus();
             }
         });
     }
@@ -111,6 +132,8 @@ public class VerifyPhoneNumber extends AppCompatActivity {
 
                             FragmentUtils.openFragment(enterCodeFragment, R.id.root_frame, EnterCodeFragment.TAG,
                                     VerifyPhoneNumber.this, true);
+
+                            WindowUtils.hideKeyboardFrom(VerifyPhoneNumber.this, rightPart);
                         } else {
 
                             //TODO show error while send data

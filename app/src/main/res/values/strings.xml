@@ -148,4 +148,6 @@
     <string name="code">Code</string>
     <string name="sms_code_text">We\'ve sent you an SMS with activation code to your phone number:</string>
     <string name="change_number">change number</string>
+    <string name="invalid_code">Invalid verify code</string>
+    <string name="error_connection">Connection error</string>
 </resources>

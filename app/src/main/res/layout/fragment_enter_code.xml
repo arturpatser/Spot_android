@@ -16,12 +16,13 @@
 
     </data>
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     android:clickable="true"
+    android:id="@+id/root"
     tools:context="com.gridyn.potspot.fragment.EnterCodeFragment">
 
 
@@ -36,7 +37,7 @@
             android:inputType="phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLength="9"
+            android:maxLength="4"
             android:id="@+id/code"
             android:hint="@string/code" />
 
@@ -69,5 +70,5 @@
             android:onClick="@{onChangeClick}"
             android:layout_marginTop="4dp" />
     </LinearLayout>
-</FrameLayout>
+</android.support.design.widget.CoordinatorLayout>
 </layout>

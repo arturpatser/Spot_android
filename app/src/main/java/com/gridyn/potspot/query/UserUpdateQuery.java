@@ -55,4 +55,22 @@ public class UserUpdateQuery {
     @SerializedName("upload")
     @Expose
     public List<String> upload = new ArrayList<>();
+
+    @Override
+    public String toString() {
+        return "UserUpdateQuery{" +
+                "token='" + token + '\'' +
+                ", name='" + name + '\'' +
+                ", about='" + about + '\'' +
+                ", birthday='" + birthday + '\'' +
+                ", gender='" + gender + '\'' +
+                ", address='" + address + '\'' +
+                ", phone='" + phone + '\'' +
+                ", realID='" + realID + '\'' +
+                ", cardID='" + cardID + '\'' +
+                ", paypalID='" + paypalID + '\'' +
+                ", email='" + email + '\'' +
+                ", upload=" + upload +
+                '}';
+    }
 }
