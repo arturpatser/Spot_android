@@ -1,5 +1,6 @@
 package com.gridyn.potspot.fragment;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,13 +17,10 @@ import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
 import com.gridyn.potspot.databinding.FragmentEnterCodeBinding;
-import com.gridyn.potspot.model.events.VerifyPhoneEvent;
 import com.gridyn.potspot.query.PhoneConfirmQuery;
 import com.gridyn.potspot.response.PhoneConfirmResponse;
 import com.gridyn.potspot.service.UserService;
 import com.gridyn.potspot.utils.FragmentUtils;
-
-import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -142,8 +140,9 @@ public class EnterCodeFragment extends Fragment {
 
                         if (resp != null && resp.success) {
 
-                            EventBus.getDefault().post(new VerifyPhoneEvent(true, leftPart.concat(rightPart)));
-
+                            Intent intent = new Intent();
+                            intent.putExtra("phone", leftPart.concat(rightPart));
+                            getActivity().setResult(getActivity().RESULT_OK, intent);
                             getActivity().finish();
                         } else {
 

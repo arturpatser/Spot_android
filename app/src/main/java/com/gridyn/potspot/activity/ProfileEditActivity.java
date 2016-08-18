@@ -1,5 +1,6 @@
 package com.gridyn.potspot.activity;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -27,16 +28,12 @@ import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.FastBlur;
 import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
-import com.gridyn.potspot.model.events.VerifyPhoneEvent;
 import com.gridyn.potspot.query.UserUpdateQuery;
 import com.gridyn.potspot.response.UserInfoResponse;
 import com.gridyn.potspot.response.UserUpdateResponse;
 import com.gridyn.potspot.service.UserService;
 import com.squareup.picasso.Picasso;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -53,6 +50,7 @@ import static com.gridyn.potspot.Constant.BASE_IMAGE;
 
 public class ProfileEditActivity extends AppCompatActivity {
 
+    private static final String TAG = ProfileEditActivity.class.getName();
     private CircleImageView mAvatar;
     private TextView mName;
     private UserService mService;
@@ -258,7 +256,7 @@ public class ProfileEditActivity extends AppCompatActivity {
 //        AlertDialog dialog = builder.create();
 //        dialog.show();
 
-        startActivity(new Intent(this, VerifyPhoneNumber.class));
+        startActivityForResult(new Intent(this, VerifyPhoneNumber.class), 123);
     }
 
     public void onClickAboutMe(View view) {
@@ -358,6 +356,14 @@ public class ProfileEditActivity extends AppCompatActivity {
                 mAvatar.setImageBitmap(thumbnailBitmap);
                 mEncodedAvatar = BitmapHelper.encodeToString(thumbnailBitmap);
                 Log.i("profileEdit", "EncodedAvatar: \n\n" + mEncodedAvatar);
+            } else if ( requestCode == 123) {
+
+                if (resultCode == Activity.RESULT_OK) {
+
+                    Log.d(TAG, "onActivityResult: received data = " + data.getStringExtra("phone"));
+
+                    mPhone.setText(data.getStringExtra("phone"));
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -365,26 +371,9 @@ public class ProfileEditActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
-        EventBus.getDefault().unregister(this);
-        super.onStop();
-    }
-
-    @Subscribe
-    public void handleEvent(VerifyPhoneEvent event) {
-
-        if (event.verified) {
-
-            mPhone.setText(event.phone);
-        }
-
-        EventBus.getDefault().removeStickyEvent(event);
-    }
-
-    @Override
     public void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
+
         Map<String, String> mapToken = new HashMap<>();
         mapToken.put("token", Person.getToken());
         Call<UserInfoResponse> call = mService.getUserInfo(Person.getId(), mapToken);
@@ -412,7 +401,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                 if (!message.data.about.isEmpty()) {
                     mPhone.setText(message.data.phone);
                 } else {
-                    mPhone.setText("Set");
+//                    mPhone.setText("Set");
                 }
 //                mWaitingForVerify = message.system.waitingForVerify;
                 mWaitingForVerify = false; //TODO: исправить mWaitingForVerify
