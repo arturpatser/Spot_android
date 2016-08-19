@@ -126,6 +126,9 @@ public class UserInfoResponse {
                     @SerializedName("badge")
                     @Expose
                     public String badge;
+                    @SerializedName("imgs")
+                    @Expose
+                    public List<String> imgs = new ArrayList<>();
                 }
             }
 

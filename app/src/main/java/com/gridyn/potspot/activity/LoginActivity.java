@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
+import com.gridyn.potspot.query.LoginQuery;
 import com.gridyn.potspot.response.UserInfoResponse;
 import com.gridyn.potspot.response.UserLoginResponse;
 import com.gridyn.potspot.service.UserService;
@@ -104,17 +105,14 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onClickLogIn(final View view) {
-        final Map<String, String> map = new HashMap<>();
-        map.put("email", mEmail.getText().toString().trim());
-        map.put("password", mPassword.getText().toString().trim());
-        map.put("android_id", Person.getAndroidId());
+        final LoginQuery query = new LoginQuery();
+        query.email = mEmail.getText().toString().trim();
+        query.password = mPassword.getText().toString().trim();
+        query.androidId = Person.getAndroidId();
 
-        Log.i(Constant.LOG, "onClickLogIn: " + new Gson().toJson(map));
-//        map.put("email", "rpugase@gmail.com");
-//        map.put("password", "qwerty123");
+        Log.i(Constant.LOG, "onClickLogIn: " + new Gson().toJson(query));
 
-
-        Call<UserLoginResponse> call = mService.loginUser(map);
+        Call<UserLoginResponse> call = mService.loginUser(query);
 
         call.enqueue(new Callback<UserLoginResponse>() {
             @Override

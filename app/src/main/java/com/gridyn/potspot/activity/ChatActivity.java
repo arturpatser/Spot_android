@@ -15,9 +15,12 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -28,8 +31,9 @@ import com.gridyn.potspot.R;
 import com.gridyn.potspot.adapter.ChatAdapter;
 import com.gridyn.potspot.model.Message;
 import com.gridyn.potspot.query.SendMessageQuery;
-import com.gridyn.potspot.response.SendMessageResponse;
+import com.gridyn.potspot.response.MessageSendResponse;
 import com.gridyn.potspot.service.ChatService;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,8 +45,6 @@ import retrofit.Response;
 import retrofit.Retrofit;
 
 public class ChatActivity extends AppCompatActivity {
-    private static final String TAG = MainActivity.class.getSimpleName();
-
     private Button mBtnSend;
     private EditText mInputMsg;
 
@@ -53,8 +55,8 @@ public class ChatActivity extends AppCompatActivity {
 
     private MessageUtil utils;
 
-    // Client name
-    private String name = null;
+    private String mNameUser;
+    private String mNameSpot;
 
     private ChatService mService;
 
@@ -65,11 +67,25 @@ public class ChatActivity extends AppCompatActivity {
 
         initRetrofit();
         initFields();
+        initHeader();
         initRecyclerView();
         initToolbar();
-        initProfile();
         loadHistory();
         receiveMessage();
+    }
+
+    private void initHeader() {
+        final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.header_chat, (ViewGroup) findViewById(R.id.chat_header), false);
+        final TextView nameUser = (TextView) view.findViewById(R.id.ch_h_name);
+        final TextView nameSpot = (TextView) view.findViewById(R.id.ch_h_about);
+        nameUser.setText(mNameUser);
+        nameSpot.setText(mNameSpot);
+        Picasso.with(getApplicationContext())
+                .load(Constant.URL_IMAGE + getIntent().getExtras().getString("imgSpot"))
+                .into((ImageView) view.findViewById(R.id.ch_h_back));
+        Picasso.with(getApplicationContext())
+                .load(Constant.URL_IMAGE + getIntent().getExtras().getString("imgUser"))
+                .into((ImageView) view.findViewById(R.id.ch_h_img));
     }
 
     private void receiveMessage() {
@@ -117,16 +133,17 @@ public class ChatActivity extends AppCompatActivity {
         mInputMsg = (EditText) findViewById(R.id.chat_input);
         utils = new MessageUtil(getApplicationContext());
         listMessages = new ArrayList<Message>();
-//        adapter = new ChatListAdapter(this, listMessages);
-//        listViewMessages = (ListView) findViewById(R.id.chat_msg);
-//        listViewMessages.setAdapter(adapter);
+
+        Bundle args = getIntent().getExtras();
+        mNameUser = args.getString("userName");
+        mNameSpot = args.getString("spotName");
 
     }
 
     private void initToolbar() {
         final Toolbar toolbar = (Toolbar) findViewById(R.id.chat_toolbar);
         final TextView title = (TextView) findViewById(R.id.chat_title);
-        title.setText("Name");
+        title.setText(mNameUser);
         toolbar.setNavigationIcon(R.drawable.back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,11 +151,6 @@ public class ChatActivity extends AppCompatActivity {
                 finish();
             }
         });
-    }
-
-    private void initProfile() {
-//        Intent intent = getIntent();
-//        name = intent.getStringExtra("name");
     }
 
     private void loadHistory() {
@@ -151,7 +163,7 @@ public class ChatActivity extends AppCompatActivity {
         if (isSelf) {
             msg = new Message("Dyuha", mInputMsg.getText().toString().trim(), true);
         } else {
-            msg = new Message("Dyuha", message, false);
+            msg = new Message(mNameUser, message, false);
         }
         appendMessage(msg);
     }
@@ -210,10 +222,10 @@ public class ChatActivity extends AppCompatActivity {
             final SendMessageQuery query = new SendMessageQuery();
             query.token = Person.getToken();
             query.message = mInputMsg.getText().toString().trim();
-            Call<SendMessageResponse> call = mService.sendMessage("userId", query);
-            call.enqueue(new Callback<SendMessageResponse>() {
+            Call<MessageSendResponse> call = mService.sendMessage("userId", query);
+            call.enqueue(new Callback<MessageSendResponse>() {
                 @Override
-                public void onResponse(Response<SendMessageResponse> response, Retrofit retrofit) {
+                public void onResponse(Response<MessageSendResponse> response, Retrofit retrofit) {
                     if (response.body().success) {
                         sendMessageToServer(query.message, true);
                         mInputMsg.setText(null);
