@@ -398,10 +398,10 @@ public class ProfileEditActivity extends AppCompatActivity {
                     mBirthDay.setText("Set");
                 }
                 mEmail.setText(message.data.email);
-                if (!message.data.about.isEmpty()) {
+                if (!message.data.phone.isEmpty()) {
                     mPhone.setText(message.data.phone);
                 } else {
-//                    mPhone.setText("Set");
+                    mPhone.setText("Set");
                 }
 //                mWaitingForVerify = message.system.waitingForVerify;
                 mWaitingForVerify = false; //TODO: исправить mWaitingForVerify

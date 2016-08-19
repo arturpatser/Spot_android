@@ -212,7 +212,7 @@ public class ProfileFragment extends Fragment {
                     mBirthdate.setText(NOT_SPECIFIED);
                 }
                 mEmail.setText(message.data.email);
-                if (!message.data.about.isEmpty()) {
+                if (!message.data.phone.isEmpty()) {
                     mPhone.setText(message.data.phone);
                 } else {
                     mPhone.setText(NOT_SPECIFIED);
