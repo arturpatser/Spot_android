@@ -9,16 +9,20 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.github.clans.fab.FloatingActionButton;
@@ -53,10 +57,10 @@ import retrofit.Retrofit;
 
 public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
+    private static final String TAG = HomeFragment.class.getName();
     private View mView;
     private List<Spot> mSpotList;
     private boolean flag;
-    private Button mFindFirstAvailable;
     private SpotService mService;
 
 
@@ -65,6 +69,49 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         HomeFragment fragment = new HomeFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.home_fragment, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == R.id.add_spot) {
+
+            Log.d(TAG, "onOptionsItemSelected: add potspot clicked");
+
+            if (!Person.isHost()) {
+                Snackbar.make(getView(), "Your account is not verified", Snackbar.LENGTH_INDEFINITE)
+                        .setAction("goto verify", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                final Intent intent = new Intent(mView.getContext(), VerificationActivity.class);
+                                startActivity(intent);
+                            }
+                        })
+                        .setActionTextColor(getResources().getColor(R.color.mainRed))
+                        .show();
+            } else if (Person.isHost()) {
+                final Intent intent = new Intent(mView.getContext(), SpaceActivity.class);
+                startActivity(intent);
+            }
+
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -77,7 +124,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             initSpot();
             initRecyclerView();
             onClickFab();
-            onClickFindFirstAvailable();
             setFonts();
 
             final SupportMapFragment mapFragment = (SupportMapFragment)
@@ -138,26 +184,16 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void onClickFab() {
-        final FloatingActionButton host = (FloatingActionButton) mView.findViewById(R.id.fab_host);
+        final FloatingActionButton firstAvailable = (FloatingActionButton) mView.findViewById(R.id.fab_host);
         final FloatingActionButton search = (FloatingActionButton) mView.findViewById(R.id.fab_search);
-        host.setOnClickListener(new View.OnClickListener() {
+        firstAvailable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!Person.isHost()) {
-                    Snackbar.make(getView(), "Your account is not verified", Snackbar.LENGTH_INDEFINITE)
-                            .setAction("goto verify", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    final Intent intent = new Intent(mView.getContext(), VerificationActivity.class);
-                                    startActivity(intent);
-                                }
-                            })
-                            .setActionTextColor(getResources().getColor(R.color.mainRed))
-                            .show();
-                } else if (Person.isHost()) {
-                    final Intent intent = new Intent(mView.getContext(), SpaceActivity.class);
-                    startActivity(intent);
-                }
+
+                Log.d(TAG, "onClick: find first available clicked");
+
+                Intent intent = new Intent(mView.getContext(), SearchResultActivity.class);
+//                startActivity(intent);
             }
         });
         search.setOnClickListener(new View.OnClickListener() {
@@ -169,25 +205,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         });
     }
 
-    private void onClickFindFirstAvailable() {
-        mFindFirstAvailable = (Button) mView.findViewById(R.id.btn_find_available);
-        mFindFirstAvailable.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO: retrofit
-                Intent intent = new Intent(mView.getContext(), SearchResultActivity.class);
-                startActivity(intent);
-            }
-        });
-    }
-
     private void setFonts() {
         final AssetManager assetManager = getContext().getAssets();
         final TextView listingOnMap = (TextView) mView.findViewById(R.id.home_listing_map);
         final TextView allListing = (TextView) mView.findViewById(R.id.home_all_listing);
         listingOnMap.setTypeface(Typeface.createFromAsset(assetManager, "fonts/Roboto-Regular.ttf"));
         allListing.setTypeface(Typeface.createFromAsset(assetManager, "fonts/Roboto-Regular.ttf"));
-        mFindFirstAvailable.setTypeface(Typeface.createFromAsset(assetManager, "fonts/Roboto-Medium.ttf"));
     }
 
     @Override
