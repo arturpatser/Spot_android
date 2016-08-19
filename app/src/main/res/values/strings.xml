@@ -141,4 +141,13 @@
         <item>Yes</item>
         <item>No</item>
     </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="confirm_phone">Please confirm your country code and enter your phone number</string>
+    <string name="code">Code</string>
+    <string name="sms_code_text">We\'ve sent you an SMS with activation code to your phone number:</string>
+    <string name="change_number">change number</string>
+    <string name="invalid_code">Invalid verify code</string>
+    <string name="error_connection">Connection error</string>
 </resources>

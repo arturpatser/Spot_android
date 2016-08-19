@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.gridyn.potspot.activity.VerifyPhoneNumber">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:background="@color/colorPrimary"
+        android:layout_height="?android:actionBarSize">
+
+    </android.support.v7.widget.Toolbar>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/root_frame"
+        android:layout_below="@+id/toolbar">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_below="@+id/toolbar"
+                android:layout_alignParentStart="true"
+                android:padding="16dp"
+                android:id="@+id/linearLayout">
+
+                <EditText
+                    style="@style/FeedbackEditText"
+                    android:inputType="phone"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:maxLength="3"
+                    android:layout_weight="0.2"
+                    android:id="@+id/left" />
+
+                <EditText
+                    style="@style/FeedbackEditText"
+                    android:inputType="phone"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:maxLength="9"
+                    android:layout_weight="0.8"
+                    android:id="@+id/right" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/confirm_phone"
+                android:id="@+id/textView2"
+                android:layout_below="@+id/linearLayout"
+                android:layout_centerHorizontal="true"
+                android:gravity="left" />
+        </LinearLayout>
+    </FrameLayout>
+
+
+</RelativeLayout>

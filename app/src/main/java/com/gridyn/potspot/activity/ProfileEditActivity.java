@@ -1,5 +1,6 @@
 package com.gridyn.potspot.activity;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,7 +11,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,10 +47,10 @@ import retrofit.Response;
 import retrofit.Retrofit;
 
 import static com.gridyn.potspot.Constant.BASE_IMAGE;
-import static com.gridyn.potspot.Constant.URL_IMAGE;
 
 public class ProfileEditActivity extends AppCompatActivity {
 
+    private static final String TAG = ProfileEditActivity.class.getName();
     private CircleImageView mAvatar;
     private TextView mName;
     private UserService mService;
@@ -229,32 +229,34 @@ public class ProfileEditActivity extends AppCompatActivity {
     }
 
     public void onClickPhone(View view) {
-        final View dialogView = getLayoutInflater()
-                .inflate(R.layout.dialog_input_field, (ViewGroup) findViewById(R.id.dialog_input_field));
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        final EditText inputField = (EditText) dialogView.findViewById(R.id.profile_edit_input_field);
-        inputField.setInputType(InputType.TYPE_CLASS_PHONE);
-        if (!mPhone.getText().toString().equals(getResources().getString(R.string.set))) {
-            inputField.setText(mPhone.getText().toString());
-        }
-        builder.setTitle(R.string.phone);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (!inputField.getText().toString().isEmpty()) {
-                    mPhone.setText(inputField.getText().toString().trim());
-                }
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        builder.setView(dialogView);
-        AlertDialog dialog = builder.create();
-        dialog.show();
+//        final View dialogView = getLayoutInflater()
+//                .inflate(R.layout.dialog_input_field, (ViewGroup) findViewById(R.id.dialog_input_field));
+//        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        final EditText inputField = (EditText) dialogView.findViewById(R.id.profile_edit_input_field);
+//        inputField.setInputType(InputType.TYPE_CLASS_PHONE);
+//        if (!mPhone.getText().toString().equals(getResources().getString(R.string.set))) {
+//            inputField.setText(mPhone.getText().toString());
+//        }
+//        builder.setTitle(R.string.phone);
+//        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                if (!inputField.getText().toString().isEmpty()) {
+//                    mPhone.setText(inputField.getText().toString().trim());
+//                }
+//            }
+//        });
+//        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                dialog.cancel();
+//            }
+//        });
+//        builder.setView(dialogView);
+//        AlertDialog dialog = builder.create();
+//        dialog.show();
+
+        startActivityForResult(new Intent(this, VerifyPhoneNumber.class), 123);
     }
 
     public void onClickAboutMe(View view) {
@@ -354,16 +356,24 @@ public class ProfileEditActivity extends AppCompatActivity {
                 mAvatar.setImageBitmap(thumbnailBitmap);
                 mEncodedAvatar = BitmapHelper.encodeToString(thumbnailBitmap);
                 Log.i("profileEdit", "EncodedAvatar: \n\n" + mEncodedAvatar);
+            } else if ( requestCode == 123) {
+
+                if (resultCode == Activity.RESULT_OK) {
+
+                    Log.d(TAG, "onActivityResult: received data = " + data.getStringExtra("phone"));
+
+                    mPhone.setText(data.getStringExtra("phone"));
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-
     @Override
     public void onStart() {
         super.onStart();
+
         Map<String, String> mapToken = new HashMap<>();
         mapToken.put("token", Person.getToken());
         Call<UserInfoResponse> call = mService.getUserInfo(Person.getId(), mapToken);
@@ -391,7 +401,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                 if (!message.data.about.isEmpty()) {
                     mPhone.setText(message.data.phone);
                 } else {
-                    mPhone.setText("Set");
+//                    mPhone.setText("Set");
                 }
 //                mWaitingForVerify = message.system.waitingForVerify;
                 mWaitingForVerify = false; //TODO: исправить mWaitingForVerify
