@@ -112,7 +112,13 @@ public class SignUpActivity extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                     } else {
-                        Snackbar.make(view, "Input data is not correct.", Snackbar.LENGTH_SHORT).show();
+                        if (res.message.get(0).email != null) {
+                            Snackbar.make(view, res.message.get(0).email, Snackbar.LENGTH_SHORT).show();
+                        } else if (res.message.get(0).password != null) {
+                            Snackbar.make(view, res.message.get(0).password, Snackbar.LENGTH_SHORT).show();
+                        } else if (res.message.get(0).name != null) {
+                            Snackbar.make(view, res.message.get(0).name, Snackbar.LENGTH_SHORT).show();
+                        }
                     }
                 }
 

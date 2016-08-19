@@ -157,8 +157,6 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void sendMessageToServer(String message, boolean isSelf) {
-        //TODO: to send message to web server
-
         Message msg;
         if (isSelf) {
             msg = new Message("Dyuha", mInputMsg.getText().toString().trim(), true);

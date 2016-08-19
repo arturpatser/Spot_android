@@ -42,33 +42,26 @@ public class UserInfoResponse {
             @SerializedName("email")
             @Expose
             public String email;
+            @SerializedName("country")
+            @Expose
+            public String country;
             @SerializedName("about")
             @Expose
             public String about;
+            @SerializedName("phone")
+            @Expose
+            public String phone;
+            @SerializedName("address")
+            @Expose
+            public String address;
+            public String paypalID; //TODO: delete
+            public String cardID; //TODO: delete
             @SerializedName("birthday")
             @Expose
             public String birthday;
             @SerializedName("gender")
             @Expose
             public String gender;
-            @SerializedName("address")
-            @Expose
-            public String address;
-            @SerializedName("phone")
-            @Expose
-            public String phone;
-            @SerializedName("real_ID")
-            @Expose
-            public String realID;
-            @SerializedName("card_ID")
-            @Expose
-            public String cardID;
-            @SerializedName("paypal_ID")
-            @Expose
-            public String paypalID;
-            /*     @SerializedName("googlemapsapi")
-                 @Expose
-                 public Googlemapsapi googlemapsapi;*/
             @SerializedName("imgs")
             @Expose
             public List<String> imgs = new ArrayList<>();
@@ -98,7 +91,6 @@ public class UserInfoResponse {
                 }
 
                 public static class Data_ {
-
                     @SerializedName("name")
                     @Expose
                     public String name;
@@ -110,7 +102,7 @@ public class UserInfoResponse {
                     public Integer price;
                     @SerializedName("maxGuests")
                     @Expose
-                    public int maxGuests;
+                    public String maxGuests;
                     @SerializedName("type")
                     @Expose
                     public String type;
@@ -119,16 +111,49 @@ public class UserInfoResponse {
                     public String about;
                     @SerializedName("time")
                     @Expose
-                    public List<Integer> time = new ArrayList<Integer>();
+                    public String time;
                     @SerializedName("days")
                     @Expose
-                    public List<String> days = new ArrayList<String>();
+                    public String days;
                     @SerializedName("badge")
                     @Expose
                     public String badge;
-                    @SerializedName("imgs")
+                    @SerializedName("country")
                     @Expose
-                    public List<String> imgs = new ArrayList<>();
+                    public String country;
+        /*            @SerializedName("googlemapsapi")
+                    @Expose
+                    public Googlemapsapi googlemapsapi;*/
+                }
+
+                public static class System {
+                    @SerializedName("owner")
+                    @Expose
+                    public String owner;
+                    @SerializedName("isVerified")
+                    @Expose
+                    public boolean isVerified;
+                    @SerializedName("TimeVerified")
+                    @Expose
+                    public int timeVerified;
+                    @SerializedName("waitingForVerify")
+                    @Expose
+                    public boolean waitingForVerify;
+                    @SerializedName("isActive")
+                    @Expose
+                    public boolean isActive;
+                    @SerializedName("TimeCreated")
+                    @Expose
+                    public int timeCreated;
+                    @SerializedName("TimeUpdated")
+                    @Expose
+                    public int timeUpdated;
+                    @SerializedName("IP_Created")
+                    @Expose
+                    public String iPCreated;
+                    @SerializedName("IP_Updated")
+                    @Expose
+                    public String iPUpdated;
                 }
             }
 
@@ -143,36 +168,9 @@ public class UserInfoResponse {
                 public boolean hostToken;
 
             }
-
-            public static class System {
-
-                @SerializedName("owner")
-                @Expose
-                public String owner;
-                @SerializedName("isVerified")
-                @Expose
-                public boolean isVerified;
-                @SerializedName("TimeVerified")
-                @Expose
-                public int timeVerified;
-                @SerializedName("TimeCreated")
-                @Expose
-                public int timeCreated;
-                @SerializedName("TimeUpdated")
-                @Expose
-                public int timeUpdated;
-                @SerializedName("IP_Created")
-                @Expose
-                public String iPCreated;
-                @SerializedName("IP_Updated")
-                @Expose
-                public String iPUpdated;
-
-            }
         }
 
-        public class System_ {
-
+        public static class System_ {
             @SerializedName("access")
             @Expose
             public String access;
@@ -188,6 +186,9 @@ public class UserInfoResponse {
             @SerializedName("TimeVerified")
             @Expose
             public int timeVerified;
+            @SerializedName("PhoneVerified")
+            @Expose
+            public boolean phoneVerified;
             @SerializedName("TimeCreated")
             @Expose
             public int timeCreated;
@@ -200,10 +201,12 @@ public class UserInfoResponse {
             @SerializedName("IP_Updated")
             @Expose
             public String iPUpdated;
+            @SerializedName("waitingForVerify")
+            @Expose
+            public boolean waitingForVerify;
             @SerializedName("android_id")
             @Expose
             public String androidId;
-
         }
     }
 }
