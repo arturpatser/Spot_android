@@ -2,6 +2,7 @@ package com.gridyn.potspot.service;
 
 import com.gridyn.potspot.query.EnableHostQuery;
 import com.gridyn.potspot.query.FeedbackQuery;
+import com.gridyn.potspot.query.LoginQuery;
 import com.gridyn.potspot.query.UserUpdateQuery;
 import com.gridyn.potspot.response.MySpotResponse;
 import com.gridyn.potspot.response.UserCommentCreateResponse;
@@ -30,7 +31,7 @@ public interface UserService {
     Call<UserInfoResponse> getUserInfo(@Path("id") String id, @Body Map<String, String> token);
 
     @POST("user/login")
-    Call<UserLoginResponse> loginUser(@Body Map<String, String> data);
+    Call<UserLoginResponse> loginUser(@Body LoginQuery data);
 
     @POST("user/update")
     Call<UserUpdateResponse> updateUser(@Body UserUpdateQuery dataForUpdate);

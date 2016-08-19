@@ -28,6 +28,7 @@ import com.google.gson.Gson;
 import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
+import com.gridyn.potspot.query.LoginQuery;
 import com.gridyn.potspot.response.UserInfoResponse;
 import com.gridyn.potspot.response.UserLoginResponse;
 import com.gridyn.potspot.service.GCMRegistrationIntentService;
@@ -113,19 +114,19 @@ public class MainActivity extends AppCompatActivity {
                     .baseUrl(Constant.BASE_URL)
                     .build();
 
-            final Map<String, String> map = new HashMap<>();
+            final LoginQuery query = new LoginQuery();
             if (settings.contains(Constant.AP_EMAIL)) {
-                map.put("email", settings.getString(Constant.AP_EMAIL, ""));
+                query.email = settings.getString(Constant.AP_EMAIL, "");
             }
             if (settings.contains(Constant.AP_PASSWORD)) {
-                map.put("password", settings.getString(Constant.AP_PASSWORD, ""));
+                query.password = settings.getString(Constant.AP_PASSWORD, "");
             }
-            map.put("android_id", Person.getAndroidId());
+            query.androidId = Person.getAndroidId();
 
-            Log.i(Constant.LOG, "ifLoginTrue: " + new Gson().toJson(map));
+            Log.i(Constant.LOG, "ifLoginTrue: " + new Gson().toJson(query));
 
             final UserService service = retrofit.create(UserService.class);
-            Call<UserLoginResponse> call = service.loginUser(map);
+            Call<UserLoginResponse> call = service.loginUser(query);
 
             call.enqueue(new Callback<UserLoginResponse>() {
                 @Override

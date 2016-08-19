@@ -13,8 +13,7 @@ public class LoginQuery {
     @Expose
     public String password;
 
-    public LoginQuery(String email, String password) {
-        this.email = email;
-        this.password = password;
-    }
+    @SerializedName("android_id")
+    @Expose
+    public String androidId;
 }

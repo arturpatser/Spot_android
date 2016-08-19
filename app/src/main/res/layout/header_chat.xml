@@ -5,6 +5,12 @@
     android:layout_height="match_parent"
     android:id="@+id/chat_header">
 
+    <ImageView
+        android:id="@+id/ch_h_back"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"/>
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/ch_h_img"
         android:layout_width="48dp"
