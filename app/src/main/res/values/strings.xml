@@ -120,7 +120,7 @@
     <string name="visit_date">Visit Date</string>
     <string name="visit_time">Visit Time</string>
     <string name="by">by </string>
-    <string name="sign_out">Sign_out</string>
+    <string name="sign_out">Sign out</string>
     <string name="message_hint">Say anithing</string>
     <string name="send">Send</string>
     <string name="type_a_message">Type a message</string>
@@ -150,4 +150,8 @@
     <string name="change_number">change number</string>
     <string name="invalid_code">Invalid verify code</string>
     <string name="error_connection">Connection error</string>
+    <string name="become_a_host">Become a host!</string>
+    <string name="paid_spots">Paid spots</string>
+    <string name="favourites">Favourites</string>
+    <string name="my_money">My money</string>
 </resources>

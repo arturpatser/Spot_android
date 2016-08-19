@@ -2,6 +2,7 @@ package com.gridyn.potspot.service;
 
 import com.gridyn.potspot.query.EnableHostQuery;
 import com.gridyn.potspot.query.FeedbackQuery;
+import com.gridyn.potspot.query.LoginQuery;
 import com.gridyn.potspot.query.PhoneConfirmQuery;
 import com.gridyn.potspot.query.PhoneVerifyQuery;
 import com.gridyn.potspot.query.UserUpdateQuery;

@@ -2,6 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="none">
+
+        <item
+            android:id="@+id/nav_become_host"
+            android:icon="@drawable/add"
+            android:title="@string/become_a_host" />
+
         <item
             android:id="@+id/nav_search"
             android:icon="@android:drawable/ic_search_category_default"
@@ -14,13 +20,23 @@
 
         <item
             android:id="@+id/nav_pay_spot"
-            android:icon="@drawable/menu_pay_spot"
-            android:title="@string/nd_pay_spot" />
+            android:icon="@drawable/ic_place_grey_24dp"
+            android:title="@string/paid_spots" />
+
+        <item
+            android:id="@+id/nav_favourites"
+            android:icon="@drawable/ic_favorite_grey_24dp"
+            android:title="@string/favourites" />
 
         <item
             android:id="@+id/nav_my_spot"
             android:icon="@drawable/menu_balcony"
             android:title="@string/nd_my_spots"/>
+
+        <item
+            android:id="@+id/nav_my_money"
+            android:icon="@drawable/dollar"
+            android:title="@string/my_money" />
 
         <item
             android:id="@+id/nav_friends"
@@ -33,6 +49,7 @@
             android:title="@string/nd_give_feedback" />
 
         <item
+            android:icon="@drawable/exit"
             android:id="@+id/nav_log_out"
             android:title="@string/sign_out" />
     </group>
