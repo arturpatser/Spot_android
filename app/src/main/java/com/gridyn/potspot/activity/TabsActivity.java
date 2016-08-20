@@ -1,5 +1,6 @@
 package com.gridyn.potspot.activity;
 
+import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,11 +15,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import com.gridyn.potspot.Constant;
+import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
 import com.gridyn.potspot.SelectPageUtil;
 import com.gridyn.potspot.adapter.TabsPagerFragmentAdapter;
@@ -29,6 +32,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class TabsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static final String TAG = TabActivity.class.getName();
     private Toolbar mToolbar;
     private DrawerLayout mDrawer;
     private View mHeaderView;
@@ -104,6 +108,28 @@ public class TabsActivity extends AppCompatActivity
         Intent intent = null;
 
         switch (item.getItemId()) {
+
+            case R.id.nav_become_host:
+
+                Log.d(TAG, "onOptionsItemSelected: add potspot clicked");
+
+                if (!Person.isHost()) {
+                    Snackbar.make(mDrawer, "Your account is not verified", Snackbar.LENGTH_INDEFINITE)
+                            .setAction("goto verify", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    final Intent intent = new Intent(TabsActivity.this, VerificationActivity.class);
+                                    startActivity(intent);
+                                }
+                            })
+                            .setActionTextColor(getResources().getColor(R.color.mainRed))
+                            .show();
+                } else if (Person.isHost()) {
+                    intent = new Intent(TabsActivity.this, SpaceActivity.class);
+                }
+
+                    break;
+
             case R.id.nav_search:
                 intent = new Intent(this, SearchCriteriaActivity.class);
                 break;
