@@ -111,13 +111,13 @@ public class UserInfoResponse {
                     public String about;
                     @SerializedName("time")
                     @Expose
-                    public String time;
+                    public String[] time = new String[2];
                     @SerializedName("days")
                     @Expose
-                    public String days;
+                    public List<String> days = new ArrayList<>();
                     @SerializedName("badge")
                     @Expose
-                    public String badge;
+                    public List<String> badge = new ArrayList<>();
                     @SerializedName("country")
                     @Expose
                     public String country;

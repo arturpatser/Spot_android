@@ -247,6 +247,7 @@ public class MainActivity extends AppCompatActivity {
                     mProgressDialog.dismiss();
                 }
                 Snackbar.make(findViewById(android.R.id.content), Constant.CONNECTION_ERROR + ": user/{id}", Snackbar.LENGTH_SHORT).show();
+                Log.i(Constant.LOG, "user/{id}" + t.getMessage());
             }
         });
     }
