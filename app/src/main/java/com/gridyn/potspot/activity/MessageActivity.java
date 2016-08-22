@@ -72,7 +72,7 @@ public class MessageActivity extends AppCompatActivity {
                     List<MessageLastResponse.Message.Message_> messages = response.body().message.get(0).messages.get(0);
                     for(int messageCount = 0; messageCount < messages.size(); messageCount++) {
                         mMessageList.add(new Message(messages.get(messageCount).system.user,
-                                messages.get(messageCount).data.message, new SimpleDateFormat("dd.mm")
+                                messages.get(messageCount).data.message, new SimpleDateFormat("dd.MM")
                                 .format(new Date((long) messages.get(messageCount).system.timeCreated * 1000))));
                         loadInfoAboutUser(retrofit, messages.get(messageCount).system.user, messageCount);
                     }

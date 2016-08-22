@@ -82,7 +82,7 @@ public class BuySpotActivity extends AppCompatActivity {
             public void onResponse(Response<SpotInfoResponse> response, Retrofit retrofit) {
                 if (response.body().success) {
                     Log.i(Constant.LOG, new Gson().toJson(response.body()));
-                    SpotInfoResponse.Message.Spot spot = response.body().message.get(0).spots.get(1);
+                    SpotInfoResponse.Message.Spot.Data spot = response.body().message.get(0).spots.get(0).data;
 
                     Picasso.with(mContext)
                             .load(Constant.URL_IMAGE + spot.imgs.get(0))

@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.edmodo.rangebar.RangeBar;
 import com.gridyn.potspot.Constant;
+import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
 import com.gridyn.potspot.SearchBridge;
 import com.gridyn.potspot.TextThumbSeekBar;
@@ -242,14 +243,15 @@ public class SearchCriteriaActivity extends AppCompatActivity implements OnMapRe
 
         distance.lat = mLat;
         distance.lng = mLng;
-        distance.radius = mRadiusInterval;
+//        distance.radius = mRadiusInterval;
+        distance.radius = 1000000000;
 //        distance.lat = 61.8141429;
 //        distance.lng = -112.9769033;
-//        distance.radius = 100000000;
         SearchCriteriaQuery query = new SearchCriteriaQuery();
+        query.token = Person.getToken();
         query.badges = getBudges();
         query.maxGuest = getGuests(Integer.parseInt(mCountGuests.getText().toString()));
-        query.price = getPriceInterval(mStartPriceRange, mEndPriceRange);
+        query.price = getPriceInterval(mStartPriceRange * 100, mEndPriceRange * 100);
         query.type = getSpotTypes();
         query.distance = distance;
 
@@ -268,6 +270,8 @@ public class SearchCriteriaActivity extends AppCompatActivity implements OnMapRe
                     SearchBridge.setDataForSearchResult(response.body().message.get(0).spots);
                     final Intent intent = new Intent(SearchCriteriaActivity.this, SearchResultActivity.class);
                     startActivity(intent);
+                } else {
+                    Log.i(Constant.LOG, "logooooogogogogogogogogogogoogogogogogoggogogogogogogogogog");
                 }
             }
 

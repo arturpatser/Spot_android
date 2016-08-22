@@ -96,7 +96,7 @@ public class ListingEditActivity extends AppCompatActivity {
         call.enqueue(new Callback<SpotInfoResponse>() {
             @Override
             public void onResponse(Response<SpotInfoResponse> response, Retrofit retrofit) {
-                SpotInfoResponse.Message.Spot spot = response.body().message.get(0).spots.get(1);
+                SpotInfoResponse.Message.Spot.Data spot = response.body().message.get(0).spots.get(0).data;
                 mTitle.setText(spot.name);
                 mDescription.setText(spot.about);
                 mAddress.setText(spot.address);

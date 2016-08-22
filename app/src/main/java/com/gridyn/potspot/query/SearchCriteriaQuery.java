@@ -8,6 +8,10 @@ import java.util.List;
 
 public class SearchCriteriaQuery {
 
+    @SerializedName("token")
+    @Expose
+    public String token;
+
     @SerializedName("price")
     @Expose
     public int[] price = new int[2];

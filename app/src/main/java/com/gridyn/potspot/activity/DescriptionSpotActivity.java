@@ -160,7 +160,7 @@ public class DescriptionSpotActivity extends AppCompatActivity {
             public void onResponse(Response<SpotInfoResponse> response, Retrofit retrofit) {
                 if (response.body().success) {
                     Log.i(LOG, new Gson().toJson(response.body()));
-                    SpotInfoResponse.Message.Spot spot = response.body().message.get(0).spots.get(1);
+                    SpotInfoResponse.Message.Spot.Data spot = response.body().message.get(0).spots.get(0).data;
 
                     Picasso.with(mContext)
                             .load(URL_IMAGE + spot.imgs.get(0))

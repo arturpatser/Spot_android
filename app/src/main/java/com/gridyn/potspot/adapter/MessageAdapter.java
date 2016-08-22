@@ -16,6 +16,7 @@ import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.R;
 import com.gridyn.potspot.activity.ChatActivity;
 import com.gridyn.potspot.model.Message;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -45,9 +46,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.Holder> 
         final Message message = mMessageList.get(position);
 
         Log.i(Constant.LOG, "imageOfUser: " + message.getImgUser());
-//        Picasso.with(mContext)
-//                .load()
-//                .into();
+
+        Picasso.with(mContext)
+                .load(Constant.URL_IMAGE + message.getImgUser())
+                .into(holder.image);
 
         holder.name.setTypeface(Typeface.createFromAsset(mContext.getAssets(), "fonts/Roboto-Regular.ttf"));
         holder.description.setTypeface(Typeface.createFromAsset(mContext.getAssets(), "fonts/Roboto-Medium.ttf"));
