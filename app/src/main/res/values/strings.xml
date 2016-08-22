@@ -154,4 +154,6 @@
     <string name="paid_spots">Paid spots</string>
     <string name="favourites">Favourites</string>
     <string name="my_money">My money</string>
+    <string name="earn_money">earn money</string>
+    <string name="while_sitting">while sitting at home!</string>
 </resources>

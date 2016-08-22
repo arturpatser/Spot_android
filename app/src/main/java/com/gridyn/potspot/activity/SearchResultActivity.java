@@ -45,7 +45,7 @@ public class SearchResultActivity extends AppCompatActivity {
 
     private void initRecyclerView() {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.sch_res_recycler);
-        SearchResultAdapter adapter = new SearchResultAdapter(mSpotList, mContext, getFragmentManager());
+        SearchResultAdapter adapter = new SearchResultAdapter(mSpotList, mContext, getFragmentManager(), recyclerView);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, 1, LinearLayoutManager.VERTICAL, false);
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
 

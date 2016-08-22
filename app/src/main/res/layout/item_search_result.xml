@@ -11,7 +11,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="224dp">
+        android:layout_height="@dimen/item_search_height">
 
         <ImageView
             android:id="@+id/sch_res_img"
