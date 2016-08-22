@@ -139,8 +139,14 @@ public class TabsActivity extends AppCompatActivity
             case R.id.nav_pay_spot:
                 intent = new Intent(this, PaidSpotsActivity.class);
                 break;
+            case R.id.nav_favourites:
+
+                break;
             case R.id.nav_my_spot:
                 intent = new Intent(this, MySpotsActivity.class);
+                break;
+            case R.id.nav_my_money:
+                intent = new Intent(this, MyMoneyActivity.class);
                 break;
             case R.id.nav_friends:
                 intent = new Intent(this, InviteFriendActivity.class);

@@ -11,4 +11,5 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="item_search_height">224dp</dimen>
+    <dimen name="toolbar_height">220dp</dimen>
 </resources>

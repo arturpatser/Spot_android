@@ -160,6 +160,7 @@
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyB7VxO1OpgcI3qiAkvqMhQarsWsy3zCkm0" />
 
+        <activity android:name=".activity.MyMoneyActivity"></activity>
     </application>
 
 </manifest>

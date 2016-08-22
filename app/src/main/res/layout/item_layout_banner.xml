@@ -7,14 +7,11 @@
     android:background="@drawable/bg_only">
 
     <TextView
+        style="@style/WhiteBoldLargeText"
         android:id="@+id/tv_earn_money"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:textAllCaps="true"
-        android:textAppearance="?android:textAppearanceLarge"
         android:layout_centerInParent="true"
-        android:textColor="@color/white"
         android:text="@string/earn_money"/>
 
     <TextView
@@ -29,16 +26,13 @@
         android:textColor="@color/white" />
 
     <TextView
+        style="@style/WhiteBoldLargeText"
         android:id="@+id/tv_become_host"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:background="@drawable/border_red"
-        android:textStyle="bold"
-        android:textAllCaps="true"
-        android:textAppearance="?android:textAppearanceMedium"
         android:layout_centerInParent="true"
-        android:textColor="@color/white"
         android:layout_alignParentBottom="true"
         android:text="@string/become_a_host"
         android:padding="12dp"

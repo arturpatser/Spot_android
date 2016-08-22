@@ -1,0 +1,31 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.gridyn.potspot.activity.MyMoneyActivity">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:id="@+id/content"
+        android:background="@drawable/money_host">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:contentInsetStart="0dp"
+            android:contentInsetLeft="0dp"
+            app:contentInsetLeft="0dp"
+            app:contentInsetStart="0dp">
+
+        </android.support.v7.widget.Toolbar>
+
+
+    </FrameLayout>
+
+
+
+</RelativeLayout>

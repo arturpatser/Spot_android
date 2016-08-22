@@ -20,7 +20,7 @@
             <FrameLayout
                 android:id="@+id/profile_header"
                 android:layout_width="match_parent"
-                android:layout_height="220dp">
+                android:layout_height="@dimen/toolbar_height">
 
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/profile_toolbar"
