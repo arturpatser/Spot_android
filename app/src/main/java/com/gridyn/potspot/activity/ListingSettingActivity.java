@@ -137,7 +137,7 @@ public class ListingSettingActivity extends AppCompatActivity {
             query.about = extra.getString("description");
         }
         query.address = extra.getString("address");
-        query.price = Integer.parseInt(extra.getString("price"));
+        query.price = Integer.parseInt(extra.getString("price")) * 100;
 
         if (!extra.getString("maxGuests").isEmpty()) {
             query.maxGuests = Integer.parseInt(extra.getString("maxGuests"));

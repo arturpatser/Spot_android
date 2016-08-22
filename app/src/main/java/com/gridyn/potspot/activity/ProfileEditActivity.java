@@ -398,13 +398,14 @@ public class ProfileEditActivity extends AppCompatActivity {
                     mBirthDay.setText("Set");
                 }
                 mEmail.setText(message.data.email);
-                if (!message.data.phone.isEmpty()) {
-                    mPhone.setText(message.data.phone);
-                } else {
-                    mPhone.setText("Set");
+                if (message.data.phone != null) {
+                    if (!message.data.phone.isEmpty()) {
+                        mPhone.setText(message.data.phone);
+                    } else {
+                        mPhone.setText("Set");
+                    }
                 }
-//                mWaitingForVerify = message.system.waitingForVerify;
-                mWaitingForVerify = false; //TODO: исправить mWaitingForVerify
+                mWaitingForVerify = message.system.waitingForVerify;
                 if (!flagForAvatar) {
                     flagForAvatar = true;
                     if (message.data.imgs.size() != 0) {

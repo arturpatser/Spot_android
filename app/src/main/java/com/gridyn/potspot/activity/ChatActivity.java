@@ -169,7 +169,7 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //TODO: Disconnect
+
     }
 
     /**

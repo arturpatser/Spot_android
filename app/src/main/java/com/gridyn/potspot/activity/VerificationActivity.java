@@ -114,7 +114,7 @@ public class VerificationActivity extends AppCompatActivity {
                         }
                     }).start();
                 } else {
-                    Snackbar.make(findViewById(android.R.id.content), "Try again", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Phone is not verified.", Snackbar.LENGTH_LONG).show();
                 }
             }
 

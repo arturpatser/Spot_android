@@ -68,7 +68,7 @@ public class MessageActivity extends AppCompatActivity {
             public void onResponse(Response<MessageLastResponse> response, Retrofit retrofit) {
                 mMessageList = new ArrayList<>();
                 Log.i(Constant.LOG, "MessageListResponse: " + new GsonBuilder().setPrettyPrinting().create().toJson(response.body()));
-                if(response.body().success) {
+                if (response.body().success && response.body().message.get(0).messages.size() != 0) {
                     List<MessageLastResponse.Message.Message_> messages = response.body().message.get(0).messages.get(0);
                     for(int messageCount = 0; messageCount < messages.size(); messageCount++) {
                         mMessageList.add(new Message(messages.get(messageCount).system.user,
@@ -99,8 +99,10 @@ public class MessageActivity extends AppCompatActivity {
                 if(response.body().success) {
                     UserInfoResponse.Message.Data user = response.body().message.get(0).data;
                     mMessageList.get(messageCount).setFromName(user.name);
-                    mMessageList.get(messageCount).setSpotName(user.spot.get(0).data.name);
                     mMessageList.get(messageCount).setImgUser(user.imgs.get(0));
+                    if (!user.spot.isEmpty()) {
+                        mMessageList.get(messageCount).setSpotName(user.spot.get(0).data.name);
+                    }
                 }
             }
 

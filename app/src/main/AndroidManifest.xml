@@ -122,6 +122,10 @@
             android:name=".activity.ChatActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Other" />
+        <activity
+            android:name=".activity.VerifyPhoneNumber"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Other" />
 
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
@@ -156,7 +160,6 @@
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyB7VxO1OpgcI3qiAkvqMhQarsWsy3zCkm0" />
 
-        <activity android:name=".activity.VerifyPhoneNumber"></activity>
     </application>
 
 </manifest>

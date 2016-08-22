@@ -212,10 +212,12 @@ public class ProfileFragment extends Fragment {
                     mBirthdate.setText(NOT_SPECIFIED);
                 }
                 mEmail.setText(message.data.email);
-                if (!message.data.phone.isEmpty()) {
-                    mPhone.setText(message.data.phone);
-                } else {
-                    mPhone.setText(NOT_SPECIFIED);
+                if (message.data.phone != null) {
+                    if (!message.data.phone.isEmpty()) {
+                        mPhone.setText(message.data.phone);
+                    } else {
+                        mPhone.setText(NOT_SPECIFIED);
+                    }
                 }
                 if (message.data.paypalID != null && message.data.cardID != null)
                 if (!message.data.paypalID.isEmpty() && !message.data.cardID.isEmpty()) {
@@ -227,8 +229,7 @@ public class ProfileFragment extends Fragment {
                 } else {
                     mPayInfo.setText(NOT_SPECIFIED);
                 }
-//                mWaitingForVerify = message.system.waitingForVerify;
-                mWaitingForVerify = false; //TODO: исправить mWaitingForVerify
+                mWaitingForVerify = message.system.waitingForVerify;
                 mMemberSince.setText(new SimpleDateFormat("MMMM yyyy")
                         .format(new Date((long) message.system.timeCreated * 1000)));
                 if (message.data.imgs.size() != 0) {

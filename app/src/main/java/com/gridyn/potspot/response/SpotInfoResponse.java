@@ -55,7 +55,7 @@ public class SpotInfoResponse {
             public List<String> badge = new ArrayList<>();
             @SerializedName("imgs")
             @Expose
-            public List<Object> imgs = new ArrayList<>();
+            public List<String> imgs = new ArrayList<>();
             @SerializedName("user_imgs")
             @Expose
             public List<String> userImgs = new ArrayList<>();
