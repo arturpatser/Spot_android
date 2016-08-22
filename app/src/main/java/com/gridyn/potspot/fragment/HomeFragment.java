@@ -163,6 +163,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         query.type.add("smokingRooms");
         query.type.add("balcony");
 
+        Log.d(TAG, "initSpot: query = " + query);
+
         Call<SpotSearchResponse> call = mService.searchSpot(query);
         call.enqueue(new Callback<SpotSearchResponse>() {
             @Override
@@ -178,6 +180,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
             @Override
             public void onFailure(Throwable t) {
+
+                Log.d(TAG, "onFailure: error while load spots = " + Log.getStackTraceString(t));
+
                 Snackbar.make(getView(), Constant.CONNECTION_ERROR, Snackbar.LENGTH_SHORT).show();
             }
         });

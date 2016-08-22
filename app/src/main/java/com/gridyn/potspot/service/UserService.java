@@ -60,7 +60,7 @@ public interface UserService {
     Call<UserFeedbackResponse> sendFeedback(@Body FeedbackQuery feedback);
 
     @POST("user/{id}/spots")
-    Call<MySpotResponse> getSpots(@Path("id") String idOfUser);
+    Call<MySpotResponse> getSpots(@Path("id") String idOfUser, @Body Map<String, String> token);
 
     @POST("user/phone/verify")
     Call<PhoneVerifyResponse> verifyPhone(@Body PhoneVerifyQuery phoneVerifyQuery);

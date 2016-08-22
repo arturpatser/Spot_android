@@ -18,9 +18,13 @@ import com.gridyn.potspot.Spot;
 import com.gridyn.potspot.adapter.YourSpotAdapter;
 import com.gridyn.potspot.response.MySpotResponse;
 import com.gridyn.potspot.service.UserService;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.logging.HttpLoggingInterceptor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit.Call;
 import retrofit.Callback;
@@ -48,13 +52,25 @@ public class MySpotsActivity extends AppCompatActivity {
         mProgressDialog.show();
         mSpotList = new ArrayList<>();
 
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        OkHttpClient okHttpClient = new OkHttpClient();
+
+        okHttpClient.interceptors().add(logging);
+
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(Constant.BASE_URL)
+                .client(okHttpClient)
                 .build();
 
+        Map<String, String> token = new HashMap<>();
+
+        token.put("token", Person.getToken());
+
         UserService service = retrofit.create(UserService.class);
-        Call<MySpotResponse> call = service.getSpots(Person.getId());
+        Call<MySpotResponse> call = service.getSpots(Person.getId(), token);
 
         call.enqueue(new Callback<MySpotResponse>() {
             @Override
