@@ -1,6 +1,7 @@
 package com.gridyn.potspot.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -23,14 +24,14 @@ public class MyMoneyActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         toolbar.setNavigationIcon(R.drawable.back);
+        toolbar.setTitleTextColor(Color.WHITE);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setTitle(Person.isHost() ? getString(R.string.my_money) : "");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
     public void onBecomeHostClick(View view) {
