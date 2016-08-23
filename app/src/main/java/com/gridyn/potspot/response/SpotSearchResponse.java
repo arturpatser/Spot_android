@@ -67,13 +67,13 @@ public class SpotSearchResponse {
         public String about;
         @SerializedName("time")
         @Expose
-        public String time;
+        public List<String> time = new ArrayList<>();
         @SerializedName("days")
         @Expose
-        public String days;
+        public List<String> days = new ArrayList<>();
         @SerializedName("badge")
         @Expose
-        public String badge;
+        public List<String> badge = new ArrayList<>();
         @SerializedName("imgs")
         @Expose
         public List<String> imgs = new ArrayList<>();

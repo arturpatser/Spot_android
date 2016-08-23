@@ -32,6 +32,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.GsonBuilder;
 import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
@@ -147,11 +148,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
         SearchCriteriaQuery query = new SearchCriteriaQuery();
         SearchCriteriaQuery.Distance distance = new SearchCriteriaQuery.Distance();
+        query.token = Person.getToken();
         distance.lat = 55.755786;
         distance.lng = 37.617633;
         distance.radius = 100000;
         query.distance = distance;
-        query.maxGuest = new int[]{1, 1};
+        query.maxGuest = new int[]{1, 5};
         query.badges = new ArrayList<>();
         query.badges.add("tobaccoFriendly");
         query.badges.add("heated");
@@ -163,18 +165,21 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         query.type.add("smokingRooms");
         query.type.add("balcony");
 
-        Log.d(TAG, "initSpot: query = " + query);
+        Log.d(TAG, "initSpot: query = " + new GsonBuilder().setPrettyPrinting().create().toJson(query));
 
         Call<SpotSearchResponse> call = mService.searchSpot(query);
         call.enqueue(new Callback<SpotSearchResponse>() {
             @Override
             public void onResponse(Response<SpotSearchResponse> response, Retrofit retrofit) {
                 if (response.body().success) {
+                    Log.d(TAG, "onResponse: " + new GsonBuilder().setPrettyPrinting().create().toJson(response.body()));
                     for (SpotSearchResponse.Spots spot : response.body().message.get(0).spots) {
                         mSpotList.add(new Spot(spot.data.name, spot.data.price,
                                 spot.data.type, spot.data.imgs.get(0),
                                 spot.data.googlemapsapi.geometry.location.lat, spot.data.googlemapsapi.geometry.location.lat));
                     }
+                } else {
+                    Log.d(TAG, "onResponse: " + new GsonBuilder().setPrettyPrinting().create().toJson(response.body()));
                 }
             }
 
