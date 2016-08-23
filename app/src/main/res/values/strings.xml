@@ -157,4 +157,8 @@
     <string name="earn_money">earn money</string>
     <string name="while_sitting">while sitting at home!</string>
     <string name="become_a_host_today">Become a host today!</string>
+    <string name="money_need">you need $%1$d by August 1 to get paid by September 1</string>
+    <string name="latest_payment">Latest payment</string>
+    <string name="pending">Pending</string>
+    <string name="payment_history">Payment history</string>
 </resources>

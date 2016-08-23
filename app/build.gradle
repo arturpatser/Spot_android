@@ -48,4 +48,5 @@ dependencies {
     compile 'com.parse:parseinterceptors:0.0.2'
     compile 'com.android.support:support-v4:23.4.0'
     compile 'it.gilvegliach.android:transparent-text-textview:1.0.2'
+    compile 'com.bignerdranch.android:simple-item-decoration:1.0.0'
 }

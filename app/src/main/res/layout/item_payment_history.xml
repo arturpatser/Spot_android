@@ -1,0 +1,35 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="item"
+            type="com.gridyn.potspot.model.PaymentHistoryItem" />
+
+    </data>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:background="@drawable/border_black"
+        android:layout_height="@dimen/payment_history_item_height">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/black"
+            android:text="@{'$' + item.value}"
+            android:id="@+id/textView8"
+            android:textSize="30sp"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@{item.date}"
+            android:id="@+id/textView9"
+            android:gravity="center" />
+    </LinearLayout>
+</layout>

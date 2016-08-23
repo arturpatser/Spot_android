@@ -17,4 +17,5 @@
     <color name="left_message">#efefef</color>
     <color name="white">#ffffff</color>
     <color name="transparent">#FFFFFFFF</color>
+    <color name="black">#000000</color>
 </resources>
