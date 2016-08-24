@@ -2,10 +2,6 @@
 
     <data>
 
-        <variable
-            name="total"
-            type="String" />
-
     </data>
 
     <LinearLayout
@@ -29,7 +25,6 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text='@{"total $" + total}'
             android:id="@+id/textView7"
             android:layout_weight="1"
             android:gravity="center_vertical|right"

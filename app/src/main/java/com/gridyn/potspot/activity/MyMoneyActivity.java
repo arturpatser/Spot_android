@@ -86,9 +86,8 @@ public class MyMoneyActivity extends AppCompatActivity {
 
         //TODO change blank values by real, implement retrofit logic here
         binding.setMoneyValue("20");
-        binding.setMoneyNeed(getString(R.string.money_need, 5));
 
-        paymentHistoryAdapter.setMyMoneyDetails("01/07", "55", "368");
+        paymentHistoryAdapter.setMyMoneyDetails("01/07", "55");
 
         ArrayList<PaymentHistoryItem> paymentHistoryItemArrayList = new ArrayList<>();
 

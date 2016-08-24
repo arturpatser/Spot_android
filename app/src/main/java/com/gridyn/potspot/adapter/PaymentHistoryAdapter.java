@@ -28,7 +28,6 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     LayoutInflater layoutInflater;
     private String latestPaymentDate;
     private String pendingMoney;
-    private String totalMoney;
 
     public PaymentHistoryAdapter(Context context) {
 
@@ -76,7 +75,6 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             ((FirstHeader) holder).binding.setPendingMoney(pendingMoney);
         } else if (holder instanceof SecondHeader) {
 
-            ((SecondHeader) holder).binding.setTotal(totalMoney);
         } else if (holder instanceof HistoryItem) {
 
             // -2 because of two headers
@@ -112,11 +110,10 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         notifyDataSetChanged();
     }
 
-    public void setMyMoneyDetails(String s, String s1, String s2) {
+    public void setMyMoneyDetails(String s, String s1) {
 
         this.latestPaymentDate = s;
         this.pendingMoney = s1;
-        this.totalMoney = s2;
 
         notifyDataSetChanged();
     }

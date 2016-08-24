@@ -15,6 +15,7 @@ import com.google.gson.GsonBuilder;
 import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
+import com.gridyn.potspot.adapter.TimePeriodsAdapter;
 import com.gridyn.potspot.query.CreateSpotQuery;
 import com.gridyn.potspot.response.SpotCreateResponse;
 import com.gridyn.potspot.service.SpotService;
@@ -50,6 +51,8 @@ public class ListingSettingActivity extends AppCompatActivity {
     private String mMinuteFrom;
 
     private SpotService mService;
+
+    TimePeriodsAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
