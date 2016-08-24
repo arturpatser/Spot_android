@@ -93,6 +93,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Other" />
         <activity
+            android:name=".activity.ListingSettingActivityNew"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Other" />
+        <activity
             android:name=".activity.ListingEditActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Other" />

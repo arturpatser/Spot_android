@@ -218,7 +218,7 @@ public class SpaceActivity extends AppCompatActivity {
 
 
     public void onClickCreateSpot(View view) {
-        final Intent intent = new Intent(this, ListingSettingActivity.class);
+        final Intent intent = new Intent(this, ListingSettingActivityNew.class);
 
         if (mTitle.getText().toString().trim().length() > 3) {
             intent.putExtra("title", mTitle.getText().toString().trim());
