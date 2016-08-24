@@ -6,12 +6,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.gridyn.potspot.R;
 import com.gridyn.potspot.model.Available;
 
 import java.util.ArrayList;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by dmytro_vodnik on 8/23/16.
@@ -53,7 +57,7 @@ public class TimePeriodsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
 
         if (holder instanceof Footer) {
 
@@ -68,8 +72,21 @@ public class TimePeriodsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         if (holder instanceof TimePeriod) {
 
+            if (position != 0)
+            ((TimePeriod) holder).remove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
+                    removeItem(position);
+                }
+            });
         }
+    }
+
+    private void removeItem(int position) {
+
+        availableArrayList.remove(position);
+        notifyDataSetChanged();
     }
 
     @Override
@@ -99,31 +116,33 @@ public class TimePeriodsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
-    private class TimePeriod extends RecyclerView.ViewHolder {
+    public class TimePeriod extends RecyclerView.ViewHolder {
 
-        private CheckBox mSunday;
-        private CheckBox mMonday;
-        private CheckBox mTuesday;
-        private CheckBox mWednesday;
-        private CheckBox mThursday;
-        private CheckBox mFriday;
-        private CheckBox mSaturday;
-
-        private TextView mTimeFrom;
-        private TextView mTimeTo;
+        @BindView(R.id.btn_sunday)
+         CheckBox mSunday;
+        @BindView(R.id.btn_monday)
+         CheckBox mMonday;
+        @BindView(R.id.btn_tuesday)
+         CheckBox mTuesday;
+        @BindView(R.id.btn_wednesday)
+         CheckBox mWednesday;
+        @BindView(R.id.btn_thursday)
+         CheckBox mThursday;
+        @BindView(R.id.btn_friday)
+         CheckBox mFriday;
+        @BindView(R.id.btn_saturday)
+         CheckBox mSaturday;
+        @BindView(R.id.listing_setting_time_from)
+         TextView mTimeFrom;
+        @BindView(R.id.listing_setting_time_to)
+         TextView mTimeTo;
+        @BindView(R.id.remove)
+        ImageView remove;
 
         public TimePeriod(View time) {
             super(time);
 
-            mSunday = (CheckBox) time.findViewById(R.id.btn_sunday);
-            mMonday = (CheckBox) time.findViewById(R.id.btn_monday);
-            mTuesday = (CheckBox) time.findViewById(R.id.btn_tuesday);
-            mWednesday = (CheckBox) time.findViewById(R.id.btn_wednesday);
-            mThursday = (CheckBox) time.findViewById(R.id.btn_thursday);
-            mFriday = (CheckBox) time.findViewById(R.id.btn_friday);
-            mSaturday = (CheckBox) time.findViewById(R.id.btn_saturday);
-            mTimeFrom = (TextView) time.findViewById(R.id.listing_setting_time_from);
-            mTimeTo = (TextView) time.findViewById(R.id.listing_setting_time_to);
+            ButterKnife.bind(this, time);
         }
     }
 }

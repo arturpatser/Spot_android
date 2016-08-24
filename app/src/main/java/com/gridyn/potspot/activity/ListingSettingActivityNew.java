@@ -35,7 +35,7 @@ public class ListingSettingActivityNew extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_listing_setting);
+        setContentView(R.layout.activity_listing_setting_new);
 
         ButterKnife.bind(this);
 
