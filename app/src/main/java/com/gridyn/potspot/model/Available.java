@@ -13,9 +13,9 @@ public class Available {
 
     @SerializedName("days")
     @Expose
-    List<String> days;
+    public List<String> days;
 
     @SerializedName("time")
     @Expose
-    String[] time = new String[2];
+    public Integer[] time = new Integer[2];
 }

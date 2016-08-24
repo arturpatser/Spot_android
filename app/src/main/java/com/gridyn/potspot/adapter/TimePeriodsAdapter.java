@@ -1,18 +1,24 @@
 package com.gridyn.potspot.adapter;
 
+import android.app.FragmentManager;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.gridyn.potspot.R;
 import com.gridyn.potspot.model.Available;
+import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
+import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,15 +31,17 @@ public class TimePeriodsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private static final int TYPE_FOOTER = 1;
     private static final int TYPE_TIME_PERIOD = 0;
+    private final FragmentManager fragmentManager;
     Context context;
     LayoutInflater layoutInflater;
     ArrayList<Available> availableArrayList;
 
-    public TimePeriodsAdapter(Context context) {
+    public TimePeriodsAdapter(Context context, FragmentManager fragmentManager) {
 
         this.context = context;
         layoutInflater = LayoutInflater.from(context);
         availableArrayList = new ArrayList<>();
+        this.fragmentManager = fragmentManager;
     }
 
     @Override
@@ -57,7 +65,7 @@ public class TimePeriodsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
 
         if (holder instanceof Footer) {
 
@@ -72,6 +80,8 @@ public class TimePeriodsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         if (holder instanceof TimePeriod) {
 
+            final Available available = getItem(position);
+
             if (position != 0)
             ((TimePeriod) holder).remove.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -80,7 +90,63 @@ public class TimePeriodsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     removeItem(position);
                 }
             });
+
+            ((TimePeriod) holder).availability.setText(context.getString(R.string.available_rules) +
+                    " #" + (position + 1));
+
+            ((TimePeriod) holder).timeFromL.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    final Calendar calendar = Calendar.getInstance();
+                    TimePickerDialog.OnTimeSetListener callback = new TimePickerDialog.OnTimeSetListener() {
+                        @Override
+                        public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
+                            String mHourFrom = String.valueOf(hourOfDay);
+                            String mMinuteFrom = String.valueOf(minute);
+
+                            ((TimePeriod) holder).mTimeFrom.setText(mHourFrom + ":" + mMinuteFrom);
+
+                            available.time[0] = Integer.parseInt(mHourFrom + mMinuteFrom);
+                        }
+                    };
+                    final TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(
+                            callback, calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE), false
+                    );
+                    timePickerDialog.setAccentColor(context.getResources().getColor(R.color.mainRed));
+                    timePickerDialog.show(fragmentManager, "DatePickerDialog");
+                }
+            });
+
+            ((TimePeriod) holder).timeToL.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    final Calendar calendar = Calendar.getInstance();
+                    TimePickerDialog.OnTimeSetListener callback = new TimePickerDialog.OnTimeSetListener() {
+                        @Override
+                        public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
+                            String mHourTo = String.valueOf(hourOfDay);
+                            String mMinuteTo = String.valueOf(minute);
+
+                            ((TimePeriod) holder).mTimeTo.setText(mHourTo + ":" + mMinuteTo);
+
+                            available.time[1] = Integer.parseInt(mHourTo + mMinuteTo);
+                        }
+                    };
+                    final TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(
+                            callback, calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE), false
+                    );
+                    timePickerDialog.setAccentColor(context.getResources().getColor(R.color.mainRed));
+                    timePickerDialog.show(fragmentManager, "DatePickerDialog");
+                }
+            });
         }
+    }
+
+    private Available getItem(int position) {
+
+        return availableArrayList.get(position);
     }
 
     private void removeItem(int position) {
@@ -110,6 +176,10 @@ public class TimePeriodsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         notifyItemInserted(availableArrayList.size());
     }
 
+    public List<Available> getItems() {
+        return availableArrayList;
+    }
+
     private class Footer extends RecyclerView.ViewHolder {
         public Footer(View view) {
             super(view);
@@ -119,25 +189,31 @@ public class TimePeriodsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public class TimePeriod extends RecyclerView.ViewHolder {
 
         @BindView(R.id.btn_sunday)
-         CheckBox mSunday;
+        public CheckBox mSunday;
         @BindView(R.id.btn_monday)
-         CheckBox mMonday;
+         public CheckBox mMonday;
         @BindView(R.id.btn_tuesday)
-         CheckBox mTuesday;
+         public CheckBox mTuesday;
         @BindView(R.id.btn_wednesday)
-         CheckBox mWednesday;
+         public CheckBox mWednesday;
         @BindView(R.id.btn_thursday)
-         CheckBox mThursday;
+         public CheckBox mThursday;
         @BindView(R.id.btn_friday)
-         CheckBox mFriday;
+         public CheckBox mFriday;
         @BindView(R.id.btn_saturday)
-         CheckBox mSaturday;
+         public CheckBox mSaturday;
         @BindView(R.id.listing_setting_time_from)
-         TextView mTimeFrom;
+         public TextView mTimeFrom;
         @BindView(R.id.listing_setting_time_to)
-         TextView mTimeTo;
+         public TextView mTimeTo;
         @BindView(R.id.remove)
-        ImageView remove;
+        public ImageView remove;
+        @BindView(R.id.availability)
+        public TextView availability;
+        @BindView(R.id.time_from_layout)
+        public FrameLayout timeFromL;
+        @BindView(R.id.time_to_layout)
+        public FrameLayout timeToL;
 
         public TimePeriod(View time) {
             super(time);
