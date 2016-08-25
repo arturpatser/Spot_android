@@ -16,8 +16,9 @@ import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
 import com.gridyn.potspot.response.SpotInfoResponse;
-import com.gridyn.potspot.utils.ServerApiUtil;
 import com.gridyn.potspot.service.SpotService;
+import com.gridyn.potspot.utils.ServerApiUtil;
+import com.squareup.picasso.Picasso;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
@@ -80,17 +81,17 @@ public class BuySpotActivity extends AppCompatActivity {
                     Log.i(Constant.LOG, new Gson().toJson(response.body()));
 
                     //TODO check class parse
-//                    SpotInfoResponse.Message.Spot.Data spot = response.body().message.get(0).spots.get(0).data;
-//
-//                    Picasso.with(mContext)
-//                            .load(Constant.URL_IMAGE + spot.imgs.get(0))
-//                            .into(mHeader);
-//
-//                    mName.setText(spot.name);
-//                    mUnderName.setText(spot.type + " | " + "спроси у Ильи про дату");
-//                    mPartySize.setText(spot.maxGuests + "\nparty size");
-//                    mTotalPrice.setText("$" + spot.price + "\ntotal price");
-//                    mPay.setText("pay $" + spot.price);
+                    SpotInfoResponse.Message.Spot spot = response.body().message.get(0).spots.get(1);
+
+                    Picasso.with(mContext)
+                            .load(Constant.URL_IMAGE + spot.imgs.get(0))
+                            .into(mHeader);
+
+                    mName.setText(spot.name);
+                    mUnderName.setText(spot.type + " | " + "спроси у Ильи про дату");
+                    mPartySize.setText(spot.maxGuests + "\nparty size");
+                    mTotalPrice.setText("$" + spot.price + "\ntotal price");
+                    mPay.setText("pay $" + spot.price);
                 }
             }
 

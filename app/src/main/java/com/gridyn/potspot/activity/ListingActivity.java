@@ -181,7 +181,7 @@ public class ListingActivity extends AppCompatActivity {
         call.enqueue(new Callback<SpotInfoResponse>() {
             @Override
             public void onResponse(Response<SpotInfoResponse> response, Retrofit retrofit) {
-                SpotInfoResponse.Message.Spot.Data spot = response.body().message.get(0).spots.get(0).data;
+                SpotInfoResponse.Message.Spot spot = response.body().message.get(0).spots.get(1);
                 if (response.body().success) {
                     Log.i(Constant.LOG, "Id of spot: " + mId);
                     mDescription.setText(spot.name);

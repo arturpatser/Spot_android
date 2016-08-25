@@ -16,11 +16,13 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
 import com.gridyn.potspot.response.SpotCommentsResponse;
 import com.gridyn.potspot.response.SpotInfoResponse;
 import com.gridyn.potspot.service.SpotService;
-import com.google.gson.Gson;
+import com.gridyn.potspot.utils.ServerApiUtil;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -33,6 +35,7 @@ import retrofit.GsonConverterFactory;
 import retrofit.Response;
 import retrofit.Retrofit;
 
+import static com.gridyn.potspot.Constant.BASE_IMAGE;
 import static com.gridyn.potspot.Constant.BASE_URL;
 import static com.gridyn.potspot.Constant.CONNECTION_ERROR;
 import static com.gridyn.potspot.Constant.FONT_ROBOTO_LIGHT;
@@ -154,17 +157,23 @@ public class DescriptionSpotActivity extends AppCompatActivity {
     }
 
     private void getSpot(SpotService service) {
-        Call<SpotInfoResponse> call = service.getSpot(getIntent().getExtras().getString("id"));
+        Call<SpotInfoResponse> call = ServerApiUtil.initSpot().getSpot(getIntent().getExtras().getString("id"), Person.getTokenMap());
         call.enqueue(new Callback<SpotInfoResponse>() {
             @Override
             public void onResponse(Response<SpotInfoResponse> response, Retrofit retrofit) {
                 if (response.body().success) {
                     Log.i(LOG, new Gson().toJson(response.body()));
-                    SpotInfoResponse.Message.Spot.Data spot = response.body().message.get(0).spots.get(0).data;
+                    SpotInfoResponse.Message.Spot spot = response.body().message.get(0).spots.get(1);
 
-                    Picasso.with(mContext)
-                            .load(URL_IMAGE + spot.imgs.get(0))
-                            .into(mHeader);
+                    if (spot.imgs.size() != 0) {
+                        Picasso.with(mContext)
+                                .load(URL_IMAGE + spot.imgs.get(0))
+                                .into(mHeader);
+                    } else {
+                        Picasso.with(mContext)
+                                .load(BASE_IMAGE)
+                                .into(mHeader);
+                    }
 
                     mPrice.setText("$ " + spot.price);
                     mName.setText(spot.name);
@@ -201,10 +210,15 @@ public class DescriptionSpotActivity extends AppCompatActivity {
                     }
                     mUserName.setText(" " + spot.username);
                     mBook.setText("Book for $" + spot.price);
-                    Picasso.with(mContext)
-                            .load(URL_IMAGE + spot.userImgs.get(0))
-                            .into(mAvatar);
-
+                    if (spot.userImgs.size() != 0) {
+                        Picasso.with(mContext)
+                                .load(URL_IMAGE + spot.userImgs.get(0))
+                                .into(mAvatar);
+                    } else {
+                        Picasso.with(mContext)
+                                .load(BASE_IMAGE)
+                                .into(mAvatar);
+                    }
                 }
             }
 
