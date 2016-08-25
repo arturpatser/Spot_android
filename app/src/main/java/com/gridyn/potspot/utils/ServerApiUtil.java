@@ -1,6 +1,8 @@
-package com.gridyn.potspot.service;
+package com.gridyn.potspot.utils;
 
 import com.gridyn.potspot.Constant;
+import com.gridyn.potspot.service.SpotService;
+import com.gridyn.potspot.service.UserService;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.logging.HttpLoggingInterceptor;
 

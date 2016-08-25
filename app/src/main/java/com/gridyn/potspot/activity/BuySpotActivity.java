@@ -16,7 +16,7 @@ import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
 import com.gridyn.potspot.response.SpotInfoResponse;
-import com.gridyn.potspot.service.ServerApiUtil;
+import com.gridyn.potspot.utils.ServerApiUtil;
 import com.gridyn.potspot.service.SpotService;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
