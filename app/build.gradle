@@ -34,7 +34,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.android.support:design:23.4.0'
     compile 'com.android.support:cardview-v7:23.4.0'
-    compile 'com.google.android.gms:play-services:9.0.1'
+    compile 'com.google.android.gms:play-services:9.4.0'
     compile 'de.hdodenhof:circleimageview:2.0.0'
     compile 'com.github.clans:fab:1.6.4'
     compile 'com.edmodo:rangebar:1.0.0'
@@ -49,4 +49,6 @@ dependencies {
     compile 'com.android.support:support-v4:23.4.0'
     compile 'it.gilvegliach.android:transparent-text-textview:1.0.2'
     compile 'com.bignerdranch.android:simple-item-decoration:1.0.0'
+    compile 'com.matthew-tamlin:sliding-intro-screen:3.2.0'
+    compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.+'
 }
