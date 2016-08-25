@@ -50,6 +50,7 @@ public class FirstLaunchActivity extends IntroActivity {
         if (introductionCompletedPreviously()) {
             final Intent nextActivity = new Intent(this, MainActivity.class);
             startActivity(nextActivity);
+            finish();
         }
 
         configureTransformer();
