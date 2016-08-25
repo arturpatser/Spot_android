@@ -9,6 +9,8 @@ import com.gridyn.potspot.response.SpotInfoResponse;
 import com.gridyn.potspot.response.SpotSearchResponse;
 import com.gridyn.potspot.response.SpotUpdateResponse;
 
+import java.util.Map;
+
 import retrofit.Call;
 import retrofit.http.Body;
 import retrofit.http.POST;
@@ -27,6 +29,9 @@ public interface SpotService {
 
     @POST("spot/{id}")
     Call<SpotInfoResponse> getSpot(@Path("id") String id);
+
+    @POST("spot/{id}")
+    Call<SpotInfoResponse> getSpot(@Path("id") String id, @Body Map<String, String> token);
 
     @POST("spot/{id}/comments")
     Call<SpotCommentsResponse> getComments(@Path("id") String id);

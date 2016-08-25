@@ -1,5 +1,8 @@
 package com.gridyn.potspot;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public final class Person {
     private static Person instance;
     private static boolean host;
@@ -30,6 +33,15 @@ public final class Person {
     }
 
     public static String getToken() {
+        return token;
+    }
+
+    public static Map<String, String> getTokenMap() {
+
+        Map<String, String> token = new HashMap<>();
+
+        token.put("token", Person.getToken());
+
         return token;
     }
 

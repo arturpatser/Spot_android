@@ -164,4 +164,6 @@
     <string name="earned_income_total">earned income total</string>
     <string name="successfully">Succesfully</string>
     <string name="add_time_rule">+ Add one more time rule</string>
+    <string name="request_booking">Request booking</string>
+    <string name="prev_date">You cannot order previous day</string>
 </resources>

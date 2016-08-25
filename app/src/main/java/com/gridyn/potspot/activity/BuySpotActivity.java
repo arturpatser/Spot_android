@@ -11,12 +11,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.gridyn.potspot.Constant;
+import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
 import com.gridyn.potspot.response.SpotInfoResponse;
+import com.gridyn.potspot.service.ServerApiUtil;
 import com.gridyn.potspot.service.SpotService;
-import com.google.gson.Gson;
-import com.squareup.picasso.Picasso;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
@@ -25,7 +26,6 @@ import java.util.Calendar;
 
 import retrofit.Call;
 import retrofit.Callback;
-import retrofit.GsonConverterFactory;
 import retrofit.Response;
 import retrofit.Retrofit;
 
@@ -65,34 +65,32 @@ public class BuySpotActivity extends AppCompatActivity {
         mPay = (Button) findViewById(R.id.buy_pay);
         mCalendar = Calendar.getInstance();
         mDate.setText(Integer.toString(mCalendar.get(Calendar.DAY_OF_MONTH)) + "/"
-                + Integer.toString(Calendar.MONTH) + "/" + Integer.toString(Calendar.YEAR));
+                + mCalendar.get(Calendar.MONTH) + "/" + mCalendar.get(Calendar.YEAR));
     }
 
     private void initRetrofit() {
-        final Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(Constant.BASE_URL)
-                .build();
 
-        final SpotService service = retrofit.create(SpotService.class);
+        final SpotService service = ServerApiUtil.initSpot();
 
-        Call<SpotInfoResponse> call = service.getSpot(getIntent().getExtras().getString("id"));
+        Call<SpotInfoResponse> call = service.getSpot(getIntent().getExtras().getString("id"), Person.getTokenMap());
         call.enqueue(new Callback<SpotInfoResponse>() {
             @Override
             public void onResponse(Response<SpotInfoResponse> response, Retrofit retrofit) {
                 if (response.body().success) {
                     Log.i(Constant.LOG, new Gson().toJson(response.body()));
-                    SpotInfoResponse.Message.Spot.Data spot = response.body().message.get(0).spots.get(0).data;
 
-                    Picasso.with(mContext)
-                            .load(Constant.URL_IMAGE + spot.imgs.get(0))
-                            .into(mHeader);
-
-                    mName.setText(spot.name);
-                    mUnderName.setText(spot.type + " | " + "спроси у Ильи про дату");
-                    mPartySize.setText(spot.maxGuests + "\nparty size");
-                    mTotalPrice.setText("$" + spot.price + "\ntotal price");
-                    mPay.setText("pay $" + spot.price);
+                    //TODO check class parse
+//                    SpotInfoResponse.Message.Spot.Data spot = response.body().message.get(0).spots.get(0).data;
+//
+//                    Picasso.with(mContext)
+//                            .load(Constant.URL_IMAGE + spot.imgs.get(0))
+//                            .into(mHeader);
+//
+//                    mName.setText(spot.name);
+//                    mUnderName.setText(spot.type + " | " + "спроси у Ильи про дату");
+//                    mPartySize.setText(spot.maxGuests + "\nparty size");
+//                    mTotalPrice.setText("$" + spot.price + "\ntotal price");
+//                    mPay.setText("pay $" + spot.price);
                 }
             }
 
@@ -119,8 +117,13 @@ public class BuySpotActivity extends AppCompatActivity {
         DatePickerDialog.OnDateSetListener callback = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
-                mDate.setText(Integer.toString(dayOfMonth) + "/" + Integer.toString(monthOfYear)
+
+                if (dayOfMonth >= mCalendar.get(Calendar.DAY_OF_MONTH) && monthOfYear >= mCalendar.get(Calendar.MONTH)
+                        && year >= mCalendar.get(Calendar.YEAR))
+                    mDate.setText(Integer.toString(dayOfMonth) + "/" + Integer.toString(monthOfYear)
                         + "/" + Integer.toString(year));
+                else
+                    Snackbar.make(findViewById(android.R.id.content), R.string.prev_date, Snackbar.LENGTH_SHORT).show();
             }
         };
         final DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(callback,
