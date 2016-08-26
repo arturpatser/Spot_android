@@ -44,6 +44,8 @@ public class ListingSettingActivityNew extends AppCompatActivity {
     RecyclerView timePeriods;
     private int code;
 
+    ArrayList<Available> oldTimePeriods;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,17 +55,27 @@ public class ListingSettingActivityNew extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
 
+        adapter = new TimePeriodsAdapter(this, getFragmentManager());
+
         if (bundle != null) {
 
             code = bundle.getInt("reqCode");
-        }
+            oldTimePeriods = bundle.getParcelableArrayList(Constant.ARG_POTSPOT_AVAILABLE);
 
-        adapter = new TimePeriodsAdapter(this, getFragmentManager());
+            if (oldTimePeriods != null) {
+
+                adapter.addItems(oldTimePeriods);
+
+                Log.d(TAG, "onCreate: old time periods = " + oldTimePeriods);
+            }
+        } else {
+
+            //if we not in edit mode we add empty time model
+            adapter.addItem(new Available());
+        }
 
         timePeriods.setAdapter(adapter);
         timePeriods.setLayoutManager(new LinearLayoutManager(this));
-
-        adapter.addItem(new Available());
 
         initToolbar();
         initRetrofit();

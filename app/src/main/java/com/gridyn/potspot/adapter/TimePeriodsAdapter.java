@@ -102,12 +102,9 @@ public class TimePeriodsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     TimePickerDialog.OnTimeSetListener callback = new TimePickerDialog.OnTimeSetListener() {
                         @Override
                         public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
-                            String mHourFrom = String.valueOf(hourOfDay);
-                            String mMinuteFrom = String.valueOf(minute);
+                            ((TimePeriod) holder).mTimeFrom.setText(forViewTime(hourOfDay, minute));
 
-                            ((TimePeriod) holder).mTimeFrom.setText(mHourFrom + ":" + mMinuteFrom);
-
-                            available.time[0] = Integer.parseInt(mHourFrom + mMinuteFrom);
+                            available.time[0] = modifyTime(hourOfDay, minute);
                         }
                     };
                     final TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(
@@ -126,12 +123,10 @@ public class TimePeriodsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     TimePickerDialog.OnTimeSetListener callback = new TimePickerDialog.OnTimeSetListener() {
                         @Override
                         public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
-                            String mHourTo = String.valueOf(hourOfDay);
-                            String mMinuteTo = String.valueOf(minute);
 
-                            ((TimePeriod) holder).mTimeTo.setText(mHourTo + ":" + mMinuteTo);
+                            ((TimePeriod) holder).mTimeTo.setText(forViewTime(hourOfDay, minute));
 
-                            available.time[1] = Integer.parseInt(mHourTo + mMinuteTo);
+                            available.time[1] = modifyTime(hourOfDay, minute);
                         }
                     };
                     final TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(
@@ -141,7 +136,83 @@ public class TimePeriodsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     timePickerDialog.show(fragmentManager, "DatePickerDialog");
                 }
             });
+
+            if (available.days != null) {
+
+                ((TimePeriod) holder).mTimeFrom.setText(unWrapTime(available.time[0]));
+                ((TimePeriod) holder).mTimeTo.setText(unWrapTime(available.time[1]));
+
+                for (String day  : available.days) {
+
+                    switch (day) {
+
+                        case "Sunday":
+                            ((TimePeriod) holder).mSunday.setChecked(true);
+                            break;
+                        case "Monday":
+                            ((TimePeriod) holder).mMonday.setChecked(true);
+                            break;
+                        case "Tuesday":
+                            ((TimePeriod) holder).mTuesday.setChecked(true);
+                            break;
+                        case "Wednesday":
+                            ((TimePeriod) holder).mWednesday.setChecked(true);
+                            break;
+                        case "Thursday":
+                            ((TimePeriod) holder).mThursday.setChecked(true);
+                            break;
+                        case "Friday":
+                            ((TimePeriod) holder).mFriday.setChecked(true);
+                            break;
+                        case "Saturday":
+                            ((TimePeriod) holder).mSaturday.setChecked(true);
+                            break;
+                    }
+                }
+            }
         }
+    }
+
+    private String unWrapTime(String s) {
+
+        String time = "";
+
+        if (s.length() == 3)
+            time = "0" + s;
+
+        time = time.substring(0,2) + ":" + time.substring(2,4);
+
+        return time;
+    }
+
+    private String modifyTime(int hourOfDay, int minute) {
+
+        String hourString = "" +hourOfDay;
+
+        String minuteSting;
+        if (minute < 10)
+            minuteSting = "0" + minute;
+        else
+            minuteSting = "" +minute;
+
+        return hourString + minuteSting;
+    }
+
+    private String forViewTime(int hourOfDay, int minute) {
+
+        String hourString;
+        if (hourOfDay < 10)
+            hourString = "0" + hourOfDay;
+        else
+            hourString = "" +hourOfDay;
+
+        String minuteSting;
+        if (minute < 10)
+            minuteSting = "0" + minute;
+        else
+            minuteSting = "" +minute;
+
+        return hourString + ":" + minuteSting;
     }
 
     private Available getItem(int position) {
@@ -178,6 +249,12 @@ public class TimePeriodsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public List<Available> getItems() {
         return availableArrayList;
+    }
+
+    public void addItems(ArrayList<Available> oldDays) {
+
+        availableArrayList.addAll(oldDays);
+        notifyDataSetChanged();
     }
 
     private class Footer extends RecyclerView.ViewHolder {

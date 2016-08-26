@@ -21,12 +21,14 @@ public class Available implements Parcelable {
 
     @SerializedName("time")
     @Expose
-    public Integer[] time = new Integer[2];
+    public String[] time = new String[2];
 
     public Available() {}
 
+
     protected Available(Parcel in) {
         days = in.createStringArrayList();
+        time = in.createStringArray();
     }
 
     public static final Creator<Available> CREATOR = new Creator<Available>() {
@@ -42,6 +44,14 @@ public class Available implements Parcelable {
     };
 
     @Override
+    public String toString() {
+        return "Available{" +
+                "days=" + days +
+                ", time=" + Arrays.toString(time) +
+                '}';
+    }
+
+    @Override
     public int describeContents() {
         return 0;
     }
@@ -49,13 +59,6 @@ public class Available implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeStringList(days);
-    }
-
-    @Override
-    public String toString() {
-        return "Available{" +
-                "days=" + days +
-                ", time=" + Arrays.toString(time) +
-                '}';
+        dest.writeStringArray(time);
     }
 }

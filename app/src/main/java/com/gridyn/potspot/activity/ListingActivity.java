@@ -53,6 +53,7 @@ public class ListingActivity extends AppCompatActivity {
     private String mId;
     private ImageView mTypeImg;
     private ImageView mHeader;
+    SpotInfoResponse.Message.Spot spot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +77,9 @@ public class ListingActivity extends AppCompatActivity {
         call.enqueue(new Callback<SpotInfoResponse>() {
             @Override
             public void onResponse(Response<SpotInfoResponse> response, Retrofit retrofit) {
-                SpotInfoResponse.Message.Spot spot = response.body().message.get(0).spots.get(1);
+
+             spot = response.body().message.get(0).spots.get(1);
+
                 if (response.body().success) {
                     Log.i(Constant.LOG, "Id of spot: " + mId);
                     mDescription.setText(spot.name);
@@ -233,9 +236,13 @@ public class ListingActivity extends AppCompatActivity {
 //        intent.putExtra("id", mId);
 //        startActivity(intent);
 
-        final Intent intent = new Intent(this, ListingSettingActivityNew.class);
-        intent.putExtra("reqCode", Constant.EDIT_TIME_CODE);
-        startActivityForResult(intent, Constant.EDIT_TIME_CODE);
+        if (spot != null) {
+
+            final Intent intent = new Intent(this, ListingSettingActivityNew.class);
+            intent.putExtra("reqCode", Constant.EDIT_TIME_CODE);
+            intent.putExtra(Constant.ARG_POTSPOT_AVAILABLE, new ArrayList<>(spot.availables));
+            startActivityForResult(intent, Constant.EDIT_TIME_CODE);
+        }
     }
 
     @Override

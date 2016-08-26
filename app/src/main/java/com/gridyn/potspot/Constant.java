@@ -25,4 +25,5 @@ public interface Constant {
     String AP_LOG_IN = "log_out";
     String MESSAGE_ACTION = "com.gridyn.potspot.NEW_MESSAGE";
     int EDIT_TIME_CODE = 1;
+    String ARG_POTSPOT_AVAILABLE = "availArr";
 }

@@ -2,6 +2,7 @@ package com.gridyn.potspot.response;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.gridyn.potspot.model.Available;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +47,9 @@ public class SpotInfoResponse {
             @SerializedName("time")
             @Expose
             public List<Integer> time = new ArrayList<>();
+            @SerializedName("available")
+            @Expose
+            public List<Available> availables;
             @SerializedName("days")
             @Expose
             public List<String> days = new ArrayList<>();
