@@ -34,5 +34,5 @@ public interface SpotService {
     Call<SpotInfoResponse> getSpot(@Path("id") String id, @Body Map<String, String> token);
 
     @POST("spot/{id}/comments")
-    Call<SpotCommentsResponse> getComments(@Path("id") String id);
+    Call<SpotCommentsResponse> getComments(@Path("id") String id, @Body Map<String, String> token);
 }

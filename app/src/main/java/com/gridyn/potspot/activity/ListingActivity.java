@@ -17,10 +17,12 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.gridyn.potspot.Constant;
+import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
+import com.gridyn.potspot.model.Available;
 import com.gridyn.potspot.response.SpotCommentsResponse;
 import com.gridyn.potspot.response.SpotInfoResponse;
-import com.gridyn.potspot.service.SpotService;
+import com.gridyn.potspot.utils.ServerApiUtil;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -29,12 +31,13 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit.Call;
 import retrofit.Callback;
-import retrofit.GsonConverterFactory;
 import retrofit.Response;
 import retrofit.Retrofit;
 
 public class ListingActivity extends AppCompatActivity {
 
+    private static final int EDIT_TIME_CODE = 1;
+    private static final String TAG = ListingActivity.class.getName();
     private List<String> mCommentList;
 
     private TextView mDescription;
@@ -50,7 +53,6 @@ public class ListingActivity extends AppCompatActivity {
     private String mId;
     private ImageView mTypeImg;
     private ImageView mHeader;
-    private SpotService mService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,20 +62,78 @@ public class ListingActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 
         initFields();
-        initRetrofit();
         initToolbar();
         initCommentList();
         initComments();
 //        initRecycler();
+
+        loadSpotInfo();
     }
 
-    private void initRetrofit() {
-        final Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(Constant.BASE_URL)
-                .build();
+    private void loadSpotInfo() {
 
-        mService = retrofit.create(SpotService.class);
+        Call<SpotInfoResponse> call = ServerApiUtil.initSpot().getSpot(mId, Person.getTokenMap());
+        call.enqueue(new Callback<SpotInfoResponse>() {
+            @Override
+            public void onResponse(Response<SpotInfoResponse> response, Retrofit retrofit) {
+                SpotInfoResponse.Message.Spot spot = response.body().message.get(0).spots.get(1);
+                if (response.body().success) {
+                    Log.i(Constant.LOG, "Id of spot: " + mId);
+                    mDescription.setText(spot.name);
+                    mTypeSpot.setText(spot.type);
+                    mProfileTypeSpot.setText(spot.type);
+                    mGuests.setText(String.valueOf(spot.maxGuests));
+                    mNameProfile.setText(" " + spot.username);
+                    mProfileDescription.setText(spot.about);
+                    switch (spot.type) {
+                        case "backyard":
+                            mTypeImg.setImageDrawable(getResources().getDrawable(R.drawable.backyard));
+                            break;
+                        case "patio":
+                            mTypeImg.setImageDrawable(getResources().getDrawable(R.drawable.patio));
+                            break;
+                        case "smokingRooms":
+                            mTypeImg.setImageDrawable(getResources().getDrawable(R.drawable.other_type_of_spot));
+                            break;
+                        case "balcony":
+                            mTypeImg.setImageDrawable(getResources().getDrawable(R.drawable.balcony));
+                            break;
+                        case "Backyard":
+                            mTypeImg.setImageDrawable(getResources().getDrawable(R.drawable.backyard));
+                            break;
+                        case "Patio":
+                            mTypeImg.setImageDrawable(getResources().getDrawable(R.drawable.patio));
+                            break;
+                        case "SmokingRooms":
+                            mTypeImg.setImageDrawable(getResources().getDrawable(R.drawable.other_type_of_spot));
+                            break;
+                        case "Balcony":
+                            mTypeImg.setImageDrawable(getResources().getDrawable(R.drawable.balcony));
+                            break;
+                    }
+                    if (spot.imgs.size() != 0) {
+                        Picasso.with(getApplicationContext())
+                                .load(Constant.URL_IMAGE + spot.imgs.get(0))
+                                .into(mHeader);
+                    } else {
+                        Picasso.with(getApplicationContext())
+                                .load(Constant.BASE_IMAGE)
+                                .into(mHeader);
+                    }
+                    if (spot.userImgs.size() != 0) {
+                        Picasso.with(getApplicationContext())
+                                .load(Constant.URL_IMAGE + spot.userImgs.get(0))
+                                .into(mProfileImage);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Snackbar.make(findViewById(android.R.id.content), Constant.CONNECTION_ERROR, Snackbar.LENGTH_LONG)
+                        .show();
+            }
+        });
     }
 
     private void initFields() {
@@ -96,7 +156,7 @@ public class ListingActivity extends AppCompatActivity {
     private void initCommentList() {
         mCommentList = new ArrayList<>();
 
-        Call<SpotCommentsResponse> call = mService.getComments(mId);
+        Call<SpotCommentsResponse> call = ServerApiUtil.initSpot().getComments(mId, Person.getTokenMap());
         call.enqueue(new Callback<SpotCommentsResponse>() {
             @Override
             public void onResponse(Response<SpotCommentsResponse> response, Retrofit retrofit) {
@@ -169,75 +229,36 @@ public class ListingActivity extends AppCompatActivity {
     }
 
     public void onClickEditList(View view) {
-        final Intent intent = new Intent(this, ListingEditActivity.class);
-        intent.putExtra("id", mId);
-        startActivity(intent);
+//        final Intent intent = new Intent(this, ListingEditActivity.class);
+//        intent.putExtra("id", mId);
+//        startActivity(intent);
+
+        final Intent intent = new Intent(this, ListingSettingActivityNew.class);
+        intent.putExtra("reqCode", Constant.EDIT_TIME_CODE);
+        startActivityForResult(intent, Constant.EDIT_TIME_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+
+            switch (requestCode) {
+
+                case EDIT_TIME_CODE:
+
+                    ArrayList<Available> availables = data.getParcelableArrayListExtra("timePeriods");
+
+                    Log.d(TAG, "onActivityResult: availables = " + availables );
+                    break;
+            }
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Call<SpotInfoResponse> call = mService.getSpot(mId);
-        call.enqueue(new Callback<SpotInfoResponse>() {
-            @Override
-            public void onResponse(Response<SpotInfoResponse> response, Retrofit retrofit) {
-                SpotInfoResponse.Message.Spot spot = response.body().message.get(0).spots.get(1);
-                if (response.body().success) {
-                    Log.i(Constant.LOG, "Id of spot: " + mId);
-                    mDescription.setText(spot.name);
-                    mTypeSpot.setText(spot.type);
-                    mProfileTypeSpot.setText(spot.type);
-                    mGuests.setText(String.valueOf(spot.maxGuests));
-                    mNameProfile.setText(" " + spot.username);
-                    mProfileDescription.setText(spot.about);
-                    switch (spot.type) {
-                        case "backyard":
-                            mTypeImg.setImageDrawable(getResources().getDrawable(R.drawable.backyard));
-                            break;
-                        case "patio":
-                            mTypeImg.setImageDrawable(getResources().getDrawable(R.drawable.patio));
-                            break;
-                        case "smokingRooms":
-                            mTypeImg.setImageDrawable(getResources().getDrawable(R.drawable.other_type_of_spot));
-                            break;
-                        case "balcony":
-                            mTypeImg.setImageDrawable(getResources().getDrawable(R.drawable.balcony));
-                            break;
-                        case "Backyard":
-                            mTypeImg.setImageDrawable(getResources().getDrawable(R.drawable.backyard));
-                            break;
-                        case "Patio":
-                            mTypeImg.setImageDrawable(getResources().getDrawable(R.drawable.patio));
-                            break;
-                        case "SmokingRooms":
-                            mTypeImg.setImageDrawable(getResources().getDrawable(R.drawable.other_type_of_spot));
-                            break;
-                        case "Balcony":
-                            mTypeImg.setImageDrawable(getResources().getDrawable(R.drawable.balcony));
-                            break;
-                    }
-                    if (spot.imgs.size() != 0) {
-                        Picasso.with(getApplicationContext())
-                                .load(Constant.URL_IMAGE + spot.imgs.get(0))
-                                .into(mHeader);
-                    } else {
-                        Picasso.with(getApplicationContext())
-                                .load(Constant.BASE_IMAGE)
-                                .into(mHeader);
-                    }
-                    if (spot.userImgs.size() != 0) {
-                        Picasso.with(getApplicationContext())
-                                .load(Constant.URL_IMAGE + spot.userImgs.get(0))
-                                .into(mProfileImage);
-                    }
-                }
-            }
 
-            @Override
-            public void onFailure(Throwable t) {
-                Snackbar.make(findViewById(android.R.id.content), Constant.CONNECTION_ERROR, Snackbar.LENGTH_LONG)
-                        .show();
-            }
-        });
     }
 }

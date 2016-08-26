@@ -121,7 +121,7 @@ public class DescriptionSpotActivity extends AppCompatActivity {
     }
 
     private void getComments(SpotService service) {
-        Call<SpotCommentsResponse> call = service.getComments(getIntent().getExtras().getString("id"));
+        Call<SpotCommentsResponse> call = ServerApiUtil.initSpot().getComments(getIntent().getExtras().getString("id"), Person.getTokenMap());
         call.enqueue(new Callback<SpotCommentsResponse>() {
             @Override
             public void onResponse(Response<SpotCommentsResponse> response, Retrofit retrofit) {

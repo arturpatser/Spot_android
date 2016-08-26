@@ -42,6 +42,7 @@ public class ListingSettingActivityNew extends AppCompatActivity {
 
     @BindView(R.id.time_periods)
     RecyclerView timePeriods;
+    private int code;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +50,13 @@ public class ListingSettingActivityNew extends AppCompatActivity {
         setContentView(R.layout.activity_listing_setting_new);
 
         ButterKnife.bind(this);
+
+        Bundle bundle = getIntent().getExtras();
+
+        if (bundle != null) {
+
+            code = bundle.getInt("reqCode");
+        }
 
         adapter = new TimePeriodsAdapter(this, getFragmentManager());
 
@@ -83,80 +91,97 @@ public class ListingSettingActivityNew extends AppCompatActivity {
 
 
     public void onClickSaveCreateSpot(final View view) {
-        view.setVisibility(View.INVISIBLE);
-        final Intent intent = new Intent(this, MySpotsActivity.class);
-        Bundle extra = getIntent().getExtras();
-        CreateSpotQuery query = new CreateSpotQuery();
-        query.token = Person.getToken();
-        query.name = extra.getString("title");
-        if (!extra.getString("description").isEmpty()) {
-            query.about = extra.getString("description");
-        }
-        query.address = extra.getString("address");
-        query.price = Integer.parseInt(extra.getString("price")) * 100;
 
-        if (!extra.getString("maxGuests").isEmpty()) {
-            query.maxGuests = Integer.parseInt(extra.getString("maxGuests"));
-        }
+        if (code == Constant.EDIT_TIME_CODE) {
 
-        if (!extra.getString("listingType").isEmpty()) {
-            query.type = extra.getString("listingType");
-        }
+            Intent intent = new Intent();
+            intent.putParcelableArrayListExtra("timePeriods", new ArrayList<>(generateAvailableArr()));
+            setResult(RESULT_OK, intent);
+            finish();
+        } else {
 
-        if (!extra.getString("tobacco").isEmpty()) {
-            query.badges.add(extra.getString("tobacco"));
-        }
+            view.setVisibility(View.INVISIBLE);
+            final Intent intent = new Intent(this, MySpotsActivity.class);
+            Bundle extra = getIntent().getExtras();
+            CreateSpotQuery query = new CreateSpotQuery();
+            query.token = Person.getToken();
+            query.name = extra.getString("title");
+            if (!extra.getString("description").isEmpty()) {
+                query.about = extra.getString("description");
+            }
+            query.address = extra.getString("address");
+            query.price = Integer.parseInt(extra.getString("price")) * 100;
 
-        if (!extra.getString("heated").isEmpty()) {
-            query.badges.add(extra.getString("heated"));
-        }
+            if (!extra.getString("maxGuests").isEmpty()) {
+                query.maxGuests = Integer.parseInt(extra.getString("maxGuests"));
+            }
 
-        if (!extra.getString("handicap").isEmpty()) {
-            query.badges.add(extra.getString("handicap"));
-        }
+            if (!extra.getString("listingType").isEmpty()) {
+                query.type = extra.getString("listingType");
+            }
 
-        query.available = adapter.getItems();
-        List<Available> available = query.available;
+            if (!extra.getString("tobacco").isEmpty()) {
+                query.badges.add(extra.getString("tobacco"));
+            }
+
+            if (!extra.getString("heated").isEmpty()) {
+                query.badges.add(extra.getString("heated"));
+            }
+
+            if (!extra.getString("handicap").isEmpty()) {
+                query.badges.add(extra.getString("handicap"));
+            }
+
+            query.available = generateAvailableArr();
+
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            Log.d(TAG, gson.toJson(query));
+
+            Call<SpotCreateResponse> call = mService.createSpot(query);
+            call.enqueue(new Callback<SpotCreateResponse>() {
+                @Override
+                public void onResponse(final Response<SpotCreateResponse> response, Retrofit retrofit) {
+                    Log.i(Constant.LOG, new Gson().toJson(response.body()));
+                    if (response.body().success) {
+                        Log.i(Constant.LOG, String.valueOf(response.code()));
+                        Log.i(Constant.LOG, "listing setting success true");
+//                    intent.putExtra("id", response);
+                        startActivity(intent);
+                    } else {
+                        Log.i(Constant.LOG, String.valueOf(response.code()));
+                        Snackbar.make(findViewById(android.R.id.content), "You already have the spot", Snackbar.LENGTH_INDEFINITE)
+                                .setAction("go to spot", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+//                                    intent.putExtra("id", response);
+                                        startActivity(intent);
+                                    }
+                                })
+                                .setActionTextColor(getResources().getColor(R.color.mainRed))
+                                .show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                    Snackbar.make(findViewById(android.R.id.content), Constant.CONNECTION_ERROR, Snackbar.LENGTH_SHORT).show();
+                    view.setVisibility(View.VISIBLE);
+                }
+            });
+        }
+    }
+
+    private List<Available> generateAvailableArr() {
+
+        List<Available> available = adapter.getItems();
+
         for (int i = 0; i < available.size(); i++) {
             Available a = available.get(i);
 
             a.days = getDays((TimePeriodsAdapter.TimePeriod) timePeriods.findViewHolderForAdapterPosition(i));
         }
 
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        Log.d(TAG, gson.toJson(query));
-
-        Call<SpotCreateResponse> call = mService.createSpot(query);
-        call.enqueue(new Callback<SpotCreateResponse>() {
-            @Override
-            public void onResponse(final Response<SpotCreateResponse> response, Retrofit retrofit) {
-                Log.i(Constant.LOG, new Gson().toJson(response.body()));
-                if (response.body().success) {
-                    Log.i(Constant.LOG, String.valueOf(response.code()));
-                    Log.i(Constant.LOG, "listing setting success true");
-//                    intent.putExtra("id", response);
-                    startActivity(intent);
-                } else {
-                    Log.i(Constant.LOG, String.valueOf(response.code()));
-                    Snackbar.make(findViewById(android.R.id.content), "You already have the spot", Snackbar.LENGTH_INDEFINITE)
-                            .setAction("go to spot", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-//                                    intent.putExtra("id", response);
-                                    startActivity(intent);
-                                }
-                            })
-                            .setActionTextColor(getResources().getColor(R.color.mainRed))
-                            .show();
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                Snackbar.make(findViewById(android.R.id.content), Constant.CONNECTION_ERROR, Snackbar.LENGTH_SHORT).show();
-                view.setVisibility(View.VISIBLE);
-            }
-        });
+        return available;
     }
 
     private List<String> getDays(TimePeriodsAdapter.TimePeriod holder) {
