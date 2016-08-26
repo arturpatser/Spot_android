@@ -127,12 +127,14 @@ public class DescriptionSpotActivity extends AppCompatActivity {
             public void onResponse(Response<SpotCommentsResponse> response, Retrofit retrofit) {
                 if (response.body().success) {
                     mAllComment = new ArrayList<>(response.body().message.get(0).comments);
-                    mReviews.setText(mAllComment.size() + " Reviews");
-                    mShowComment.add(mAllComment.get(0).data.comment);
-                    mAllComment.remove(0);
-                    mCommentsAdapter = new ArrayAdapter<>(DescriptionSpotActivity.this,
-                            R.layout.item_comment, mShowComment);
-                    mCommentView.setAdapter(mCommentsAdapter);
+                    if (mAllComment.size() > 0) {
+                        mReviews.setText(mAllComment.size() + " Reviews");
+                        mShowComment.add(mAllComment.get(0).data.comment);
+                        mAllComment.remove(0);
+                        mCommentsAdapter = new ArrayAdapter<>(DescriptionSpotActivity.this,
+                                R.layout.item_comment, mShowComment);
+                        mCommentView.setAdapter(mCommentsAdapter);
+                    }
                 }
             }
 
