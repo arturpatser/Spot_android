@@ -221,24 +221,35 @@ public class MainActivity extends AppCompatActivity {
 
         call.enqueue(new Callback<UserInfoResponse>() {
             @Override
-            public void onResponse(retrofit.Response<UserInfoResponse> response, Retrofit retrofit) {
+            public void onResponse(final retrofit.Response<UserInfoResponse> response, Retrofit retrofit) {
                 final Intent intent = new Intent(MainActivity.this, TabsActivity.class);
                 Log.i("profile", String.valueOf(response.code()));
-                UserInfoResponse res = response.body();
-                UserInfoResponse.Message message = res.message.get(0);
-                Person.setHost(message.system.isVerified);
-                intent.putExtra("name", message.data.name);
-                intent.putExtra("email", message.data.email);
-                Log.i(Constant.LOG, "android id from the server: " + message.system.androidId);
-                try {
-                    intent.putExtra("avatar", message.data.imgs.get(0));
-                } catch (IndexOutOfBoundsException e) {
-                    intent.putExtra("avatar", Constant.BASE_IMAGE);
-                }
+
                 if (mProgressDialog.isShowing()) {
                     mProgressDialog.dismiss();
                 }
-                startActivity(intent);
+
+                setContentView(R.layout.success_signup);
+
+                findViewById(R.id.signup_success_layout).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        UserInfoResponse res = response.body();
+                        UserInfoResponse.Message message = res.message.get(0);
+                        Person.setHost(message.system.isVerified);
+                        intent.putExtra("name", message.data.name);
+                        intent.putExtra("email", message.data.email);
+                        Log.i(Constant.LOG, "android id from the server: " + message.system.androidId);
+                        try {
+                            intent.putExtra("avatar", message.data.imgs.get(0));
+                        } catch (IndexOutOfBoundsException e) {
+                            intent.putExtra("avatar", Constant.BASE_IMAGE);
+                        }
+
+                        startActivity(intent);
+                    }
+                });
             }
 
             @Override

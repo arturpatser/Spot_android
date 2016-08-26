@@ -1,0 +1,33 @@
+<FrameLayout android:clickable="true"
+    android:background="@color/wallet_holo_blue_light"
+    android:onClick="onClickWelcome"
+    android:id="@+id/signup_success_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.MainActivity"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/signup_text"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/white"
+        android:padding="16dp"/>
+
+    <TextView
+        android:textAppearance="?android:textAppearanceMedium"
+        android:text="@string/click_anywhere"
+        android:textColor="@color/white"
+        android:layout_gravity="bottom"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:padding="8dp" />
+
+</FrameLayout>

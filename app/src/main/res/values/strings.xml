@@ -162,9 +162,11 @@
     <string name="pending">Pending</string>
     <string name="payment_history">Payment history</string>
     <string name="earned_income_total">earned income total</string>
-    <string name="successfully">Succesfully</string>
+    <string name="successfully">Successfully</string>
     <string name="add_time_rule">+ Add one more time rule</string>
     <string name="request_booking">Request booking</string>
     <string name="prev_date">You cannot order previous day</string>
     <string name="add_friends">Add friends</string>
+    <string name="signup_text">We want your next Jay to be a vacation, a Jaycation! Our Hosts will make sure your next Jaycation is an experience you won\'t forget(or maybe you will)…\nExplore the many Spots in your city now! </string>
+    <string name="click_anywhere">Click anywhere to continue</string>
 </resources>
