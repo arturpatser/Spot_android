@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.gridyn.potspot.AssetsHelper;
+import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.FastBlur;
 import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
@@ -25,6 +26,8 @@ import com.gridyn.potspot.activity.ProfileEditActivity;
 import com.gridyn.potspot.activity.VerificationActivity;
 import com.gridyn.potspot.response.UserInfoResponse;
 import com.gridyn.potspot.service.UserService;
+import com.gridyn.potspot.utils.FragmentUtils;
+import com.gridyn.potspot.utils.SharedPrefsUtils;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -270,6 +273,13 @@ public class ProfileFragment extends Fragment {
     public void onResume() {
         super.onResume();
         SelectPageUtil.selectProfile();
+
+        if ( !SharedPrefsUtils.getBooleanPreference(getContext(), Constant.PROFILE_ONE_TIME, false)) {
+
+            OneTimeFragment oneTimeFragment = OneTimeFragment.newInstance(Constant.PROFILE_ONE_TIME, R.drawable.myprofile);
+
+            FragmentUtils.openFragment(oneTimeFragment, R.id.drawer_layout, Constant.PROFILE_ONE_TIME, getContext(), true);
+        }
     }
 
     private void onClickButton() {

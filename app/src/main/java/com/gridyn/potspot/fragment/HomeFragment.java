@@ -120,11 +120,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        if (!SharedPrefsUtils.getBooleanPreference(getContext(), Constant.PROFILE_ONE_TIME, false)) {
+        if (!SharedPrefsUtils.getBooleanPreference(getContext(), Constant.HOME_ONE_TIME, false)) {
 
-            OneTimeFragment oneTimeFragment = OneTimeFragment.newInstance(Constant.PROFILE_ONE_TIME, R.drawable.home_1);
+            OneTimeFragment oneTimeFragment = OneTimeFragment.newInstance(Constant.HOME_ONE_TIME, R.drawable.home_1);
 
-            FragmentUtils.openFragment(oneTimeFragment, R.id.drawer_layout, Constant.PROFILE_ONE_TIME, getContext(), true);
+            FragmentUtils.openFragment(oneTimeFragment, R.id.drawer_layout, Constant.HOME_ONE_TIME, getContext(), true);
         }
 
         if (!flag) {

@@ -26,6 +26,7 @@ public interface Constant {
     String MESSAGE_ACTION = "com.gridyn.potspot.NEW_MESSAGE";
     int EDIT_TIME_CODE = 1;
     String ARG_POTSPOT_AVAILABLE = "availArr";
-    String PROFILE_ONE_TIME = "profileOneTime";
+    String HOME_ONE_TIME = "homeOneTime";
     String SPOT_ONE_TIME = "spotOneTime";
+    String PROFILE_ONE_TIME = "profOneTime";
 }
