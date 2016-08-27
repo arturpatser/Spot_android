@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.R;
 import com.gridyn.potspot.utils.FragmentUtils;
 import com.gridyn.potspot.utils.SharedPrefsUtils;
@@ -47,7 +46,7 @@ public class OneTimeFragment extends Fragment {
             mSharedPref = getArguments().getString(ARG_SHARED_PREF);
             picId = getArguments().getInt(ARG_PIC_ID);
 
-            SharedPrefsUtils.setBooleanPreference(getContext(), Constant.PROFILE_ONE_TIME, true);
+            SharedPrefsUtils.setBooleanPreference(getContext(), mSharedPref, true);
         }
     }
 

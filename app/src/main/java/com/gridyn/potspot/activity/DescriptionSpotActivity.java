@@ -17,12 +17,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
+import com.gridyn.potspot.fragment.OneTimeFragment;
 import com.gridyn.potspot.response.SpotCommentsResponse;
 import com.gridyn.potspot.response.SpotInfoResponse;
 import com.gridyn.potspot.service.SpotService;
+import com.gridyn.potspot.utils.FragmentUtils;
 import com.gridyn.potspot.utils.ServerApiUtil;
+import com.gridyn.potspot.utils.SharedPrefsUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -71,6 +75,14 @@ public class DescriptionSpotActivity extends AppCompatActivity {
         setContentView(R.layout.activity_description_spot);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+
+        if (!SharedPrefsUtils.getBooleanPreference(this, Constant.SPOT_ONE_TIME, false)) {
+
+            OneTimeFragment oneTimeFragment = OneTimeFragment.newInstance(Constant.SPOT_ONE_TIME, R.drawable.spot_page_1);
+
+            FragmentUtils.openFragment(oneTimeFragment, R.id.content_frame, Constant.SPOT_ONE_TIME, this, true);
+        }
+
         initFields();
         initFonts();
         initRetrofit();

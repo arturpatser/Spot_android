@@ -27,4 +27,5 @@ public interface Constant {
     int EDIT_TIME_CODE = 1;
     String ARG_POTSPOT_AVAILABLE = "availArr";
     String PROFILE_ONE_TIME = "profileOneTime";
+    String SPOT_ONE_TIME = "spotOneTime";
 }
