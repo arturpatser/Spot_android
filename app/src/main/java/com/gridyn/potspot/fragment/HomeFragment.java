@@ -46,6 +46,8 @@ import com.gridyn.potspot.adapter.HomeAdapter;
 import com.gridyn.potspot.query.SearchCriteriaQuery;
 import com.gridyn.potspot.response.SpotSearchResponse;
 import com.gridyn.potspot.service.SpotService;
+import com.gridyn.potspot.utils.FragmentUtils;
+import com.gridyn.potspot.utils.SharedPrefsUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -117,6 +119,14 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        if (!SharedPrefsUtils.getBooleanPreference(getContext(), Constant.PROFILE_ONE_TIME, false)) {
+
+            OneTimeFragment oneTimeFragment = OneTimeFragment.newInstance(Constant.PROFILE_ONE_TIME, R.drawable.home_1);
+
+            FragmentUtils.openFragment(oneTimeFragment, R.id.drawer_layout, Constant.PROFILE_ONE_TIME, getContext(), true);
+        }
+
         if (!flag) {
             flag = true;
             mView = inflater.inflate(R.layout.fragment_home, container, false);
