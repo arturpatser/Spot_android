@@ -6,6 +6,7 @@ import com.gridyn.potspot.query.LoginQuery;
 import com.gridyn.potspot.query.PhoneConfirmQuery;
 import com.gridyn.potspot.query.PhoneVerifyQuery;
 import com.gridyn.potspot.query.UserUpdateQuery;
+import com.gridyn.potspot.response.FriendsResponse;
 import com.gridyn.potspot.response.MySpotResponse;
 import com.gridyn.potspot.response.PhoneConfirmResponse;
 import com.gridyn.potspot.response.PhoneVerifyResponse;
@@ -67,4 +68,7 @@ public interface UserService {
 
     @POST("user/phone/confirm")
     Call<PhoneConfirmResponse> confirmPhone(@Body PhoneConfirmQuery phoneConfirmQuery);
+
+    @POST("user/friends")
+    Call<FriendsResponse> getFriends(@Body Map<String, String> token);
 }

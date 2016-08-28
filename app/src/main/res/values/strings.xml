@@ -169,4 +169,8 @@
     <string name="add_friends">Add friends</string>
     <string name="signup_text">We want your next Jay to be a vacation, a Jaycation! Our Hosts will make sure your next Jaycation is an experience you won\'t forget(or maybe you will)…\nExplore the many Spots in your city now! </string>
     <string name="click_anywhere">Click anywhere to continue</string>
+    <string name="share_with">Share with %1$s friends</string>
+    <string name="email_your_friend">Email your friend</string>
+    <string name="add">Add</string>
+    <string name="cannot_split">You cannot split this payment</string>
 </resources>

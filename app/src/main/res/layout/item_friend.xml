@@ -1,0 +1,35 @@
+<layout>
+
+    <data>
+
+        <variable
+            name="friend"
+            type="com.gridyn.potspot.model.FriendModel" />
+
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:background="@{friend.selected ? @color/mainRed : @color/white}"
+        android:layout_height="@dimen/payment_history_item_height">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:id="@+id/friend_pic"
+            android:layout_weight="0.2"
+            android:layout_margin="4dp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@{friend.name}"
+            android:id="@+id/textView11"
+            android:layout_weight="0.8"
+            android:layout_margin="4dp"
+            android:gravity="center_vertical"
+            android:padding="4dp" />
+    </LinearLayout>
+</layout>

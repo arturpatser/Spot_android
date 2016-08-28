@@ -15,14 +15,18 @@ import com.google.gson.Gson;
 import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
+import com.gridyn.potspot.fragment.SelectFriendsFragment;
+import com.gridyn.potspot.model.FriendModel;
 import com.gridyn.potspot.response.SpotInfoResponse;
 import com.gridyn.potspot.service.SpotService;
+import com.gridyn.potspot.utils.FragmentUtils;
 import com.gridyn.potspot.utils.ServerApiUtil;
 import com.squareup.picasso.Picasso;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import retrofit.Call;
@@ -32,6 +36,7 @@ import retrofit.Retrofit;
 
 public class BuySpotActivity extends AppCompatActivity {
 
+    private static final String TAG = BuySpotActivity.class.getName();
     private Context mContext;
     private ImageView mHeader;
     private TextView mName;
@@ -42,6 +47,7 @@ public class BuySpotActivity extends AppCompatActivity {
     private TextView mTime;
     private Button mPay;
     private Calendar mCalendar;
+    SpotInfoResponse.Message.Spot spot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +87,7 @@ public class BuySpotActivity extends AppCompatActivity {
                     Log.i(Constant.LOG, new Gson().toJson(response.body()));
 
                     //TODO check class parse
-                    SpotInfoResponse.Message.Spot spot = response.body().message.get(0).spots.get(1);
+                    spot = response.body().message.get(0).spots.get(1);
 
                     Picasso.with(mContext)
                             .load(Constant.URL_IMAGE + spot.imgs.get(0))
@@ -146,5 +152,51 @@ public class BuySpotActivity extends AppCompatActivity {
         );
         timePickerDialog.setAccentColor(getResources().getColor(R.color.mainRed));
         timePickerDialog.show(getFragmentManager(), "TimePickerDialog");
+    }
+
+    public void onClickBuyPay(View view) {
+
+//        try {
+//            Stripe stripe = new Stripe(Constant.STRIPE_KEY);
+//
+//            Card card = new Card("4242424242424242", 12, 2013, "123");
+//
+//            stripe.createToken(card,
+//                    new TokenCallback() {
+//                        @Override
+//                        public void onError(Exception error) {
+//
+//                            Log.e(TAG, "onError: error while create token for stripe = " + Log.getStackTraceString(error));
+//                        }
+//
+//                        @Override
+//                        public void onSuccess(Token token) {
+//
+//                            Log.d(TAG, "onSuccess: successfull received stripe token = " + token.getId());
+//                        }
+//                    });
+//
+//        } catch (AuthenticationException e) {
+//            Log.e(TAG, "onClickBuyPay: error while init stripe = " + Log.getStackTraceString(e));
+//        }
+    }
+
+    public void onClickSplitPayment(View view) {
+
+        if (spot != null && spot.maxGuests != 1) {
+            SelectFriendsFragment select = SelectFriendsFragment.newInstance(spot.maxGuests);
+
+            select.setOnSelectFriendsListener(new SelectFriendsFragment.OnSelectFriendsListener() {
+                @Override
+                public void friendsSelected(ArrayList<FriendModel> selectedItems) {
+
+                    //TODO process selected friends here
+                    Log.d(TAG, "friendsSelected: process friends started " + selectedItems);
+                }
+            });
+
+            FragmentUtils.openFragment(select, R.id.content_frame, SelectFriendsFragment.TAG, this, true);
+        } else
+            Snackbar.make(findViewById(android.R.id.content), R.string.cannot_split, Snackbar.LENGTH_SHORT).show();
     }
 }
