@@ -14,6 +14,7 @@ import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
 import com.gridyn.potspot.adapter.FriendsAdapter;
 import com.gridyn.potspot.databinding.FragmentSelectFriendsBinding;
+import com.gridyn.potspot.interfaces.SelectFriendsInterface;
 import com.gridyn.potspot.model.FriendModel;
 import com.gridyn.potspot.response.FriendsResponse;
 import com.gridyn.potspot.utils.FragmentUtils;
@@ -28,7 +29,7 @@ import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-public class SelectFriendsFragment extends Fragment {
+public class SelectFriendsFragment extends Fragment implements SelectFriendsInterface {
 
     public static final String TAG = SelectFriendsFragment.class.getName();
     private static String ARG_PARTY_SIZE = "partysize";
@@ -39,6 +40,8 @@ public class SelectFriendsFragment extends Fragment {
     RecyclerView friendsRecycler;
 
     FriendsAdapter adapter;
+
+    FragmentSelectFriendsBinding binding;
 
     public SelectFriendsFragment() {
         // Required empty public constructor
@@ -61,7 +64,7 @@ public class SelectFriendsFragment extends Fragment {
             partySize = getArguments().getInt(ARG_PARTY_SIZE);
         }
 
-        adapter = new FriendsAdapter(getContext());
+        adapter = new FriendsAdapter(getContext(), this);
 
         loadFriends();
     }
@@ -73,9 +76,9 @@ public class SelectFriendsFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_select_friends, container, false);
 
         ButterKnife.bind(this, rootView);
-        FragmentSelectFriendsBinding binding = DataBindingUtil.bind(rootView);
+        binding = DataBindingUtil.bind(rootView);
 
-        binding.setShareText(getString(R.string.share_with, String.valueOf(partySize - 1)));
+        binding.setShareText(getString(R.string.share_with, ""));
 
         binding.setAddFriendsListener(new View.OnClickListener() {
             @Override
@@ -137,6 +140,12 @@ public class SelectFriendsFragment extends Fragment {
     public void setOnSelectFriendsListener(OnSelectFriendsListener onSelectFriendsListener) {
 
         this.mListener = onSelectFriendsListener;
+    }
+
+    @Override
+    public void selectedFriends(int selected) {
+
+        binding.setShareText(getString(R.string.share_with, selected != 0 ? String.valueOf(selected) : ""));
     }
 
     public interface OnSelectFriendsListener {

@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 import com.gridyn.potspot.R;
 import com.gridyn.potspot.databinding.ItemFriendBinding;
+import com.gridyn.potspot.interfaces.SelectFriendsInterface;
 import com.gridyn.potspot.model.FriendModel;
 
 import java.util.ArrayList;
@@ -23,14 +24,16 @@ import java.util.List;
 public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHolder>{
 
     private static final String TAG = FriendsAdapter.class.getName();
+    private final SelectFriendsInterface selectFriendsInterface;
     Context context;
     LayoutInflater layoutInflater;
     ArrayList<FriendModel> friendModelArrayList;
 
-    public FriendsAdapter(Context context) {
+    public FriendsAdapter(Context context, SelectFriendsInterface selectFriendsInterface) {
         this.context = context;
         this.layoutInflater = LayoutInflater.from(context);
         friendModelArrayList = new ArrayList<>();
+        this.selectFriendsInterface = selectFriendsInterface;
     }
 
     @Override
@@ -54,6 +57,8 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                 Log.d(TAG, "onClick: clicked friend = " + friendModel);
 
                 friendModel.setSelected(!friendModel.isSelected());
+
+                selectFriendsInterface.selectedFriends(getSelectedCount());
             }
         });
 
@@ -85,6 +90,17 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                 selectedItems.add(friendModel);
 
         return selectedItems;
+    }
+
+    public int getSelectedCount() {
+
+        int selectedCount = 0;
+
+        for (FriendModel friendModel : friendModelArrayList)
+            if (friendModel.isSelected())
+                selectedCount++;
+
+        return selectedCount;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
