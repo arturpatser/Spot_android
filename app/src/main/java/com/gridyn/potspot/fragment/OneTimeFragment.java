@@ -5,8 +5,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
+import com.davemorrissey.labs.subscaleview.ImageSource;
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.gridyn.potspot.R;
 import com.gridyn.potspot.utils.FragmentUtils;
 import com.gridyn.potspot.utils.SharedPrefsUtils;
@@ -23,7 +24,7 @@ public class OneTimeFragment extends Fragment {
     private int picId;
 
     @BindView(R.id.pic_to_show)
-    ImageView imageView;
+    SubsamplingScaleImageView imageView;
 
     public OneTimeFragment() {
         // Required empty public constructor
@@ -46,7 +47,8 @@ public class OneTimeFragment extends Fragment {
             mSharedPref = getArguments().getString(ARG_SHARED_PREF);
             picId = getArguments().getInt(ARG_PIC_ID);
 
-            SharedPrefsUtils.setBooleanPreference(getContext(), mSharedPref, true);
+            if (mSharedPref != null)
+                SharedPrefsUtils.setBooleanPreference(getContext(), mSharedPref, true);
         }
     }
 
@@ -58,8 +60,9 @@ public class OneTimeFragment extends Fragment {
 
         ButterKnife.bind(this, rootView);
 
-        imageView.setImageResource(picId);
+        imageView.setImage(ImageSource.resource(picId));
 
+        if (mSharedPref != null)
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,6 +73,4 @@ public class OneTimeFragment extends Fragment {
 
         return rootView;
     }
-
-
 }

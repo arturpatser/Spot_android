@@ -1,5 +1,5 @@
 <FrameLayout android:clickable="true"
-    android:background="@color/wallet_holo_blue_light"
+    android:background="@drawable/welcome_bg"
     android:onClick="onClickWelcome"
     android:id="@+id/signup_success_layout"
     android:layout_width="match_parent"

@@ -51,4 +51,5 @@ dependencies {
     compile 'com.bignerdranch.android:simple-item-decoration:1.0.0'
     compile 'com.matthew-tamlin:sliding-intro-screen:3.2.0'
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.+'
+    compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.5.0'
 }

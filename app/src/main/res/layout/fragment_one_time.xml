@@ -6,7 +6,7 @@
     android:clickable="true"
     tools:context="com.gridyn.potspot.fragment.OneTimeFragment">
 
-    <ImageView
+    <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
         android:id="@+id/pic_to_show"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

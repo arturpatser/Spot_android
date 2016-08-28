@@ -29,4 +29,5 @@ public interface Constant {
     String HOME_ONE_TIME = "homeOneTime";
     String SPOT_ONE_TIME = "spotOneTime";
     String PROFILE_ONE_TIME = "profOneTime";
+    String ADD_SPOT_ONE_TIME = "addSpotOneTime";
 }

@@ -20,6 +20,7 @@ import com.gridyn.potspot.model.Available;
 import com.gridyn.potspot.query.CreateSpotQuery;
 import com.gridyn.potspot.response.SpotCreateResponse;
 import com.gridyn.potspot.service.SpotService;
+import com.gridyn.potspot.utils.SharedPrefsUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,11 +68,11 @@ public class ListingSettingActivityNew extends AppCompatActivity {
                 adapter.addItems(oldTimePeriods);
 
                 Log.d(TAG, "onCreate: old time periods = " + oldTimePeriods);
-            }
-        } else {
+            } else {
 
-            //if we not in edit mode we add empty time model
-            adapter.addItem(new Available());
+                //if we not in edit mode we add empty time model
+                adapter.addItem(new Available());
+            }
         }
 
         timePeriods.setAdapter(adapter);
@@ -113,7 +114,8 @@ public class ListingSettingActivityNew extends AppCompatActivity {
         } else {
 
             view.setVisibility(View.INVISIBLE);
-            final Intent intent = new Intent(this, MySpotsActivity.class);
+            final Intent intent = !SharedPrefsUtils.getBooleanPreference(this, Constant.ADD_SPOT_ONE_TIME, false) ?
+                    new Intent(this, AddNewSpotTips.class) : new Intent(this, MySpotsActivity.class);
             Bundle extra = getIntent().getExtras();
             CreateSpotQuery query = new CreateSpotQuery();
             query.token = Person.getToken();
