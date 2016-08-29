@@ -173,4 +173,6 @@
     <string name="email_your_friend">Email your friend</string>
     <string name="add">Add</string>
     <string name="cannot_split">You cannot split this payment</string>
+    <string name="add_more_friends">+ more friends</string>
+    <string name="party_size_alert">You cannot select more then party size limit</string>
 </resources>

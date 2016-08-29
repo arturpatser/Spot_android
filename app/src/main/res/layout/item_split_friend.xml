@@ -1,0 +1,38 @@
+<layout>
+
+    <data>
+
+        <variable
+            name="friend"
+            type="com.gridyn.potspot.model.FriendModel" />
+
+    </data>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_margin="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_margin="4dp"
+            android:padding="4dp"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:text="@{friend.name}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.7" />
+
+        <TextView
+            android:layout_margin="4dp"
+            android:padding="4dp"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:text='@{String.valueOf(friend.splitSize) + "$"}'
+            android:layout_width="0dp"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3" />
+
+    </LinearLayout>
+</layout>

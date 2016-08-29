@@ -1,9 +1,12 @@
 package com.gridyn.potspot.activity;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -15,7 +18,10 @@ import com.google.gson.Gson;
 import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
+import com.gridyn.potspot.adapter.SplitFriendsAdapter;
+import com.gridyn.potspot.databinding.ActivityBuySpotBinding;
 import com.gridyn.potspot.fragment.SelectFriendsFragment;
+import com.gridyn.potspot.interfaces.BuySpotInterface;
 import com.gridyn.potspot.model.FriendModel;
 import com.gridyn.potspot.response.SpotInfoResponse;
 import com.gridyn.potspot.service.SpotService;
@@ -34,7 +40,7 @@ import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-public class BuySpotActivity extends AppCompatActivity {
+public class BuySpotActivity extends AppCompatActivity implements BuySpotInterface {
 
     private static final String TAG = BuySpotActivity.class.getName();
     private Context mContext;
@@ -48,11 +54,14 @@ public class BuySpotActivity extends AppCompatActivity {
     private Button mPay;
     private Calendar mCalendar;
     SpotInfoResponse.Message.Spot spot;
-
+    RecyclerView splitFriendsRecycler;
+    private SplitFriendsAdapter adapter;
+    ActivityBuySpotBinding binding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_buy_spot);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_buy_spot);
+        binding.setShowSplit(true);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         initFields();
@@ -73,6 +82,13 @@ public class BuySpotActivity extends AppCompatActivity {
         mCalendar = Calendar.getInstance();
         mDate.setText(Integer.toString(mCalendar.get(Calendar.DAY_OF_MONTH)) + "/"
                 + mCalendar.get(Calendar.MONTH) + "/" + mCalendar.get(Calendar.YEAR));
+
+        splitFriendsRecycler = (RecyclerView) findViewById(R.id.split_friends_recycler);
+
+        adapter = new SplitFriendsAdapter(this, this);
+
+        splitFriendsRecycler.setLayoutManager(new LinearLayoutManager(this));
+        splitFriendsRecycler.setAdapter(adapter);
     }
 
     private void initRetrofit() {
@@ -184,19 +200,38 @@ public class BuySpotActivity extends AppCompatActivity {
     public void onClickSplitPayment(View view) {
 
         if (spot != null && spot.maxGuests != 1) {
-            SelectFriendsFragment select = SelectFriendsFragment.newInstance(spot.maxGuests);
-
-            select.setOnSelectFriendsListener(new SelectFriendsFragment.OnSelectFriendsListener() {
-                @Override
-                public void friendsSelected(ArrayList<FriendModel> selectedItems) {
-
-                    //TODO process selected friends here
-                    Log.d(TAG, "friendsSelected: process friends started " + selectedItems);
-                }
-            });
-
-            FragmentUtils.openFragment(select, R.id.content_frame, SelectFriendsFragment.TAG, this, true);
+            showSplitFriends();
         } else
             Snackbar.make(findViewById(android.R.id.content), R.string.cannot_split, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showSplitFriends() {
+
+        SelectFriendsFragment select = SelectFriendsFragment.newInstance(spot.maxGuests - 1, adapter.getItems());
+
+        select.setOnSelectFriendsListener(new SelectFriendsFragment.OnSelectFriendsListener() {
+            @Override
+            public void friendsSelected(ArrayList<FriendModel> selectedItems) {
+
+                //TODO process selected friends here
+                Log.d(TAG, "friendsSelected: process friends started " + selectedItems);
+                adapter.clear();
+                if (selectedItems.size() > 0) {
+
+                    for (FriendModel f :
+                            selectedItems) {
+                        f.setSplitSize(spot.price / (selectedItems.size() + 1));
+                    }
+
+                    adapter.addItems(selectedItems);
+                    binding.setShowSplit(false);
+                }
+                else
+                    binding.setShowSplit(true);
+            }
+        });
+
+        FragmentUtils.openFragment(select, R.id.content_frame, SelectFriendsFragment.TAG, this, true);
     }
 }

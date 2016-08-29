@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.gridyn.potspot.R;
 import com.gridyn.potspot.databinding.ItemFriendBinding;
@@ -25,15 +26,17 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
     private static final String TAG = FriendsAdapter.class.getName();
     private final SelectFriendsInterface selectFriendsInterface;
+    private final int partySize;
     Context context;
     LayoutInflater layoutInflater;
     ArrayList<FriendModel> friendModelArrayList;
 
-    public FriendsAdapter(Context context, SelectFriendsInterface selectFriendsInterface) {
+    public FriendsAdapter(Context context, SelectFriendsInterface selectFriendsInterface, int partySize) {
         this.context = context;
         this.layoutInflater = LayoutInflater.from(context);
         friendModelArrayList = new ArrayList<>();
         this.selectFriendsInterface = selectFriendsInterface;
+        this.partySize = partySize;
     }
 
     @Override
@@ -56,16 +59,24 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
                 Log.d(TAG, "onClick: clicked friend = " + friendModel);
 
-                friendModel.setSelected(!friendModel.isSelected());
+                int selectedCount = getSelectedCount();
 
-                selectFriendsInterface.selectedFriends(getSelectedCount());
+                if (selectedCount < partySize) {
+                    friendModel.setSelected(!friendModel.isSelected());
+
+                    selectFriendsInterface.selectedFriends(getSelectedCount());
+                } else if (friendModel.isSelected()) {
+                    friendModel.setSelected(false);
+                } else {
+                    Toast.makeText(context, R.string.party_size_alert, Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
         //TODO load pic here
     }
 
-    private FriendModel getItem(int position) {
+    public FriendModel getItem(int position) {
 
         return friendModelArrayList.get(position);
     }
@@ -101,6 +112,10 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                 selectedCount++;
 
         return selectedCount;
+    }
+
+    public ArrayList<FriendModel> getItems() {
+        return friendModelArrayList;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

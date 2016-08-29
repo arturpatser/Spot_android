@@ -33,6 +33,7 @@ public class SelectFriendsFragment extends Fragment implements SelectFriendsInte
 
     public static final String TAG = SelectFriendsFragment.class.getName();
     private static String ARG_PARTY_SIZE = "partysize";
+    private static String ARG_FRIENDS_SELECTED = "friends";
     private OnSelectFriendsListener mListener;
     private int partySize;
 
@@ -42,15 +43,17 @@ public class SelectFriendsFragment extends Fragment implements SelectFriendsInte
     FriendsAdapter adapter;
 
     FragmentSelectFriendsBinding binding;
+    private ArrayList<FriendModel> friendsArr;
 
     public SelectFriendsFragment() {
         // Required empty public constructor
     }
 
-    public static SelectFriendsFragment newInstance(int partySize) {
+    public static SelectFriendsFragment newInstance(int partySize, ArrayList<FriendModel> arrayList) {
         SelectFriendsFragment fragment = new SelectFriendsFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_PARTY_SIZE, partySize);
+        args.putParcelableArrayList(ARG_FRIENDS_SELECTED, arrayList);
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,9 +65,10 @@ public class SelectFriendsFragment extends Fragment implements SelectFriendsInte
         if (getArguments() != null) {
 
             partySize = getArguments().getInt(ARG_PARTY_SIZE);
+            friendsArr = getArguments().getParcelableArrayList(ARG_FRIENDS_SELECTED);
         }
 
-        adapter = new FriendsAdapter(getContext(), this);
+        adapter = new FriendsAdapter(getContext(), this, partySize);
 
         loadFriends();
     }
@@ -118,6 +122,29 @@ public class SelectFriendsFragment extends Fragment implements SelectFriendsInte
 
                 //TODO uncomment, add friends to adapter here
                 //adapter.addAll();
+
+                ArrayList<FriendModel> arr = new ArrayList<>();
+
+                for (int i = 0; i < 10; i++) {
+
+                    arr.add(new FriendModel(""+i, false, "topkek"+i));
+                }
+
+                adapter.addAll(arr);
+
+                for (int j = 0; j < adapter.getItems().size(); j++) {
+
+                    FriendModel adapItem = adapter.getItem(j);
+
+                    for (int i = 0; i < friendsArr.size(); i++) {
+
+                        FriendModel selectedItem = friendsArr.get(i);
+
+                        if (adapItem.getId().equals(selectedItem.getId())) {
+                            adapItem.setSelected(true);
+                        }
+                    }
+                }
             }
 
             @Override
@@ -126,15 +153,6 @@ public class SelectFriendsFragment extends Fragment implements SelectFriendsInte
                 Log.e(TAG, "onFailure: error while load friends = " + Log.getStackTraceString(t));
             }
         });
-
-        ArrayList<FriendModel> arr = new ArrayList<>();
-
-        for (int i = 0; i < 10; i++) {
-
-            arr.add(new FriendModel(""+i, false, "topkek"+i));
-        }
-
-        adapter.addAll(arr);
     }
 
     public void setOnSelectFriendsListener(OnSelectFriendsListener onSelectFriendsListener) {
