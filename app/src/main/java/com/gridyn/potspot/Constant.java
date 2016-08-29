@@ -31,4 +31,7 @@ public interface Constant {
     String PROFILE_ONE_TIME = "profOneTime";
     String ADD_SPOT_ONE_TIME = "addSpotOneTime";
     String STRIPE_KEY = "sk_test_volRoAtAFfrYZEKLPVOTQh68";
+    String SPOT_NAME = "spotname";
+    String NOTIF_TEXT = "notiftext";
+    String SPOT_ID = "spotid";
 }

@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                         .setContentIntent(pendingIntent);
 
                 NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                notificationManager.notify(1010, builder.build());
+//                notificationManager.notify(1010, builder.build());
             }
         };
 

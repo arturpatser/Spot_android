@@ -23,6 +23,7 @@ import com.gridyn.potspot.query.LoginQuery;
 import com.gridyn.potspot.response.UserInfoResponse;
 import com.gridyn.potspot.response.UserLoginResponse;
 import com.gridyn.potspot.service.UserService;
+import com.gridyn.potspot.utils.ServerApiUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -72,7 +73,7 @@ public class LoginActivity extends AppCompatActivity {
                 .baseUrl(Constant.BASE_URL)
                 .build();
 
-        mService = retrofit.create(UserService.class);
+        mService = ServerApiUtil.initUser();
     }
 
     private void setFonts() {

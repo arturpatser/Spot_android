@@ -176,4 +176,7 @@
     <string name="add_more_friends">+ more friends</string>
     <string name="party_size_alert">You cannot select more then party size limit</string>
     <string name="no_spots">You do not have spots</string>
+    <string name="book_request_accepted">Your book request was accepted</string>
+    <string name="cancel">Cancel</string>
+    <string name="close">Close</string>
 </resources>

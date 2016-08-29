@@ -105,6 +105,7 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
                     //TODO check class parse
                     spot = response.body().message.get(0).spots.get(1);
 
+                    if (spot.imgs.size() > 0)
                     Picasso.with(mContext)
                             .load(Constant.URL_IMAGE + spot.imgs.get(0))
                             .into(mHeader);
