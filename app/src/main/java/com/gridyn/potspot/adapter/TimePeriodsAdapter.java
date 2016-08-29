@@ -3,6 +3,7 @@ package com.gridyn.potspot.adapter;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,7 @@ public class TimePeriodsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private static final int TYPE_FOOTER = 1;
     private static final int TYPE_TIME_PERIOD = 0;
+    private static final String TAG = TimePeriodsAdapter.class.getName();
     private final FragmentManager fragmentManager;
     Context context;
     LayoutInflater layoutInflater;
@@ -139,6 +141,8 @@ public class TimePeriodsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
             if (available.days != null) {
 
+                Log.d(TAG, "onBindViewHolder: available = " + available);
+
                 ((TimePeriod) holder).mTimeFrom.setText(unWrapTime(available.time[0]));
                 ((TimePeriod) holder).mTimeTo.setText(unWrapTime(available.time[1]));
 
@@ -179,6 +183,10 @@ public class TimePeriodsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         if (s.length() == 3)
             time = "0" + s;
+        else
+            time = s;
+
+        Log.d(TAG, "unWrapTime: time = " + time + " s = " + s);
 
         time = time.substring(0,2) + ":" + time.substring(2,4);
 

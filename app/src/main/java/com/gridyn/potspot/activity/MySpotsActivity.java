@@ -75,6 +75,11 @@ public class MySpotsActivity extends AppCompatActivity {
         call.enqueue(new Callback<MySpotResponse>() {
             @Override
             public void onResponse(Response<MySpotResponse> response, Retrofit retrofit) {
+
+                if (mProgressDialog.isShowing()) {
+                    mProgressDialog.dismiss();
+                }
+
                 List<MySpotResponse.Message.Spot> data = response.body().message.get(0).spots;
 //                Log.i(Constant.LOG, data.get(0).id.$id + " " + data.get(0).data.name + " " + data.get(0).data.address);
 //                for (MySpotResponse.Message.Spot spot : data) {
@@ -82,9 +87,9 @@ public class MySpotsActivity extends AppCompatActivity {
                     if (data.size() != 0) {
                         mSpotList.add(new Spot(data.get(0).id.$id, data.get(0).data.name, data.get(0).data.address));
                         initRecycler();
-                        if (mProgressDialog.isShowing()) {
-                            mProgressDialog.dismiss();
-                        }
+                    } else {
+
+                        Snackbar.make(findViewById(android.R.id.content), R.string.no_spots, Snackbar.LENGTH_SHORT).show();
                     }
                 }
 //                }
