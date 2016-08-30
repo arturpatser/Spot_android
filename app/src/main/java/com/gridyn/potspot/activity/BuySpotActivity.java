@@ -68,6 +68,8 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
     String spotId;
     private String sTimeFrom, sTimeTo;
     private String requestId;
+    private int minsFrom = 0;
+    private int minsTo = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -195,19 +197,25 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
             @Override
             public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
 
+                minsFrom = hourOfDay * 60 + minute;
+
                 sTimeFrom = Integer.toString(hourOfDay) + ":" + Integer.toString(minute);
 
                 TimePickerDialog.OnTimeSetListener callback = new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
 
+                        minsTo = hourOfDay * 60 + minute;
+
                         sTimeTo = Integer.toString(hourOfDay) + ":" + Integer.toString(minute);
+
+                        Log.d(TAG, "onTimeSet: timestay = " + (minsTo - minsFrom));
 
                         mTime.setText(sTimeFrom + " - " + sTimeTo);
                     }
                 };
                 final TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(
-                        callback, calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE), false
+                        callback, calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE), true
                 );
                 timePickerDialog.setTitle(getString(R.string.time_to));
                 timePickerDialog.setAccentColor(getResources().getColor(R.color.mainRed));
@@ -215,7 +223,7 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
             }
         };
         final TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(
-                callback, calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE), false
+                callback, calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE), true
         );
         timePickerDialog.setTitle(getString(R.string.time_from));
         timePickerDialog.setAccentColor(getResources().getColor(R.color.mainRed));
@@ -229,52 +237,59 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
             //book process here
             if (spot != null) {
 
-                final Snackbar progress = Snackbar.make(findViewById(android.R.id.content),
-                        R.string.request_process, Snackbar.LENGTH_INDEFINITE);
-                progress.show();
+                int timeStay = minsTo - minsFrom;
 
-                BookQuery bookQuery = new BookQuery();
+                if (mTime.getText().equals("Set") || timeStay <= 0) {
 
-                Format formatter;
-                //  vvvvvvvvvv  Add your date object here
-                Date date = new Date();
+                    Snackbar.make(findViewById(android.R.id.content), R.string.select_time, Snackbar.LENGTH_SHORT).show();
+                } else {
+                    final Snackbar progress = Snackbar.make(findViewById(android.R.id.content),
+                            R.string.request_process, Snackbar.LENGTH_INDEFINITE);
+                    progress.show();
 
-                formatter = new SimpleDateFormat("EEEE MMMM dd, yyyy");
+                    BookQuery bookQuery = new BookQuery();
 
-                bookQuery.setGuests(1);
-                bookQuery.setTimeStay(60);
-                bookQuery.setDate(formatter.format(date));
-                bookQuery.setToken(Person.getToken());
+                    Format formatter;
+                    //  vvvvvvvvvv  Add your date object here
+                    Date date = new Date();
 
-                Call<BookResponse> bookResponseCall = ServerApiUtil.initUser().bookSpot(spotId,
-                        bookQuery);
+                    formatter = new SimpleDateFormat("EEEE MMMM dd, yyyy");
 
-                bookResponseCall.enqueue(new Callback<BookResponse>() {
-                    @Override
-                    public void onResponse(Response<BookResponse> response, Retrofit retrofit) {
+                    bookQuery.setGuests(1);
+                    bookQuery.setTimeStay(timeStay);
+                    bookQuery.setDate(formatter.format(date));
+                    bookQuery.setToken(Person.getToken());
 
-                        progress.dismiss();
+                    Call<BookResponse> bookResponseCall = ServerApiUtil.initUser().bookSpot(spotId,
+                            bookQuery);
 
-                        BookResponse bookResp = response.body();
+                    bookResponseCall.enqueue(new Callback<BookResponse>() {
+                        @Override
+                        public void onResponse(Response<BookResponse> response, Retrofit retrofit) {
 
-                        Log.d(TAG, "onResponse: response = " + bookResp);
+                            progress.dismiss();
 
-                        if (bookResp.isSuccess()) {
+                            BookResponse bookResp = response.body();
 
-                            goToTabs(getString(R.string.successfull_request));
+                            Log.d(TAG, "onResponse: response = " + bookResp);
+
+                            if (bookResp.isSuccess()) {
+
+                                goToTabs(getString(R.string.successfull_request));
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Throwable t) {
+                        @Override
+                        public void onFailure(Throwable t) {
 
-                        progress.dismiss();
+                            progress.dismiss();
 
-                        Log.e(TAG, "onFailure: error while book = " + Log.getStackTraceString(t));
+                            Log.e(TAG, "onFailure: error while book = " + Log.getStackTraceString(t));
 
-                        Snackbar.make(findViewById(android.R.id.content), R.string.error_connection, Snackbar.LENGTH_SHORT).show();
-                    }
-                });
+                            Snackbar.make(findViewById(android.R.id.content), R.string.error_connection, Snackbar.LENGTH_SHORT).show();
+                        }
+                    });
+                }
 
             }
         } else {
