@@ -68,7 +68,7 @@ public class ListingActivity extends AppCompatActivity {
         initComments();
 //        initRecycler();
 
-        loadSpotInfo();
+//        loadSpotInfo();
     }
 
     private void loadSpotInfo() {
@@ -223,8 +223,12 @@ public class ListingActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.listing_setting) {
-            final Intent intent = new Intent(this, ListingSettingActivity.class);
-            startActivity(intent);
+            if (spot != null) {
+                final Intent intent = new Intent(this, ListingSettingActivityNew.class);
+                intent.putExtra("reqCode", Constant.EDIT_TIME_CODE);
+                intent.putExtra(Constant.ARG_POTSPOT_AVAILABLE, new ArrayList<>(spot.availables));
+                startActivityForResult(intent, Constant.EDIT_TIME_CODE);
+            }
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -236,13 +240,9 @@ public class ListingActivity extends AppCompatActivity {
 //        intent.putExtra("id", mId);
 //        startActivity(intent);
 
-        if (spot != null) {
-
-            final Intent intent = new Intent(this, ListingSettingActivityNew.class);
-            intent.putExtra("reqCode", Constant.EDIT_TIME_CODE);
-            intent.putExtra(Constant.ARG_POTSPOT_AVAILABLE, new ArrayList<>(spot.availables));
-            startActivityForResult(intent, Constant.EDIT_TIME_CODE);
-        }
+        final Intent intent = new Intent(this, ListingEditActivity.class);
+        intent.putExtra("id", mId);
+        startActivity(intent);
     }
 
     @Override
@@ -266,6 +266,6 @@ public class ListingActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
+        loadSpotInfo();
     }
 }

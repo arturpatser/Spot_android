@@ -26,10 +26,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.github.clans.fab.FloatingActionButton;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.GsonBuilder;
@@ -58,7 +55,7 @@ import retrofit.GsonConverterFactory;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-public class HomeFragment extends Fragment implements OnMapReadyCallback {
+public class HomeFragment extends Fragment /*implements OnMapReadyCallback */ {
 
     private static final String TAG = HomeFragment.class.getName();
     private View mView;
@@ -133,13 +130,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
             initRetrofit();
             initSpot();
-            initRecyclerView();
             onClickFab();
-            setFonts();
+//            setFonts();
 
-            final SupportMapFragment mapFragment = (SupportMapFragment)
-                    getChildFragmentManager().findFragmentById(R.id.map);
-            mapFragment.getMapAsync(this);
+//            final SupportMapFragment mapFragment = (SupportMapFragment)
+//                    getChildFragmentManager().findFragmentById(R.id.map);
+//            mapFragment.getMapAsync(this);
         }
         return mView;
     }
@@ -161,14 +157,14 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         query.token = Person.getToken();
         distance.lat = 55.755786;
         distance.lng = 37.617633;
-        distance.radius = 100000;
+        distance.radius = 100000000;
         query.distance = distance;
         query.maxGuest = new int[]{1, 5};
         query.badges = new ArrayList<>();
         query.badges.add("tobaccoFriendly");
         query.badges.add("heated");
         query.badges.add("handicap");
-        query.price = new int[]{0, 100};
+        query.price = new int[]{0, 100000};
         query.type = new ArrayList<>();
         query.type.add("patio");
         query.type.add("backyard");
@@ -184,10 +180,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                 if (response.body().success) {
                     Log.d(TAG, "onResponse: " + new GsonBuilder().setPrettyPrinting().create().toJson(response.body()));
                     for (SpotSearchResponse.Spots spot : response.body().message.get(0).spots) {
-                        mSpotList.add(new Spot(spot.data.name, spot.data.price,
+                        mSpotList.add(new Spot(spot.id.$id, spot.data.name, spot.data.price / 100,
                                 spot.data.type, spot.data.imgs.get(0),
                                 spot.data.googlemapsapi.geometry.location.lat, spot.data.googlemapsapi.geometry.location.lat));
                     }
+                    initRecyclerView();
                 } else {
                     Log.d(TAG, "onResponse: " + new GsonBuilder().setPrettyPrinting().create().toJson(response.body()));
                 }
@@ -233,16 +230,16 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         allListing.setTypeface(Typeface.createFromAsset(assetManager, "fonts/Roboto-Regular.ttf"));
     }
 
-    @Override
-    public void onMapReady(GoogleMap map) {
-        LatLng toronto = new LatLng(43.453505, 80.465284);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(toronto, 11));
-        setMarkers(map);
-    }
+//    @Override
+//    public void onMapReady(GoogleMap map) {
+//        LatLng toronto = new LatLng(43.453505, 80.465284);
+//        map.moveCamera(CameraUpdateFactory.newLatLngZoom(toronto, 11));
+//        setMarkers(map);
+//    }
 
     private void initRecyclerView() {
         RecyclerView recyclerView = (RecyclerView) mView.findViewById(R.id.home_recycler_view);
-        HomeAdapter adapter = new HomeAdapter(mSpotList, getContext(), getActivity());
+        HomeAdapter adapter = new HomeAdapter(mSpotList, getContext(), getChildFragmentManager());
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 1, LinearLayoutManager.VERTICAL, false);
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
 

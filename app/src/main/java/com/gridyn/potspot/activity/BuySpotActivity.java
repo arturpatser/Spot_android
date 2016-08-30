@@ -1,7 +1,6 @@
 package com.gridyn.potspot.activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -24,9 +23,6 @@ import com.gridyn.potspot.databinding.ActivityBuySpotBinding;
 import com.gridyn.potspot.fragment.SelectFriendsFragment;
 import com.gridyn.potspot.interfaces.BuySpotInterface;
 import com.gridyn.potspot.model.FriendModel;
-import com.gridyn.potspot.query.BookQuery;
-import com.gridyn.potspot.response.BookResponse;
-import com.gridyn.potspot.response.PaymentResponse;
 import com.gridyn.potspot.response.SpotInfoResponse;
 import com.gridyn.potspot.service.SpotService;
 import com.gridyn.potspot.utils.FragmentUtils;
@@ -36,11 +32,8 @@ import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
-import java.text.Format;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 import retrofit.Call;
 import retrofit.Callback;
@@ -64,28 +57,13 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
     RecyclerView splitFriendsRecycler;
     private SplitFriendsAdapter adapter;
     ActivityBuySpotBinding binding;
-    boolean forBook;
-    String spotId;
-    private String sTimeFrom, sTimeTo;
-    private String requestId;
-    private int minsFrom = 0;
-    private int minsTo = 0;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        forBook = getIntent().getExtras().getBoolean(Constant.OPEN_FOR_BOOK);
-        spotId = getIntent().getExtras().getString("id");
-        requestId = getIntent().getExtras().getString(Constant.REQUEST_ID);
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_buy_spot);
         binding.setShowSplit(true);
-        binding.setForBook(forBook);
-
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-
         initFields();
         initRetrofit();
         initToolbar();
@@ -111,18 +89,13 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
 
         splitFriendsRecycler.setLayoutManager(new LinearLayoutManager(this));
         splitFriendsRecycler.setAdapter(adapter);
-
-        if (forBook) {
-            mPay.setText(getString(R.string.request_booking));
-
-        }
     }
 
     private void initRetrofit() {
 
         final SpotService service = ServerApiUtil.initSpot();
 
-        Call<SpotInfoResponse> call = service.getSpot(spotId, Person.getTokenMap());
+        Call<SpotInfoResponse> call = service.getSpot(getIntent().getExtras().getString("id"), Person.getTokenMap());
         call.enqueue(new Callback<SpotInfoResponse>() {
             @Override
             public void onResponse(Response<SpotInfoResponse> response, Retrofit retrofit) {
@@ -132,8 +105,6 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
                     //TODO check class parse
                     spot = response.body().message.get(0).spots.get(1);
 
-                    Log.d(TAG, "onResponse: spot = " + spot);
-
                     if (spot.imgs.size() > 0)
                     Picasso.with(mContext)
                             .load(Constant.URL_IMAGE + spot.imgs.get(0))
@@ -142,19 +113,13 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
                     mName.setText(spot.name);
                     mUnderName.setText(spot.type + " | " + "спроси у Ильи про дату");
                     mPartySize.setText(spot.maxGuests + "\nparty size");
-                    mTotalPrice.setText("$" + spot.price + "\ntotal price");
-
-                    if (!forBook) {
-                        mPay.setText("pay $" + spot.price);
-                    }
+                    mTotalPrice.setText("$" + spot.price / 100 + "\ntotal price");
+                    mPay.setText("pay $" + spot.price);
                 }
             }
 
             @Override
             public void onFailure(Throwable t) {
-
-                Log.e(TAG, "onFailure: error while load spot = " + Log.getStackTraceString(t));
-
                 Snackbar.make(findViewById(android.R.id.content), Constant.CONNECTION_ERROR, Snackbar.LENGTH_SHORT).show();
             }
         });
@@ -196,138 +161,17 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
         TimePickerDialog.OnTimeSetListener callback = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
-
-                minsFrom = hourOfDay * 60 + minute;
-
-                sTimeFrom = Integer.toString(hourOfDay) + ":" + Integer.toString(minute);
-
-                TimePickerDialog.OnTimeSetListener callback = new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
-
-                        minsTo = hourOfDay * 60 + minute;
-
-                        sTimeTo = Integer.toString(hourOfDay) + ":" + Integer.toString(minute);
-
-                        Log.d(TAG, "onTimeSet: timestay = " + (minsTo - minsFrom));
-
-                        mTime.setText(sTimeFrom + " - " + sTimeTo);
-                    }
-                };
-                final TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(
-                        callback, calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE), true
-                );
-                timePickerDialog.setTitle(getString(R.string.time_to));
-                timePickerDialog.setAccentColor(getResources().getColor(R.color.mainRed));
-                timePickerDialog.show(getFragmentManager(), "TimePickerDialogTo");
+                mTime.setText(Integer.toString(hourOfDay) + ":" + Integer.toString(minute));
             }
         };
         final TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(
-                callback, calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE), true
+                callback, calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE), false
         );
-        timePickerDialog.setTitle(getString(R.string.time_from));
         timePickerDialog.setAccentColor(getResources().getColor(R.color.mainRed));
-        timePickerDialog.show(getFragmentManager(), "TimePickerDialogFrom");
+        timePickerDialog.show(getFragmentManager(), "TimePickerDialog");
     }
 
     public void onClickBuyPay(View view) {
-
-        if (forBook) {
-
-            //book process here
-            if (spot != null) {
-
-                int timeStay = minsTo - minsFrom;
-
-                if (mTime.getText().equals("Set") || timeStay <= 0) {
-
-                    Snackbar.make(findViewById(android.R.id.content), R.string.select_time, Snackbar.LENGTH_SHORT).show();
-                } else {
-                    final Snackbar progress = Snackbar.make(findViewById(android.R.id.content),
-                            R.string.request_process, Snackbar.LENGTH_INDEFINITE);
-                    progress.show();
-
-                    BookQuery bookQuery = new BookQuery();
-
-                    Format formatter;
-                    //  vvvvvvvvvv  Add your date object here
-                    Date date = new Date();
-
-                    formatter = new SimpleDateFormat("EEEE MMMM dd, yyyy");
-
-                    bookQuery.setGuests(1);
-                    bookQuery.setTimeStay(timeStay);
-                    bookQuery.setDate(formatter.format(date));
-                    bookQuery.setToken(Person.getToken());
-
-                    Call<BookResponse> bookResponseCall = ServerApiUtil.initUser().bookSpot(spotId,
-                            bookQuery);
-
-                    bookResponseCall.enqueue(new Callback<BookResponse>() {
-                        @Override
-                        public void onResponse(Response<BookResponse> response, Retrofit retrofit) {
-
-                            progress.dismiss();
-
-                            BookResponse bookResp = response.body();
-
-                            Log.d(TAG, "onResponse: response = " + bookResp);
-
-                            if (bookResp.isSuccess()) {
-
-                                goToTabs(getString(R.string.successfull_request));
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Throwable t) {
-
-                            progress.dismiss();
-
-                            Log.e(TAG, "onFailure: error while book = " + Log.getStackTraceString(t));
-
-                            Snackbar.make(findViewById(android.R.id.content), R.string.error_connection, Snackbar.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-
-            }
-        } else {
-
-            //buy process here
-
-            final Snackbar progress = Snackbar.make(findViewById(android.R.id.content),
-                    R.string.payment_progress, Snackbar.LENGTH_INDEFINITE);
-            progress.show();
-
-            Call<PaymentResponse> call = ServerApiUtil.initUser().startPaying(requestId, Person.getTokenMap());
-
-            call.enqueue(new Callback<PaymentResponse>() {
-                @Override
-                public void onResponse(Response<PaymentResponse> response, Retrofit retrofit) {
-
-                    PaymentResponse payment = response.body();
-
-                    Log.d(TAG, "onResponse: response = " + payment);
-
-                    if (payment.isSuccess()) {
-
-                        goToTabs(getString(R.string.successfull_payment));
-
-                        progress.dismiss();
-                    }
-                }
-
-                @Override
-                public void onFailure(Throwable t) {
-
-                    Log.e(TAG, "onFailure: payment error = " + Log.getStackTraceString(t));
-
-                    progress.dismiss();
-                    Snackbar.make(findViewById(android.R.id.content), R.string.error_connection, Snackbar.LENGTH_INDEFINITE).show();
-                }
-            });
-        }
 
 //        try {
 //            Stripe stripe = new Stripe(Constant.STRIPE_KEY);
@@ -352,27 +196,6 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
 //        } catch (AuthenticationException e) {
 //            Log.e(TAG, "onClickBuyPay: error while init stripe = " + Log.getStackTraceString(e));
 //        }
-    }
-
-    private void goToTabs(String mes) {
-
-        Intent intent = new Intent(BuySpotActivity.this, TabsActivity.class);
-
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-        intent.putExtra("name", Person.getName());
-        intent.putExtra("email", Person.getEmail());
-        intent.putExtra(Constant.PROGRESS_MESSAGE, mes);
-
-        try {
-            intent.putExtra("avatar", Person.getAvatar());
-
-        } catch (IndexOutOfBoundsException e) {
-            intent.putExtra("avatar", Constant.BASE_IMAGE);
-        }
-
-        startActivity(intent);
     }
 
     public void onClickSplitPayment(View view) {

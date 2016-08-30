@@ -52,4 +52,8 @@ public class CreateSpotQuery {
     @SerializedName("badge")
     @Expose
     public List<String> badges = new ArrayList<>();
+
+    @SerializedName("upload")
+    @Expose
+    public List<String> upload = new ArrayList<>();
 }
