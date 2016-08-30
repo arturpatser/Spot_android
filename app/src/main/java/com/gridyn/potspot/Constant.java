@@ -34,4 +34,5 @@ public interface Constant {
     String SPOT_NAME = "spotname";
     String NOTIF_TEXT = "notiftext";
     String SPOT_ID = "spotid";
+    String OPEN_FOR_BOOK = "forBook";
 }

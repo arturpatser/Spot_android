@@ -1,11 +1,13 @@
 package com.gridyn.potspot.service;
 
+import com.gridyn.potspot.query.BookQuery;
 import com.gridyn.potspot.query.EnableHostQuery;
 import com.gridyn.potspot.query.FeedbackQuery;
 import com.gridyn.potspot.query.LoginQuery;
 import com.gridyn.potspot.query.PhoneConfirmQuery;
 import com.gridyn.potspot.query.PhoneVerifyQuery;
 import com.gridyn.potspot.query.UserUpdateQuery;
+import com.gridyn.potspot.response.BookResponse;
 import com.gridyn.potspot.response.FriendsResponse;
 import com.gridyn.potspot.response.MySpotResponse;
 import com.gridyn.potspot.response.PhoneConfirmResponse;
@@ -71,4 +73,7 @@ public interface UserService {
 
     @POST("user/friends")
     Call<FriendsResponse> getFriends(@Body Map<String, String> token);
+
+    @POST("booking/create/{id}")
+    Call<BookResponse> bookSpot(@Path("id") String id, @Body BookQuery bookQuery);
 }

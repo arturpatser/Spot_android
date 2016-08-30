@@ -23,6 +23,8 @@ import com.gridyn.potspot.databinding.ActivityBuySpotBinding;
 import com.gridyn.potspot.fragment.SelectFriendsFragment;
 import com.gridyn.potspot.interfaces.BuySpotInterface;
 import com.gridyn.potspot.model.FriendModel;
+import com.gridyn.potspot.query.BookQuery;
+import com.gridyn.potspot.response.BookResponse;
 import com.gridyn.potspot.response.SpotInfoResponse;
 import com.gridyn.potspot.service.SpotService;
 import com.gridyn.potspot.utils.FragmentUtils;
@@ -32,8 +34,11 @@ import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import retrofit.Call;
 import retrofit.Callback;
@@ -57,13 +62,24 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
     RecyclerView splitFriendsRecycler;
     private SplitFriendsAdapter adapter;
     ActivityBuySpotBinding binding;
+    boolean forBook;
+    String spotId;
+    private String sTimeFrom, sTimeTo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        forBook = getIntent().getExtras().getBoolean(Constant.OPEN_FOR_BOOK);
+        spotId = getIntent().getExtras().getString("id");
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_buy_spot);
         binding.setShowSplit(true);
+        binding.setForBook(forBook);
+
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+
         initFields();
         initRetrofit();
         initToolbar();
@@ -89,13 +105,18 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
 
         splitFriendsRecycler.setLayoutManager(new LinearLayoutManager(this));
         splitFriendsRecycler.setAdapter(adapter);
+
+        if (forBook) {
+            mPay.setText(getString(R.string.request_booking));
+
+        }
     }
 
     private void initRetrofit() {
 
         final SpotService service = ServerApiUtil.initSpot();
 
-        Call<SpotInfoResponse> call = service.getSpot(getIntent().getExtras().getString("id"), Person.getTokenMap());
+        Call<SpotInfoResponse> call = service.getSpot(spotId, Person.getTokenMap());
         call.enqueue(new Callback<SpotInfoResponse>() {
             @Override
             public void onResponse(Response<SpotInfoResponse> response, Retrofit retrofit) {
@@ -104,6 +125,8 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
 
                     //TODO check class parse
                     spot = response.body().message.get(0).spots.get(1);
+
+                    Log.d(TAG, "onResponse: spot = " + spot);
 
                     if (spot.imgs.size() > 0)
                     Picasso.with(mContext)
@@ -114,12 +137,18 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
                     mUnderName.setText(spot.type + " | " + "спроси у Ильи про дату");
                     mPartySize.setText(spot.maxGuests + "\nparty size");
                     mTotalPrice.setText("$" + spot.price + "\ntotal price");
-                    mPay.setText("pay $" + spot.price);
+
+                    if (!forBook) {
+                        mPay.setText("pay $" + spot.price);
+                    }
                 }
             }
 
             @Override
             public void onFailure(Throwable t) {
+
+                Log.e(TAG, "onFailure: error while load spot = " + Log.getStackTraceString(t));
+
                 Snackbar.make(findViewById(android.R.id.content), Constant.CONNECTION_ERROR, Snackbar.LENGTH_SHORT).show();
             }
         });
@@ -161,17 +190,78 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
         TimePickerDialog.OnTimeSetListener callback = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
-                mTime.setText(Integer.toString(hourOfDay) + ":" + Integer.toString(minute));
+
+                sTimeFrom = Integer.toString(hourOfDay) + ":" + Integer.toString(minute);
+
+                TimePickerDialog.OnTimeSetListener callback = new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
+
+                        sTimeTo = Integer.toString(hourOfDay) + ":" + Integer.toString(minute);
+
+                        mTime.setText(sTimeFrom + " - " + sTimeTo);
+                    }
+                };
+                final TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(
+                        callback, calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE), false
+                );
+                timePickerDialog.setTitle(getString(R.string.time_to));
+                timePickerDialog.setAccentColor(getResources().getColor(R.color.mainRed));
+                timePickerDialog.show(getFragmentManager(), "TimePickerDialogTo");
             }
         };
         final TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(
                 callback, calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE), false
         );
+        timePickerDialog.setTitle(getString(R.string.time_from));
         timePickerDialog.setAccentColor(getResources().getColor(R.color.mainRed));
-        timePickerDialog.show(getFragmentManager(), "TimePickerDialog");
+        timePickerDialog.show(getFragmentManager(), "TimePickerDialogFrom");
     }
 
     public void onClickBuyPay(View view) {
+
+        if (forBook) {
+
+            //book process here
+            if (spot != null) {
+
+                BookQuery bookQuery = new BookQuery();
+
+                Format formatter;
+                //  vvvvvvvvvv  Add your date object here
+                Date date = new Date();
+
+                formatter = new SimpleDateFormat("EEEE MMMM dd, yyyy");
+
+                bookQuery.setGuests(1);
+                bookQuery.setTimeStay(60);
+                bookQuery.setDate(formatter.format(date));
+                bookQuery.setToken(Person.getToken());
+
+                Call<BookResponse> bookResponseCall = ServerApiUtil.initUser().bookSpot(spotId,
+                        bookQuery);
+
+                bookResponseCall.enqueue(new Callback<BookResponse>() {
+                    @Override
+                    public void onResponse(Response<BookResponse> response, Retrofit retrofit) {
+
+                        BookResponse bookResp = response.body();
+
+                        Log.d(TAG, "onResponse: response = " + bookResp);
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+
+                        Log.e(TAG, "onFailure: error while book = " + Log.getStackTraceString(t));
+                    }
+                });
+
+            }
+        } else {
+
+            //buy process here
+        }
 
 //        try {
 //            Stripe stripe = new Stripe(Constant.STRIPE_KEY);

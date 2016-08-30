@@ -244,8 +244,9 @@ public class DescriptionSpotActivity extends AppCompatActivity {
     }
 
     public void onCLickBookFor(View view) {
-        final Intent intent = new Intent(this, BuySpotActivity.class);
+        Intent intent = new Intent(this, BuySpotActivity.class);
         intent.putExtra("id", getIntent().getExtras().getString("id"));
+        intent.putExtra(Constant.OPEN_FOR_BOOK, true);
         startActivity(intent);
     }
 

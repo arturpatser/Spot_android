@@ -39,6 +39,7 @@ public class ClientPopup extends AppCompatActivity {
 
         Intent intent = new Intent(this, BuySpotActivity.class);
         intent.putExtra("id", spotId);
+        intent.putExtra(Constant.OPEN_FOR_BOOK, false);
         startActivity(intent);
     }
 
