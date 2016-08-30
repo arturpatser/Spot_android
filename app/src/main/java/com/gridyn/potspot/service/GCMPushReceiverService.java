@@ -15,8 +15,11 @@ import com.google.gson.Gson;
 import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.R;
 import com.gridyn.potspot.activity.ClientPopup;
+import com.gridyn.potspot.activity.HostNewRequestPopup;
 import com.gridyn.potspot.activity.MainActivity;
 import com.gridyn.potspot.model.AcceptRequestModel;
+import com.gridyn.potspot.model.BookRequestData;
+import com.gridyn.potspot.model.BookRequestModel;
 
 import static com.gridyn.potspot.Constant.LOG;
 import static com.gridyn.potspot.Constant.MESSAGE_ACTION;
@@ -48,8 +51,6 @@ public class GCMPushReceiverService extends GcmListenerService {
 
                     notificationMessage = getString(R.string.book_request_accepted);
 
-                    acceptReqModel.getAcceptRequestData().setSpotName("askljfaklsjfa");
-
                     Intent popupIntent = new Intent(this, ClientPopup.class);
                     popupIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     popupIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -61,6 +62,28 @@ public class GCMPushReceiverService extends GcmListenerService {
                     startActivity(popupIntent);
                 }
             break;
+
+            case "book_request":
+
+                BookRequestModel bookRequestModel = gson.fromJson(data, BookRequestModel.class);
+
+                BookRequestData bookData = bookRequestModel.getBookRequestData();
+
+                Log.d(TAG, "onMessageReceived: book " + bookRequestModel);
+
+                notificationMessage = getString(R.string.have_new_book);
+
+                Intent popupIntent = new Intent(this, HostNewRequestPopup.class);
+                popupIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                popupIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                popupIntent.putExtra(Constant.DATE_TIME_REQUEST, bookData.getDate());
+                popupIntent.putExtra(Constant.SPOT_NAME, bookData.getSpotName());
+                popupIntent.putExtra(Constant.SPOT_ID, bookData.getSpotId());
+                popupIntent.putExtra(Constant.REQUEST_ID, bookData.getRequestId());
+
+                startActivity(popupIntent);
+                break;
 
             case "message_new":
 

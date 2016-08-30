@@ -35,4 +35,6 @@ public interface Constant {
     String NOTIF_TEXT = "notiftext";
     String SPOT_ID = "spotid";
     String OPEN_FOR_BOOK = "forBook";
+    String DATE_TIME_REQUEST = "datetime";
+    String REQUEST_ID = "reqId";
 }

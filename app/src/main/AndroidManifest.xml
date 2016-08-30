@@ -40,10 +40,10 @@
         </activity>
         <activity
             android:name=".activity.MainActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.AddNewSpotTips"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.LoginActivity"
             android:parentActivityName=".activity.MainActivity"
@@ -172,9 +172,13 @@
             android:value="AIzaSyB7VxO1OpgcI3qiAkvqMhQarsWsy3zCkm0" />
 
         <activity android:name=".activity.MyMoneyActivity" />
-        <activity android:name=".activity.ClientPopup"
-            android:theme="@style/Theme.UserDialog"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.ClientPopup"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.UserDialog" />
+        <activity android:name=".activity.HostNewRequestPopup"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.UserDialog"/>
     </application>
 
 </manifest>

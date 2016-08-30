@@ -10,11 +10,11 @@ import com.google.gson.annotations.SerializedName;
  */
 public class AcceptRequestData {
 
-    @SerializedName("spotID")
+    @SerializedName("spot_id")
     @Expose
     String spotId;
 
-    @SerializedName("spotName")
+    @SerializedName("spot_name")
     @Exclude
     String spotName;
 
