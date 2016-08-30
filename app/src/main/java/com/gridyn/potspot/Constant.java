@@ -37,4 +37,6 @@ public interface Constant {
     String OPEN_FOR_BOOK = "forBook";
     String DATE_TIME_REQUEST = "datetime";
     String REQUEST_ID = "reqId";
+    String PAYMENT_SUCCESSFULL = "paymentsuccessfull";
+    String PROGRESS_MESSAGE = "progress";
 }

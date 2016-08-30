@@ -1,6 +1,7 @@
 package com.gridyn.potspot.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -228,6 +229,10 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
             //book process here
             if (spot != null) {
 
+                final Snackbar progress = Snackbar.make(findViewById(android.R.id.content),
+                        R.string.request_process, Snackbar.LENGTH_INDEFINITE);
+                progress.show();
+
                 BookQuery bookQuery = new BookQuery();
 
                 Format formatter;
@@ -248,18 +253,22 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
                     @Override
                     public void onResponse(Response<BookResponse> response, Retrofit retrofit) {
 
+                        progress.dismiss();
+
                         BookResponse bookResp = response.body();
 
                         Log.d(TAG, "onResponse: response = " + bookResp);
 
                         if (bookResp.isSuccess()) {
 
-                            Snackbar.make(findViewById(android.R.id.content), R.string.successfull_request, Snackbar.LENGTH_SHORT).show();
+                            goToTabs(getString(R.string.successfull_request));
                         }
                     }
 
                     @Override
                     public void onFailure(Throwable t) {
+
+                        progress.dismiss();
 
                         Log.e(TAG, "onFailure: error while book = " + Log.getStackTraceString(t));
 
@@ -271,6 +280,10 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
         } else {
 
             //buy process here
+
+            final Snackbar progress = Snackbar.make(findViewById(android.R.id.content),
+                    R.string.payment_progress, Snackbar.LENGTH_INDEFINITE);
+            progress.show();
 
             Call<PaymentResponse> call = ServerApiUtil.initUser().startPaying(requestId, Person.getTokenMap());
 
@@ -284,9 +297,9 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
 
                     if (payment.isSuccess()) {
 
-                        Snackbar.make(findViewById(android.R.id.content), R.string.successfull_payment, Snackbar.LENGTH_SHORT).show();
+                        goToTabs(getString(R.string.successfull_payment));
 
-                        finish();
+                        progress.dismiss();
                     }
                 }
 
@@ -295,7 +308,8 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
 
                     Log.e(TAG, "onFailure: payment error = " + Log.getStackTraceString(t));
 
-                    Snackbar.make(findViewById(android.R.id.content), R.string.error_connection, Snackbar.LENGTH_SHORT).show();
+                    progress.dismiss();
+                    Snackbar.make(findViewById(android.R.id.content), R.string.error_connection, Snackbar.LENGTH_INDEFINITE).show();
                 }
             });
         }
@@ -323,6 +337,27 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
 //        } catch (AuthenticationException e) {
 //            Log.e(TAG, "onClickBuyPay: error while init stripe = " + Log.getStackTraceString(e));
 //        }
+    }
+
+    private void goToTabs(String mes) {
+
+        Intent intent = new Intent(BuySpotActivity.this, TabsActivity.class);
+
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        intent.putExtra("name", Person.getName());
+        intent.putExtra("email", Person.getEmail());
+        intent.putExtra(Constant.PROGRESS_MESSAGE, mes);
+
+        try {
+            intent.putExtra("avatar", Person.getAvatar());
+
+        } catch (IndexOutOfBoundsException e) {
+            intent.putExtra("avatar", Constant.BASE_IMAGE);
+        }
+
+        startActivity(intent);
     }
 
     public void onClickSplitPayment(View view) {

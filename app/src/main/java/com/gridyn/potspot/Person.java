@@ -10,6 +10,22 @@ public final class Person {
     private static String id;
     private static String androidId;
 
+    public static String getName() {
+        return name;
+    }
+
+    public static String getEmail() {
+        return email;
+    }
+
+    public static String getAvatar() {
+        return avatar;
+    }
+
+    private static String name;
+    private static String email;
+    private static String avatar;
+
     private Person() {
     }
 
@@ -63,5 +79,17 @@ public final class Person {
 
     public static void setAndroidId(String androidId) {
         Person.androidId = androidId;
+    }
+
+    public static void setName(String name) {
+        Person.name = name;
+    }
+
+    public static void setEmail(String email) {
+        Person.email = email;
+    }
+
+    public static void setAvatar(String avatar) {
+        Person.avatar = avatar;
     }
 }

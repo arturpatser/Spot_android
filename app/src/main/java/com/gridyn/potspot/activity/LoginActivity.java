@@ -165,10 +165,15 @@ public class LoginActivity extends AppCompatActivity {
                 Person.setHost(message.system.isVerified);
                 intent.putExtra("name", message.data.name);
                 intent.putExtra("email", message.data.email);
+
+                Person.setName(message.data.name);
+                Person.setEmail(message.data.email);
                 try {
                     intent.putExtra("avatar", message.data.imgs.get(0));
+                    Person.setAvatar(message.data.imgs.get(0));
                 } catch (IndexOutOfBoundsException e) {
                     intent.putExtra("avatar", Constant.BASE_IMAGE);
+                    Person.setAvatar(Constant.BASE_IMAGE);
                 }
                 startActivity(intent);
             }

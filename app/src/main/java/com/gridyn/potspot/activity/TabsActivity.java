@@ -46,6 +46,11 @@ public class TabsActivity extends AppCompatActivity
         initTabs();
         initNav();
         initHeader();
+
+        String mes = getIntent().getExtras().getString(Constant.PROGRESS_MESSAGE);
+
+        if (mes != null)
+            Snackbar.make(findViewById(android.R.id.content), mes, Snackbar.LENGTH_SHORT).show();
     }
 
     private void initHeader() {
