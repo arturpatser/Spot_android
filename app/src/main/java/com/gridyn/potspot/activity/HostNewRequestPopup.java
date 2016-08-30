@@ -33,9 +33,9 @@ public class HostNewRequestPopup extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_host_new_request_popup);
 

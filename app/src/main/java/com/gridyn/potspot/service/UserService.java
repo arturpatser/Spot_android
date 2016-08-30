@@ -10,6 +10,7 @@ import com.gridyn.potspot.query.UserUpdateQuery;
 import com.gridyn.potspot.response.BookResponse;
 import com.gridyn.potspot.response.FriendsResponse;
 import com.gridyn.potspot.response.MySpotResponse;
+import com.gridyn.potspot.response.PaymentResponse;
 import com.gridyn.potspot.response.PhoneConfirmResponse;
 import com.gridyn.potspot.response.PhoneVerifyResponse;
 import com.gridyn.potspot.response.SuccessResponse;
@@ -83,4 +84,10 @@ public interface UserService {
 
     @POST("booking/{id}/host/decline")
     Call<SuccessResponse> declineBooking(@Path("id") String requestId, @Body Map<String, String> tokenMap);
+
+    @POST("booking/{id}/confirm")
+    Call<PaymentResponse> startPaying(@Path("id") String requestId, @Body Map<String, String> tokenMap);
+
+    @POST("booking/{id}/cancel")
+    Call<PaymentResponse> cancelPaying(@Path("id") String requestId, @Body Map<String, String> tokenMap);
 }

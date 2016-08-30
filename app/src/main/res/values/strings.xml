@@ -181,4 +181,6 @@
     <string name="close">Close</string>
     <string name="have_new_book">have a new book request</string>
     <string name="respone_timer">Response timer</string>
+    <string name="successfull_payment">Successfull payment</string>
+    <string name="successfull_request">Your request successfully sent</string>
 </resources>

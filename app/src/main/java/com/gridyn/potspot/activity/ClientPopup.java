@@ -15,6 +15,7 @@ public class ClientPopup extends AppCompatActivity {
 
     ActivityPopupBinding binding;
     String spotId;
+    String requestId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +33,7 @@ public class ClientPopup extends AppCompatActivity {
             binding.setSpotName(args.getString(Constant.SPOT_NAME));
 
             spotId = args.getString(Constant.SPOT_ID);
+            requestId = args.getString(Constant.REQUEST_ID);
         }
     }
 
@@ -39,8 +41,11 @@ public class ClientPopup extends AppCompatActivity {
 
         Intent intent = new Intent(this, BuySpotActivity.class);
         intent.putExtra("id", spotId);
+        intent.putExtra(Constant.REQUEST_ID, requestId);
         intent.putExtra(Constant.OPEN_FOR_BOOK, false);
         startActivity(intent);
+
+        finish();
     }
 
     public void onClickCancel(View view) {

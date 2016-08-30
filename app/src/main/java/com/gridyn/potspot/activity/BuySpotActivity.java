@@ -25,6 +25,7 @@ import com.gridyn.potspot.interfaces.BuySpotInterface;
 import com.gridyn.potspot.model.FriendModel;
 import com.gridyn.potspot.query.BookQuery;
 import com.gridyn.potspot.response.BookResponse;
+import com.gridyn.potspot.response.PaymentResponse;
 import com.gridyn.potspot.response.SpotInfoResponse;
 import com.gridyn.potspot.service.SpotService;
 import com.gridyn.potspot.utils.FragmentUtils;
@@ -65,6 +66,7 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
     boolean forBook;
     String spotId;
     private String sTimeFrom, sTimeTo;
+    private String requestId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +74,7 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
 
         forBook = getIntent().getExtras().getBoolean(Constant.OPEN_FOR_BOOK);
         spotId = getIntent().getExtras().getString("id");
+        requestId = getIntent().getExtras().getString(Constant.REQUEST_ID);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_buy_spot);
         binding.setShowSplit(true);
@@ -248,12 +251,19 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
                         BookResponse bookResp = response.body();
 
                         Log.d(TAG, "onResponse: response = " + bookResp);
+
+                        if (bookResp.isSuccess()) {
+
+                            Snackbar.make(findViewById(android.R.id.content), R.string.successfull_request, Snackbar.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override
                     public void onFailure(Throwable t) {
 
                         Log.e(TAG, "onFailure: error while book = " + Log.getStackTraceString(t));
+
+                        Snackbar.make(findViewById(android.R.id.content), R.string.error_connection, Snackbar.LENGTH_SHORT).show();
                     }
                 });
 
@@ -261,6 +271,33 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
         } else {
 
             //buy process here
+
+            Call<PaymentResponse> call = ServerApiUtil.initUser().startPaying(requestId, Person.getTokenMap());
+
+            call.enqueue(new Callback<PaymentResponse>() {
+                @Override
+                public void onResponse(Response<PaymentResponse> response, Retrofit retrofit) {
+
+                    PaymentResponse payment = response.body();
+
+                    Log.d(TAG, "onResponse: response = " + payment);
+
+                    if (payment.isSuccess()) {
+
+                        Snackbar.make(findViewById(android.R.id.content), R.string.successfull_payment, Snackbar.LENGTH_SHORT).show();
+
+                        finish();
+                    }
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+
+                    Log.e(TAG, "onFailure: payment error = " + Log.getStackTraceString(t));
+
+                    Snackbar.make(findViewById(android.R.id.content), R.string.error_connection, Snackbar.LENGTH_SHORT).show();
+                }
+            });
         }
 
 //        try {

@@ -22,6 +22,18 @@ public class AcceptRequestData {
     @Expose
     boolean success;
 
+    @SerializedName("request_id")
+    @Exclude
+    String requestId;
+
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
+    }
+
     public String getSpotId() {
         return spotId;
     }
