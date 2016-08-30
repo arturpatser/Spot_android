@@ -45,7 +45,15 @@ public class Spot {
         this.typeListing = typeListing;
         this.image = image;
         latLng = new LatLng(lat, lng);
+    }
 
+    public Spot(String id, String title, Integer price, String typeListing, String image, float lat, float lng) {
+        this.id = id;
+        this.title = title;
+        this.price = price;
+        this.typeListing = typeListing;
+        this.image = image;
+        latLng = new LatLng(lat, lng);
     }
 
     public LatLng getLatLng() {

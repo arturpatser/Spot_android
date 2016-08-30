@@ -47,6 +47,7 @@ public class SpaceActivity extends AppCompatActivity {
     private String mHeated;
     private String mHandicap;
     private String mEncodedImage;
+    private List<String> mEncodedImages;
 
 
     @Override
@@ -60,6 +61,7 @@ public class SpaceActivity extends AppCompatActivity {
     }
 
     private void initFields() {
+        mEncodedImages = new ArrayList<>();
         mTitle = (EditText) findViewById(R.id.space_title);
         mDescription = (EditText) findViewById(R.id.space_desc);
         mAddress = (EditText) findViewById(R.id.space_address);
@@ -203,12 +205,14 @@ public class SpaceActivity extends AppCompatActivity {
         try {
             if (requestCode == Constant.CAMERA && data != null) {
                 final Bitmap thumbnailBitmap = BitmapHelper.scaleBitmap((Bitmap) data.getExtras().get("data"));
-                mEncodedImage = BitmapHelper.encodeToString(thumbnailBitmap);
+                mEncodedImages.add(Constant.URL_BASE64 + BitmapHelper.encodeToString(thumbnailBitmap));
+//                mEncodedImage = BitmapHelper.encodeToString(thumbnailBitmap);
             } else if (requestCode == Constant.GALLERY && data != null) {
                 Uri selectedImage = data.getData();
                 final Bitmap thumbnailBitmap = BitmapHelper
                         .scaleBitmap(MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage));
-                mEncodedImage = BitmapHelper.encodeToString(thumbnailBitmap);
+                mEncodedImages.add(Constant.URL_BASE64 + BitmapHelper.encodeToString(thumbnailBitmap));
+//                mEncodedImage = BitmapHelper.encodeToString(thumbnailBitmap);
                 Log.i("profileEdit", "EncodedAvatar: \n\n" + mEncodedImage);
             }
         } catch (Exception e) {
@@ -245,6 +249,9 @@ public class SpaceActivity extends AppCompatActivity {
         intent.putExtra("tobacco", mTobacco);
         intent.putExtra("heated", mHeated);
         intent.putExtra("handicap", mHandicap);
+        String[] strings = new String[mEncodedImages.size()];
+        intent.putExtra("upload", mEncodedImages.toArray(strings));
+
         if (isEmptyFields()) {
             Snackbar.make(view, "Input red fields", Snackbar.LENGTH_LONG).show();
         } else {

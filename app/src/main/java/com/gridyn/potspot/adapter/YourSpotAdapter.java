@@ -43,6 +43,7 @@ public class YourSpotAdapter extends RecyclerView.Adapter<YourSpotAdapter.Holder
         holder.address.setText(spot.getAddress());
         if (mSpot.size() == 0) {
             holder.name.setText("Nothing to show");
+
         }
 
         final Intent intent = new Intent(mContext, ListingActivity.class);

@@ -1,5 +1,6 @@
 package com.gridyn.potspot.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.gson.GsonBuilder;
 import com.gridyn.potspot.Constant;
@@ -25,16 +27,16 @@ import com.gridyn.potspot.R;
 import com.gridyn.potspot.Spot;
 import com.gridyn.potspot.adapter.ListingEditAdapter;
 import com.gridyn.potspot.query.UpdateSpotQuery;
+import com.gridyn.potspot.response.SpotDeleteResponse;
 import com.gridyn.potspot.response.SpotInfoResponse;
 import com.gridyn.potspot.response.SpotUpdateResponse;
-import com.gridyn.potspot.service.SpotService;
+import com.gridyn.potspot.utils.ServerApiUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import retrofit.Call;
 import retrofit.Callback;
-import retrofit.GsonConverterFactory;
 import retrofit.Response;
 import retrofit.Retrofit;
 
@@ -50,7 +52,6 @@ public class ListingEditActivity extends AppCompatActivity {
     private Spinner mTobaccoSpinner;
     private Spinner mHeatedSpinner;
     private Spinner mHandicapSpinner;
-    private SpotService mService;
 /*    private String mListingType;
     private String mTobacco;
     private String mHeated;
@@ -62,7 +63,6 @@ public class ListingEditActivity extends AppCompatActivity {
         setContentView(R.layout.activity_listing_edit);
 
         initFields();
-        initRetrofit();
         loadFields();
         initSpotList();
         initToolbar();
@@ -82,17 +82,8 @@ public class ListingEditActivity extends AppCompatActivity {
         mHandicapSpinner = (Spinner) findViewById(R.id.list_edit_handicap);
     }
 
-    private void initRetrofit() {
-        final Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(Constant.BASE_URL)
-                .build();
-
-        mService = retrofit.create(SpotService.class);
-    }
-
     private void loadFields() {
-        Call<SpotInfoResponse> call = mService.getSpot(getIntent().getExtras().getString("id"));
+        Call<SpotInfoResponse> call = ServerApiUtil.initSpot().getSpot(getIntent().getExtras().getString("id"), Person.getTokenMap());
         call.enqueue(new Callback<SpotInfoResponse>() {
             @Override
             public void onResponse(Response<SpotInfoResponse> response, Retrofit retrofit) {
@@ -100,7 +91,7 @@ public class ListingEditActivity extends AppCompatActivity {
                 mTitle.setText(spot.name);
                 mDescription.setText(spot.about);
                 mAddress.setText(spot.address);
-                mPrice.setText(String.valueOf(spot.price));
+                mPrice.setText(String.valueOf(spot.price / 100));
                 mGuests.setText(String.valueOf(spot.maxGuests));
 
                 mTobaccoSpinner.setSelection(1);
@@ -185,6 +176,7 @@ public class ListingEditActivity extends AppCompatActivity {
                 finish();
             }
         });
+
     }
 
     private void initRecycler() {
@@ -207,6 +199,22 @@ public class ListingEditActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.list_edit_menu) {
+            Call<SpotDeleteResponse> call = ServerApiUtil.initSpot().deleteSpot(Person.getTokenMap());
+            call.enqueue(new Callback<SpotDeleteResponse>() {
+                @Override
+                public void onResponse(Response<SpotDeleteResponse> response, Retrofit retrofit) {
+                    Toast.makeText(getApplicationContext(), "Spot was completed", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(ListingEditActivity.this, TabsActivity.class);
+                    intent.addFlags(android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                    Snackbar.make(findViewById(android.R.id.content), Constant.CONNECTION_ERROR, Snackbar.LENGTH_LONG)
+                            .show();
+                }
+            });
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -220,7 +228,7 @@ public class ListingEditActivity extends AppCompatActivity {
         query.name = mTitle.getText().toString().trim();
         query.about = mDescription.getText().toString().trim();
         query.address = mAddress.getText().toString().trim();
-        query.price = Integer.valueOf(mPrice.getText().toString().trim());
+        query.price = Integer.valueOf(mPrice.getText().toString().trim()) * 100;
         query.maxGuests = Integer.valueOf(mGuests.getText().toString().trim());
 
         mListingTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -268,7 +276,7 @@ public class ListingEditActivity extends AppCompatActivity {
         builder.setPrettyPrinting();
         Log.i(Constant.LOG, "JSON EDIT PROFILE: \n " + builder.create().toJson(query));
 
-        Call<SpotUpdateResponse> call = mService.updateSpot(query);
+        Call<SpotUpdateResponse> call = ServerApiUtil.initSpot().updateSpot(query);
         call.enqueue(new Callback<SpotUpdateResponse>() {
             @Override
             public void onResponse(Response<SpotUpdateResponse> response, Retrofit retrofit) {

@@ -5,6 +5,7 @@ import com.gridyn.potspot.query.SearchCriteriaQuery;
 import com.gridyn.potspot.query.UpdateSpotQuery;
 import com.gridyn.potspot.response.SpotCommentsResponse;
 import com.gridyn.potspot.response.SpotCreateResponse;
+import com.gridyn.potspot.response.SpotDeleteResponse;
 import com.gridyn.potspot.response.SpotInfoResponse;
 import com.gridyn.potspot.response.SpotSearchResponse;
 import com.gridyn.potspot.response.SpotUpdateResponse;
@@ -35,4 +36,7 @@ public interface SpotService {
 
     @POST("spot/{id}/comments")
     Call<SpotCommentsResponse> getComments(@Path("id") String id, @Body Map<String, String> token);
+
+    @POST("spot/delete")
+    Call<SpotDeleteResponse> deleteSpot(@Body Map<String, String> token);
 }

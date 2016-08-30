@@ -113,7 +113,7 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
                     mName.setText(spot.name);
                     mUnderName.setText(spot.type + " | " + "спроси у Ильи про дату");
                     mPartySize.setText(spot.maxGuests + "\nparty size");
-                    mTotalPrice.setText("$" + spot.price + "\ntotal price");
+                    mTotalPrice.setText("$" + spot.price / 100 + "\ntotal price");
                     mPay.setText("pay $" + spot.price);
                 }
             }

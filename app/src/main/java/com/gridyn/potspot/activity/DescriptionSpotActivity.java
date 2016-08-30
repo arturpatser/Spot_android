@@ -23,7 +23,6 @@ import com.gridyn.potspot.R;
 import com.gridyn.potspot.fragment.OneTimeFragment;
 import com.gridyn.potspot.response.SpotCommentsResponse;
 import com.gridyn.potspot.response.SpotInfoResponse;
-import com.gridyn.potspot.service.SpotService;
 import com.gridyn.potspot.utils.FragmentUtils;
 import com.gridyn.potspot.utils.ServerApiUtil;
 import com.gridyn.potspot.utils.SharedPrefsUtils;
@@ -35,12 +34,10 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit.Call;
 import retrofit.Callback;
-import retrofit.GsonConverterFactory;
 import retrofit.Response;
 import retrofit.Retrofit;
 
 import static com.gridyn.potspot.Constant.BASE_IMAGE;
-import static com.gridyn.potspot.Constant.BASE_URL;
 import static com.gridyn.potspot.Constant.CONNECTION_ERROR;
 import static com.gridyn.potspot.Constant.FONT_ROBOTO_LIGHT;
 import static com.gridyn.potspot.Constant.FONT_ROBOTO_MEDIUM;
@@ -121,18 +118,11 @@ public class DescriptionSpotActivity extends AppCompatActivity {
     }
 
     private void initRetrofit() {
-        final Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(BASE_URL)
-                .build();
-
-        final SpotService service = retrofit.create(SpotService.class);
-
-        getSpot(service);
-        getComments(service);
+        getSpot();
+        getComments();
     }
 
-    private void getComments(SpotService service) {
+    private void getComments() {
         Call<SpotCommentsResponse> call = ServerApiUtil.initSpot().getComments(getIntent().getExtras().getString("id"), Person.getTokenMap());
         call.enqueue(new Callback<SpotCommentsResponse>() {
             @Override
@@ -170,7 +160,7 @@ public class DescriptionSpotActivity extends AppCompatActivity {
         }
     }
 
-    private void getSpot(SpotService service) {
+    private void getSpot() {
         Call<SpotInfoResponse> call = ServerApiUtil.initSpot().getSpot(getIntent().getExtras().getString("id"), Person.getTokenMap());
         call.enqueue(new Callback<SpotInfoResponse>() {
             @Override
@@ -189,7 +179,7 @@ public class DescriptionSpotActivity extends AppCompatActivity {
                                 .into(mHeader);
                     }
 
-                    mPrice.setText("$ " + spot.price);
+                    mPrice.setText("$ " + spot.price / 100);
                     mName.setText(spot.name);
                     mAbout.setText(spot.about);
                     mGuest.setText(spot.maxGuests + "guests");

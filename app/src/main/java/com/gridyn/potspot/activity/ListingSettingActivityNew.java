@@ -146,6 +146,13 @@ public class ListingSettingActivityNew extends AppCompatActivity {
                 query.badges.add(extra.getString("handicap"));
             }
 
+            if (extra.getStringArray("upload").length != 0) {
+                for (String img : extra.getStringArray("upload")) {
+                    query.upload.add(img);
+                }
+
+            }
+
             query.available = generateAvailableArr();
 
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -159,7 +166,6 @@ public class ListingSettingActivityNew extends AppCompatActivity {
                     if (response.body().success) {
                         Log.i(Constant.LOG, String.valueOf(response.code()));
                         Log.i(Constant.LOG, "listing setting success true");
-//                    intent.putExtra("id", response);
                         startActivity(intent);
                     } else {
                         Log.i(Constant.LOG, String.valueOf(response.code()));
@@ -167,7 +173,6 @@ public class ListingSettingActivityNew extends AppCompatActivity {
                                 .setAction("go to spot", new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-//                                    intent.putExtra("id", response);
                                         startActivity(intent);
                                     }
                                 })
