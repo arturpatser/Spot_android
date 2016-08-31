@@ -76,6 +76,7 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
         super.onCreate(savedInstanceState);
 
         forBook = getIntent().getExtras().getBoolean(Constant.OPEN_FOR_BOOK);
+        forBook = false;
         spotId = getIntent().getExtras().getString("id");
         requestId = getIntent().getExtras().getString(Constant.REQUEST_ID);
 
@@ -113,8 +114,8 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
         splitFriendsRecycler.setAdapter(adapter);
 
         if (forBook) {
-            mPay.setText(getString(R.string.request_booking));
 
+            mPay.setText(getString(R.string.request_booking));
         }
     }
 
@@ -327,30 +328,6 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
                 }
             });
         }
-
-//        try {
-//            Stripe stripe = new Stripe(Constant.STRIPE_KEY);
-//
-//            Card card = new Card("4242424242424242", 12, 2013, "123");
-//
-//            stripe.createToken(card,
-//                    new TokenCallback() {
-//                        @Override
-//                        public void onError(Exception error) {
-//
-//                            Log.e(TAG, "onError: error while create token for stripe = " + Log.getStackTraceString(error));
-//                        }
-//
-//                        @Override
-//                        public void onSuccess(Token token) {
-//
-//                            Log.d(TAG, "onSuccess: successfull received stripe token = " + token.getId());
-//                        }
-//                    });
-//
-//        } catch (AuthenticationException e) {
-//            Log.e(TAG, "onClickBuyPay: error while init stripe = " + Log.getStackTraceString(e));
-//        }
     }
 
     private void goToTabs(String mes) {

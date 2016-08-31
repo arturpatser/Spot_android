@@ -16,7 +16,8 @@ import com.gridyn.potspot.adapter.FriendsAdapter;
 import com.gridyn.potspot.databinding.FragmentSelectFriendsBinding;
 import com.gridyn.potspot.interfaces.SelectFriendsInterface;
 import com.gridyn.potspot.model.FriendModel;
-import com.gridyn.potspot.response.FriendsResponse;
+import com.gridyn.potspot.response.friendResponse.FriendsResponse;
+import com.gridyn.potspot.response.friendResponse.Message;
 import com.gridyn.potspot.utils.FragmentUtils;
 import com.gridyn.potspot.utils.ServerApiUtil;
 
@@ -118,30 +119,37 @@ public class SelectFriendsFragment extends Fragment implements SelectFriendsInte
             @Override
             public void onResponse(Response<FriendsResponse> response, Retrofit retrofit) {
 
-                Log.d(TAG, "onResponse: ");
+                FriendsResponse friendsResponse = response.body();
 
-                //TODO uncomment, add friends to adapter here
-                //adapter.addAll();
+                Log.d(TAG, "onResponse: " + friendsResponse);
 
-                ArrayList<FriendModel> arr = new ArrayList<>();
+                if (friendsResponse.getMessage().size() > 0) {
 
-                for (int i = 0; i < 10; i++) {
+                    ArrayList<FriendModel> friendModels = new ArrayList<>();
 
-                    arr.add(new FriendModel(""+i, false, "topkek"+i));
-                }
+                    for (Message message : friendsResponse.getMessage().get(0)) {
 
-                adapter.addAll(arr);
+                        FriendModel friendModel = message.getData();
 
-                for (int j = 0; j < adapter.getItems().size(); j++) {
+                        friendModel.setId(message.getId().get$id());
 
-                    FriendModel adapItem = adapter.getItem(j);
+                        friendModels.add(friendModel);
+                    }
 
-                    for (int i = 0; i < friendsArr.size(); i++) {
+                    adapter.addAll(friendModels);
 
-                        FriendModel selectedItem = friendsArr.get(i);
+                    //checking selected items
+                    for (int j = 0; j < adapter.getItems().size(); j++) {
 
-                        if (adapItem.getId().equals(selectedItem.getId())) {
-                            adapItem.setSelected(true);
+                        FriendModel adapItem = adapter.getItem(j);
+
+                        for (int i = 0; i < friendsArr.size(); i++) {
+
+                            FriendModel selectedItem = friendsArr.get(i);
+
+                            if (adapItem.getId().equals(selectedItem.getId())) {
+                                adapItem.setSelected(true);
+                            }
                         }
                     }
                 }

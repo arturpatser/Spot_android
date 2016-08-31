@@ -197,60 +197,63 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onResponse(retrofit.Response<UserInfoResponse> response, Retrofit retrofit) {
                 UserInfoResponse.Message message = response.body().message.get(0);
-                mName.setText(message.data.name);
-                mAddress.setText(message.data.address);
-                if (!message.data.about.isEmpty()) {
-                    mAbout.setText(message.data.about);
-                } else {
-                    mAbout.setText(NOT_SPECIFIED);
-                }
-                if (!message.data.gender.isEmpty()) {
-                    mGender.setText(message.data.gender);
-                } else {
-                    mGender.setText(NOT_SPECIFIED);
-                }
-                if (!message.data.birthday.isEmpty()) {
-                    mBirthdate.setText(message.data.birthday);
-                } else {
-                    mBirthdate.setText(NOT_SPECIFIED);
-                }
-                mEmail.setText(message.data.email);
-                if (message.data.phone != null) {
-                    if (!message.data.phone.isEmpty()) {
-                        mPhone.setText(message.data.phone);
+
+                if (message != null) {
+                    mName.setText(message.data.name);
+                    mAddress.setText(message.data.address);
+                    if (!message.data.about.isEmpty()) {
+                        mAbout.setText(message.data.about);
                     } else {
-                        mPhone.setText(NOT_SPECIFIED);
+                        mAbout.setText(NOT_SPECIFIED);
                     }
-                }
-                if (message.data.paypalID != null && message.data.cardID != null)
-                if (!message.data.paypalID.isEmpty() && !message.data.cardID.isEmpty()) {
-                    mPayInfo.setText("Card and Paypal");
-                } else if (!message.data.paypalID.isEmpty()) {
-                    mPayInfo.setText("Paypal");
-                } else if (!message.data.cardID.isEmpty()) {
-                    mPayInfo.setText("Card");
-                } else {
-                    mPayInfo.setText(NOT_SPECIFIED);
-                }
-                mWaitingForVerify = message.system.waitingForVerify;
-                mMemberSince.setText(new SimpleDateFormat("MMMM yyyy")
-                        .format(new Date((long) message.system.timeCreated * 1000)));
-                if (message.data.imgs.size() != 0) {
-                    if (!message.data.imgs.get(0).isEmpty()) {
-                        Picasso.with(mView.getContext())
-                                .load(URL_IMAGE + message.data.imgs.get(0))
+                    if (!message.data.gender.isEmpty()) {
+                        mGender.setText(message.data.gender);
+                    } else {
+                        mGender.setText(NOT_SPECIFIED);
+                    }
+                    if (!message.data.birthday.isEmpty()) {
+                        mBirthdate.setText(message.data.birthday);
+                    } else {
+                        mBirthdate.setText(NOT_SPECIFIED);
+                    }
+                    mEmail.setText(message.data.email);
+                    if (message.data.phone != null) {
+                        if (!message.data.phone.isEmpty()) {
+                            mPhone.setText(message.data.phone);
+                        } else {
+                            mPhone.setText(NOT_SPECIFIED);
+                        }
+                    }
+                    if (message.data.paypalID != null && message.data.cardID != null)
+                        if (!message.data.paypalID.isEmpty() && !message.data.cardID.isEmpty()) {
+                            mPayInfo.setText("Card and Paypal");
+                        } else if (!message.data.paypalID.isEmpty()) {
+                            mPayInfo.setText("Paypal");
+                        } else if (!message.data.cardID.isEmpty()) {
+                            mPayInfo.setText("Card");
+                        } else {
+                            mPayInfo.setText(NOT_SPECIFIED);
+                        }
+                    mWaitingForVerify = message.system.waitingForVerify;
+                    mMemberSince.setText(new SimpleDateFormat("MMMM yyyy")
+                            .format(new Date((long) message.system.timeCreated * 1000)));
+                    if (message.data.imgs.size() != 0) {
+                        if (!message.data.imgs.get(0).isEmpty()) {
+                            Picasso.with(mView.getContext())
+                                    .load(URL_IMAGE + message.data.imgs.get(0))
+                                    .into(mAvatar);
+                        }
+                    } else {
+                        Picasso.with(getContext())
+                                .load(BASE_IMAGE)
                                 .into(mAvatar);
                     }
-                } else {
-                    Picasso.with(getContext())
-                            .load(BASE_IMAGE)
-                            .into(mAvatar);
-                }
-                if (message.data.spot != null && message.data.spot.size() != 0) {
-                    loadSpotInfo(message);
-                } else {
-                    mCard.setVisibility(View.GONE);
-                    mTVListing.setVisibility(View.GONE);
+                    if (message.data.spot != null && message.data.spot.size() != 0) {
+                        loadSpotInfo(message);
+                    } else {
+                        mCard.setVisibility(View.GONE);
+                        mTVListing.setVisibility(View.GONE);
+                    }
                 }
             }
 

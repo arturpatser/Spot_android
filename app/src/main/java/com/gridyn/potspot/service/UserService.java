@@ -8,7 +8,6 @@ import com.gridyn.potspot.query.PhoneConfirmQuery;
 import com.gridyn.potspot.query.PhoneVerifyQuery;
 import com.gridyn.potspot.query.UserUpdateQuery;
 import com.gridyn.potspot.response.BookResponse;
-import com.gridyn.potspot.response.FriendsResponse;
 import com.gridyn.potspot.response.MySpotResponse;
 import com.gridyn.potspot.response.PaymentResponse;
 import com.gridyn.potspot.response.PhoneConfirmResponse;
@@ -23,6 +22,7 @@ import com.gridyn.potspot.response.UserFeedbackResponse;
 import com.gridyn.potspot.response.UserInfoResponse;
 import com.gridyn.potspot.response.UserLoginResponse;
 import com.gridyn.potspot.response.UserUpdateResponse;
+import com.gridyn.potspot.response.friendResponse.FriendsResponse;
 
 import java.util.Map;
 
