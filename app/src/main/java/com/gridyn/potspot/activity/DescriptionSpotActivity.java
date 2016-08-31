@@ -61,10 +61,11 @@ public class DescriptionSpotActivity extends AppCompatActivity {
     private TextView mUserName;
     private TextView mReviews;
     private ListView mCommentView;
-    private Button mBook;
+    private Button mBook, minus, plus;
     private List<SpotCommentsResponse.Comment> mAllComment;
     private List<String> mShowComment;
     private ArrayAdapter<String> mCommentsAdapter;
+    SpotInfoResponse.Message.Spot spot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +105,12 @@ public class DescriptionSpotActivity extends AppCompatActivity {
         mReviews = (TextView) findViewById(R.id.desc_spot_reviews);
         mBook = (Button) findViewById(R.id.desc_spot_book);
         mCommentView = (ListView) findViewById(R.id.desc_spot_comment);
+
+        minus = (Button) findViewById(R.id.desc_spot_minus);
+        plus = (Button) findViewById(R.id.desc_spot_plus);
+
+        minus.setEnabled(false);
+        plus.setEnabled(false);
     }
 
     private void initToolbar() {
@@ -166,8 +173,12 @@ public class DescriptionSpotActivity extends AppCompatActivity {
             @Override
             public void onResponse(Response<SpotInfoResponse> response, Retrofit retrofit) {
                 if (response.body().success) {
+
+                    minus.setEnabled(true);
+                    plus.setEnabled(true);
+
                     Log.i(LOG, new Gson().toJson(response.body()));
-                    SpotInfoResponse.Message.Spot spot = response.body().message.get(0).spots.get(1);
+                    spot = response.body().message.get(0).spots.get(1);
 
                     if (spot.imgs.size() != 0) {
                         Picasso.with(mContext)
@@ -179,7 +190,9 @@ public class DescriptionSpotActivity extends AppCompatActivity {
                                 .into(mHeader);
                     }
 
-                    mPrice.setText("$ " + spot.price / 100);
+                    spot.price = spot.price / 100;
+
+                    mPrice.setText("$ " + spot.price);
                     mName.setText(spot.name);
                     mAbout.setText(spot.about);
                     mGuest.setText(spot.maxGuests + "guests");
@@ -236,18 +249,18 @@ public class DescriptionSpotActivity extends AppCompatActivity {
     public void onCLickBookFor(View view) {
         Intent intent = new Intent(this, BuySpotActivity.class);
         intent.putExtra("id", getIntent().getExtras().getString("id"));
+        intent.putExtra(Constant.PARTY_SIZE, mCountGuests.getText().toString());
         intent.putExtra(Constant.OPEN_FOR_BOOK, true);
         startActivity(intent);
     }
 
     private void changeCountGuests() {
-        final Button minus = (Button) findViewById(R.id.desc_spot_minus);
-        final Button plus = (Button) findViewById(R.id.desc_spot_plus);
+
         minus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Integer i = Integer.parseInt(mCountGuests.getText().toString());
-                if (i > 0) {
+                if (i > 1) {
                     i--;
                 }
                 mCountGuests.setText(Integer.toString(i));
@@ -257,7 +270,7 @@ public class DescriptionSpotActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Integer i = Integer.parseInt(mCountGuests.getText().toString());
-                if (i >= 0) {
+                if (i >= 1 && i < spot.maxGuests - 1) {
                     i++;
                 }
                 mCountGuests.setText(Integer.toString(i));

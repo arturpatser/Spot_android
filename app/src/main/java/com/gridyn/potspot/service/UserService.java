@@ -90,4 +90,8 @@ public interface UserService {
 
     @POST("booking/{id}/cancel")
     Call<PaymentResponse> cancelPaying(@Path("id") String requestId, @Body Map<String, String> tokenMap);
+
+    @POST("booking/{id}/friend/{fr_id}/add")
+    Call<SuccessResponse> addFriendToBooking(@Path("id") String bookingId, @Path("fr_id") String friendId,
+                                             @Body Map<String, String> token);
 }

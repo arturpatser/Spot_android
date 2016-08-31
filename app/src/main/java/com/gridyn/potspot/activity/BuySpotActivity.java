@@ -28,6 +28,7 @@ import com.gridyn.potspot.query.BookQuery;
 import com.gridyn.potspot.response.BookResponse;
 import com.gridyn.potspot.response.PaymentResponse;
 import com.gridyn.potspot.response.SpotInfoResponse;
+import com.gridyn.potspot.response.SuccessResponse;
 import com.gridyn.potspot.service.SpotService;
 import com.gridyn.potspot.utils.FragmentUtils;
 import com.gridyn.potspot.utils.ServerApiUtil;
@@ -70,15 +71,17 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
     private String requestId;
     private int minsFrom = 0;
     private int minsTo = 0;
+    private String partySize;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         forBook = getIntent().getExtras().getBoolean(Constant.OPEN_FOR_BOOK);
-        forBook = false;
+
         spotId = getIntent().getExtras().getString("id");
         requestId = getIntent().getExtras().getString(Constant.REQUEST_ID);
+//        partySize = getIntent().getExtras().getString(Constant.PARTY_SIZE);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_buy_spot);
         binding.setShowSplit(true);
@@ -133,6 +136,10 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
                     //TODO check class parse
                     spot = response.body().message.get(0).spots.get(1);
 
+                    partySize = String.valueOf(spot.maxGuests);
+
+                    spot.price = spot.price / 100;
+
                     Log.d(TAG, "onResponse: spot = " + spot);
 
                     if (spot.imgs.size() > 0)
@@ -142,8 +149,8 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
 
                     mName.setText(spot.name);
                     mUnderName.setText(spot.type + " | " + "спроси у Ильи про дату");
-                    mPartySize.setText(spot.maxGuests + "\nparty size");
-                    mTotalPrice.setText("$" + spot.price / 100 + "\ntotal price");
+                    mPartySize.setText(partySize + "\nparty size");
+                    mTotalPrice.setText("$" + spot.price + "\ntotal price");
                     if (!forBook) {
                         mPay.setText("pay $" + spot.price);
                     }
@@ -362,7 +369,7 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
     @Override
     public void showSplitFriends() {
 
-        SelectFriendsFragment select = SelectFriendsFragment.newInstance(spot.maxGuests - 1, adapter.getItems());
+        SelectFriendsFragment select = SelectFriendsFragment.newInstance(Integer.parseInt(partySize) - 1, adapter.getItems());
 
         select.setOnSelectFriendsListener(new SelectFriendsFragment.OnSelectFriendsListener() {
             @Override
@@ -375,7 +382,32 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
 
                     for (FriendModel f :
                             selectedItems) {
-                        f.setSplitSize(spot.price / (selectedItems.size() + 1));
+
+                        float fSplitPrice = (float) spot.price / (selectedItems.size() + 1);
+
+                        //TODO change price
+                        f.setSplitSize(fSplitPrice);
+
+                        Call<SuccessResponse> call = ServerApiUtil.initUser()
+                                .addFriendToBooking(requestId, f.getId(), Person.getTokenMap());
+
+                        call.enqueue(new Callback<SuccessResponse>() {
+                            @Override
+                            public void onResponse(Response<SuccessResponse> response, Retrofit retrofit) {
+
+                                SuccessResponse success = response.body();
+
+                                Log.d(TAG, "onResponse: success = " + success);
+                            }
+
+                            @Override
+                            public void onFailure(Throwable t) {
+
+                                Log.e(TAG, "onFailure: error add friend to book = " + Log.getStackTraceString(t));
+
+                                Snackbar.make(findViewById(android.R.id.content), R.string.error_connection, Snackbar.LENGTH_INDEFINITE).show();
+                            }
+                        });
                     }
 
                     adapter.addItems(selectedItems);
@@ -383,6 +415,7 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
                 }
                 else
                     binding.setShowSplit(true);
+
             }
         });
 

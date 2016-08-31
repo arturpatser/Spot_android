@@ -39,4 +39,5 @@ public interface Constant {
     String REQUEST_ID = "reqId";
     String PAYMENT_SUCCESSFULL = "paymentsuccessfull";
     String PROGRESS_MESSAGE = "progress";
+    String PARTY_SIZE = "partySize";
 }
