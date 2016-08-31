@@ -187,4 +187,10 @@
     <string name="request_process">We are processing your request</string>
     <string name="select_time">Select time please</string>
     <string name="successfull_add_friend">Wait until friend accept invite</string>
+    <string name="yes">YES!</string>
+    <string name="no_thanks">No, thanks</string>
+    <string name="hi_its">Hi! It is</string>
+    <string name="join_spot">Do you want to join a spot?</string>
+    <string name="successfull_invite">Successfull invite</string>
+    <string name="successfull_decline">Invite successfully declined</string>
 </resources>

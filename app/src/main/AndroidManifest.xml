@@ -180,7 +180,9 @@
             android:name=".activity.HostNewRequestPopup"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.UserDialog" />
-        <activity android:name=".activity.InvitedToJoinPopup"></activity>
+        <activity android:name=".activity.InvitedToJoinPopup"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.UserDialog" />
     </application>
 
 </manifest>

@@ -1,6 +1,5 @@
 package com.gridyn.potspot.model;
 
-import com.google.firebase.database.Exclude;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -15,7 +14,7 @@ public class AcceptRequestData {
     String spotId;
 
     @SerializedName("spot_name")
-    @Exclude
+    @Expose
     String spotName;
 
     @SerializedName("success")
@@ -23,8 +22,20 @@ public class AcceptRequestData {
     boolean success;
 
     @SerializedName("request_id")
-    @Exclude
+    @Expose
     String requestId;
+
+    public String getPartySize() {
+        return partySize;
+    }
+
+    public void setPartySize(String partySize) {
+        this.partySize = partySize;
+    }
+
+    @SerializedName("party_size")
+    @Expose
+    String partySize;
 
     public String getRequestId() {
         return requestId;

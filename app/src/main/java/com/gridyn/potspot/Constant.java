@@ -40,4 +40,7 @@ public interface Constant {
     String PAYMENT_SUCCESSFULL = "paymentsuccessfull";
     String PROGRESS_MESSAGE = "progress";
     String PARTY_SIZE = "partySize";
+    String ARG_SPOT_ID = "potspotid";
+    String ARG_WHO_INVITE = "whoinvitename";
+    String ARG_WHO_INVITE_ID = "whoinviteid";
 }

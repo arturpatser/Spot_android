@@ -16,10 +16,13 @@ import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.R;
 import com.gridyn.potspot.activity.ClientPopup;
 import com.gridyn.potspot.activity.HostNewRequestPopup;
+import com.gridyn.potspot.activity.InvitedToJoinPopup;
 import com.gridyn.potspot.activity.MainActivity;
 import com.gridyn.potspot.model.AcceptRequestModel;
 import com.gridyn.potspot.model.BookRequestData;
 import com.gridyn.potspot.model.BookRequestModel;
+import com.gridyn.potspot.model.bookInvite.BookInviteModel;
+import com.gridyn.potspot.model.bookInvite.Data;
 
 import static com.gridyn.potspot.Constant.LOG;
 import static com.gridyn.potspot.Constant.MESSAGE_ACTION;
@@ -91,6 +94,26 @@ public class GCMPushReceiverService extends GcmListenerService {
                 break;
 
             case "book_friend_invite":
+
+                BookInviteModel bookInviteModel = gson.fromJson(data, BookInviteModel.class);
+
+                Data inviteData = bookInviteModel.getData();
+
+                notificationMessage = getString(R.string.join_spot);
+
+                Intent popupIntentInvite = new Intent(this, InvitedToJoinPopup.class);
+
+                popupIntentInvite.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                popupIntentInvite.putExtra(Constant.ARG_SPOT_ID, inviteData.getSpotId());
+                popupIntentInvite.putExtra(Constant.ARG_WHO_INVITE, inviteData.getUserName());
+                popupIntentInvite.putExtra(Constant.ARG_WHO_INVITE_ID, inviteData.getUserId());
+                popupIntentInvite.putExtra(Constant.SPOT_NAME, inviteData.getSpotName());
+                popupIntentInvite.putExtra(Constant.REQUEST_ID, inviteData.getRequestId());
+
+                startActivity(popupIntentInvite);
+
+                Log.d(TAG, "onMessageReceived: received request invite = " + inviteData);
 
                 break;
 

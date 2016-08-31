@@ -97,4 +97,10 @@ public interface UserService {
 
     @POST("booking/{id}/friend/add_by_email")
     Call<SuccessResponse> addFriendByMail(@Path("id") String id, @Body Map<String, String> token);
+
+    @POST("booking/{id}/invite/confirm")
+    Call<SuccessResponse> confirmInvite(@Path("id") String requestId, @Body Map<String, String> token);
+
+    @POST("booking/{id}/invite/decline")
+    Call<SuccessResponse> declineInvite(@Path("id") String requestId, @Body Map<String, String> token);
 }
