@@ -176,9 +176,11 @@
             android:name=".activity.ClientPopup"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.UserDialog" />
-        <activity android:name=".activity.HostNewRequestPopup"
+        <activity
+            android:name=".activity.HostNewRequestPopup"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.UserDialog"/>
+            android:theme="@style/Theme.UserDialog" />
+        <activity android:name=".activity.InvitedToJoinPopup"></activity>
     </application>
 
 </manifest>

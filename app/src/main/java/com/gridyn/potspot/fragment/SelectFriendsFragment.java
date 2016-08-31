@@ -2,6 +2,7 @@ package com.gridyn.potspot.fragment;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +17,7 @@ import com.gridyn.potspot.adapter.FriendsAdapter;
 import com.gridyn.potspot.databinding.FragmentSelectFriendsBinding;
 import com.gridyn.potspot.interfaces.SelectFriendsInterface;
 import com.gridyn.potspot.model.FriendModel;
+import com.gridyn.potspot.response.SuccessResponse;
 import com.gridyn.potspot.response.friendResponse.FriendsResponse;
 import com.gridyn.potspot.response.friendResponse.Message;
 import com.gridyn.potspot.utils.FragmentUtils;
@@ -30,11 +32,14 @@ import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
+import static com.gridyn.potspot.Constant.CONNECTION_ERROR;
+
 public class SelectFriendsFragment extends Fragment implements SelectFriendsInterface {
 
     public static final String TAG = SelectFriendsFragment.class.getName();
     private static String ARG_PARTY_SIZE = "partysize";
     private static String ARG_FRIENDS_SELECTED = "friends";
+    private static String ARG_REQUEST_ID = "reqId";
     private OnSelectFriendsListener mListener;
     private int partySize;
 
@@ -45,16 +50,19 @@ public class SelectFriendsFragment extends Fragment implements SelectFriendsInte
 
     FragmentSelectFriendsBinding binding;
     private ArrayList<FriendModel> friendsArr;
+    private String requestId;
 
     public SelectFriendsFragment() {
         // Required empty public constructor
     }
 
-    public static SelectFriendsFragment newInstance(int partySize, ArrayList<FriendModel> arrayList) {
+    public static SelectFriendsFragment newInstance(int partySize, ArrayList<FriendModel> arrayList,
+                                                    String requestId) {
         SelectFriendsFragment fragment = new SelectFriendsFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_PARTY_SIZE, partySize);
         args.putParcelableArrayList(ARG_FRIENDS_SELECTED, arrayList);
+        args.putString(ARG_REQUEST_ID, requestId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -67,6 +75,7 @@ public class SelectFriendsFragment extends Fragment implements SelectFriendsInte
 
             partySize = getArguments().getInt(ARG_PARTY_SIZE);
             friendsArr = getArguments().getParcelableArrayList(ARG_FRIENDS_SELECTED);
+            requestId = getArguments().getString(ARG_REQUEST_ID);
         }
 
         adapter = new FriendsAdapter(getContext(), this, partySize);
@@ -101,7 +110,37 @@ public class SelectFriendsFragment extends Fragment implements SelectFriendsInte
             @Override
             public void onClick(View v) {
 
-                Log.d(TAG, "onClick: clicked add by email ");
+            Log.d(TAG, "onClick: clicked add by email ");
+
+            Call<SuccessResponse> call = ServerApiUtil.initUser().addFriendByMail(requestId,
+                    Person.getTokenMap());
+
+            call.enqueue(new Callback<SuccessResponse>() {
+                @Override
+                public void onResponse(Response<SuccessResponse> response, Retrofit retrofit) {
+
+                    SuccessResponse successResponse = response.body();
+
+                    if (successResponse == null) {
+
+                    } else {
+
+                        if (successResponse.isSuccess()) {
+
+                            Snackbar.make(getActivity().findViewById(android.R.id.content),
+                                    R.string.successfull_add_friend, Snackbar.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+
+                    Log.e(TAG, "onFailure: error while add friend by mail = " + Log.getStackTraceString(t));
+
+                    Snackbar.make(getActivity().findViewById(android.R.id.content), CONNECTION_ERROR, Snackbar.LENGTH_SHORT).show();
+                }
+            });
             }
         });
 

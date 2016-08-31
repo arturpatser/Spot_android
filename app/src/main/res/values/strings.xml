@@ -186,4 +186,5 @@
     <string name="payment_progress">We are progressing your payment...</string>
     <string name="request_process">We are processing your request</string>
     <string name="select_time">Select time please</string>
+    <string name="successfull_add_friend">Wait until friend accept invite</string>
 </resources>

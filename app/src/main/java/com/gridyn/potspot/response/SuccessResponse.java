@@ -9,6 +9,14 @@ import com.google.gson.annotations.SerializedName;
  */
 public class SuccessResponse {
 
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
+
     @SerializedName("success")
     @Expose
     boolean success;

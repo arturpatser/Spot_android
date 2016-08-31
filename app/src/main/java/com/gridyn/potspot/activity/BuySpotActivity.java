@@ -369,7 +369,8 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
     @Override
     public void showSplitFriends() {
 
-        SelectFriendsFragment select = SelectFriendsFragment.newInstance(Integer.parseInt(partySize) - 1, adapter.getItems());
+        SelectFriendsFragment select = SelectFriendsFragment.newInstance(Integer.parseInt(partySize) - 1,
+                adapter.getItems(), requestId);
 
         select.setOnSelectFriendsListener(new SelectFriendsFragment.OnSelectFriendsListener() {
             @Override
