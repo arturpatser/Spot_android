@@ -103,14 +103,24 @@ public class SignUpActivity extends AppCompatActivity {
                     Log.i("signup", "Response status code: " + response.code());
 
                     if (res.success) {
-                        final SharedPreferences settings = getSharedPreferences(Constant.APP_PREFERENCES, Context.MODE_PRIVATE);
-                        final SharedPreferences.Editor editor = settings.edit();
-                        editor.putString(Constant.AP_EMAIL, email);
-                        editor.apply();
-                        final Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
-                        intent.putExtra("isReg", true);
-                        startActivity(intent);
-                        finish();
+
+                        setContentView(R.layout.success_signup);
+
+                        findViewById(R.id.signup_success_layout).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                final SharedPreferences settings = getSharedPreferences(Constant.APP_PREFERENCES, Context.MODE_PRIVATE);
+                                final SharedPreferences.Editor editor = settings.edit();
+                                editor.putString(Constant.AP_EMAIL, email);
+                                editor.apply();
+                                final Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
+                                intent.putExtra("isReg", true);
+                                startActivity(intent);
+                                finish();
+                            }
+                        });
+
                     } else {
                         if (res.message.get(0).email != null) {
                             Snackbar.make(view, res.message.get(0).email, Snackbar.LENGTH_SHORT).show();

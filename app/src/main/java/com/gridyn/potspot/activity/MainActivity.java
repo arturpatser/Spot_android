@@ -229,27 +229,19 @@ public class MainActivity extends AppCompatActivity {
                     mProgressDialog.dismiss();
                 }
 
-                setContentView(R.layout.success_signup);
+                UserInfoResponse res = response.body();
+                UserInfoResponse.Message message = res.message.get(0);
+                Person.setHost(message.system.isVerified);
+                intent.putExtra("name", message.data.name);
+                intent.putExtra("email", message.data.email);
+                Log.i(Constant.LOG, "android id from the server: " + message.system.androidId);
+                try {
+                    intent.putExtra("avatar", message.data.imgs.get(0));
+                } catch (IndexOutOfBoundsException e) {
+                    intent.putExtra("avatar", Constant.BASE_IMAGE);
+                }
 
-                findViewById(R.id.signup_success_layout).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        UserInfoResponse res = response.body();
-                        UserInfoResponse.Message message = res.message.get(0);
-                        Person.setHost(message.system.isVerified);
-                        intent.putExtra("name", message.data.name);
-                        intent.putExtra("email", message.data.email);
-                        Log.i(Constant.LOG, "android id from the server: " + message.system.androidId);
-                        try {
-                            intent.putExtra("avatar", message.data.imgs.get(0));
-                        } catch (IndexOutOfBoundsException e) {
-                            intent.putExtra("avatar", Constant.BASE_IMAGE);
-                        }
-
-                        startActivity(intent);
-                    }
-                });
+                startActivity(intent);
             }
 
             @Override

@@ -81,7 +81,7 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
 
         spotId = getIntent().getExtras().getString("id");
         requestId = getIntent().getExtras().getString(Constant.REQUEST_ID);
-//        partySize = getIntent().getExtras().getString(Constant.PARTY_SIZE);
+        partySize = getIntent().getExtras().getString(Constant.PARTY_SIZE);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_buy_spot);
         binding.setShowSplit(true);
@@ -136,7 +136,8 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
                     //TODO check class parse
                     spot = response.body().message.get(0).spots.get(1);
 
-                    partySize = String.valueOf(spot.maxGuests);
+                    if (partySize == null)
+                        partySize = String.valueOf(spot.maxGuests);
 
                     spot.price = spot.price / 100;
 
@@ -262,7 +263,7 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
 
                     formatter = new SimpleDateFormat("EEEE MMMM dd, yyyy");
 
-                    bookQuery.setGuests(1);
+                    bookQuery.setGuests(Integer.parseInt(partySize));
                     bookQuery.setTimeStay(timeStay);
                     bookQuery.setDate(formatter.format(date));
                     bookQuery.setToken(Person.getToken());

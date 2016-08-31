@@ -62,6 +62,7 @@ public class GCMPushReceiverService extends GcmListenerService {
                     popupIntent.putExtra(Constant.NOTIF_TEXT, notificationMessage);
                     popupIntent.putExtra(Constant.SPOT_ID, acceptReqModel.getAcceptRequestData().getSpotId());
                     popupIntent.putExtra(Constant.REQUEST_ID, acceptReqModel.getAcceptRequestData().getRequestId());
+                    popupIntent.putExtra(Constant.PARTY_SIZE, acceptReqModel.getAcceptRequestData().getPartySize());
 
                     startActivity(popupIntent);
                 }
