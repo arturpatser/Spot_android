@@ -10,13 +10,21 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
 import com.gridyn.potspot.databinding.ItemFriendBinding;
 import com.gridyn.potspot.interfaces.SelectFriendsInterface;
 import com.gridyn.potspot.model.FriendModel;
+import com.gridyn.potspot.response.SuccessResponse;
+import com.gridyn.potspot.utils.ServerApiUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 /**
  * Created by dmytro_vodnik on 8/28/16.
@@ -30,13 +38,16 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
     Context context;
     LayoutInflater layoutInflater;
     ArrayList<FriendModel> friendModelArrayList;
+    String bookingId;
 
-    public FriendsAdapter(Context context, SelectFriendsInterface selectFriendsInterface, int partySize) {
+    public FriendsAdapter(Context context, SelectFriendsInterface selectFriendsInterface, int partySize,
+                          String bookingId) {
         this.context = context;
         this.layoutInflater = LayoutInflater.from(context);
         friendModelArrayList = new ArrayList<>();
         this.selectFriendsInterface = selectFriendsInterface;
         this.partySize = partySize;
+        this.bookingId = bookingId;
     }
 
     @Override
@@ -69,6 +80,35 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                     friendModel.setSelected(false);
                 } else {
                     Toast.makeText(context, R.string.party_size_alert, Toast.LENGTH_SHORT).show();
+                }
+
+                if (!friendModel.isSelected() && friendModel.isInviteSent()) {
+
+                    Call<SuccessResponse> call = ServerApiUtil.initUser()
+                            .removeFriendFromBooking(bookingId, friendModel.getId(), Person.getTokenMap());
+
+                    call.enqueue(new Callback<SuccessResponse>() {
+                        @Override
+                        public void onResponse(Response<SuccessResponse> response, Retrofit retrofit) {
+
+                            SuccessResponse successResponse = response.body();
+
+                            if (successResponse == null) {
+
+                            } else {
+
+                                if (successResponse.isSuccess())
+                                    friendModel.setInviteSent(false);
+                            }
+
+                        }
+
+                        @Override
+                        public void onFailure(Throwable t) {
+
+                            Log.e(TAG, "onFailure: error while remove friend = " + Log.getStackTraceString(t));
+                        }
+                    });
                 }
             }
         });

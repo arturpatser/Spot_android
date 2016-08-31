@@ -124,6 +124,7 @@ public class GCMPushReceiverService extends GcmListenerService {
 
             case "book_friend_accept":
 
+
                 break;
 
             case "friend_invite":

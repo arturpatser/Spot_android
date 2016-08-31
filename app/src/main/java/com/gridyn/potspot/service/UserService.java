@@ -3,6 +3,7 @@ package com.gridyn.potspot.service;
 import com.gridyn.potspot.query.BookQuery;
 import com.gridyn.potspot.query.EnableHostQuery;
 import com.gridyn.potspot.query.FeedbackQuery;
+import com.gridyn.potspot.query.FriendByMailQuery;
 import com.gridyn.potspot.query.LoginQuery;
 import com.gridyn.potspot.query.PhoneConfirmQuery;
 import com.gridyn.potspot.query.PhoneVerifyQuery;
@@ -95,8 +96,12 @@ public interface UserService {
     Call<SuccessResponse> addFriendToBooking(@Path("id") String bookingId, @Path("fr_id") String friendId,
                                              @Body Map<String, String> token);
 
+    @POST("booking/{id}/friend/{fr_id}/remove")
+    Call<SuccessResponse> removeFriendFromBooking(@Path("id") String bookingId, @Path("fr_id") String friendId,
+                                                  @Body Map<String, String> token);
+
     @POST("booking/{id}/friend/add_by_email")
-    Call<SuccessResponse> addFriendByMail(@Path("id") String id, @Body Map<String, String> token);
+    Call<SuccessResponse> addFriendByMail(@Path("id") String id, @Body FriendByMailQuery friendByMailQuery);
 
     @POST("booking/{id}/invite/confirm")
     Call<SuccessResponse> confirmInvite(@Path("id") String requestId, @Body Map<String, String> token);

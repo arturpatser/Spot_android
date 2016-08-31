@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
@@ -17,6 +18,7 @@ import com.gridyn.potspot.adapter.FriendsAdapter;
 import com.gridyn.potspot.databinding.FragmentSelectFriendsBinding;
 import com.gridyn.potspot.interfaces.SelectFriendsInterface;
 import com.gridyn.potspot.model.FriendModel;
+import com.gridyn.potspot.query.FriendByMailQuery;
 import com.gridyn.potspot.response.SuccessResponse;
 import com.gridyn.potspot.response.friendResponse.FriendsResponse;
 import com.gridyn.potspot.response.friendResponse.Message;
@@ -45,6 +47,9 @@ public class SelectFriendsFragment extends Fragment implements SelectFriendsInte
 
     @BindView(R.id.friends_list_recycler)
     RecyclerView friendsRecycler;
+
+    @BindView(R.id.friend_email)
+    EditText friendEmail;
 
     FriendsAdapter adapter;
 
@@ -78,7 +83,7 @@ public class SelectFriendsFragment extends Fragment implements SelectFriendsInte
             requestId = getArguments().getString(ARG_REQUEST_ID);
         }
 
-        adapter = new FriendsAdapter(getContext(), this, partySize);
+        adapter = new FriendsAdapter(getContext(), this, partySize, requestId);
 
         loadFriends();
     }
@@ -110,37 +115,45 @@ public class SelectFriendsFragment extends Fragment implements SelectFriendsInte
             @Override
             public void onClick(View v) {
 
-            Log.d(TAG, "onClick: clicked add by email ");
+                Log.d(TAG, "onClick: clicked add by email ");
 
-            Call<SuccessResponse> call = ServerApiUtil.initUser().addFriendByMail(requestId,
-                    Person.getTokenMap());
+                if (friendEmail.getText().length() > 0) {
 
-            call.enqueue(new Callback<SuccessResponse>() {
-                @Override
-                public void onResponse(Response<SuccessResponse> response, Retrofit retrofit) {
+                    FriendByMailQuery friendByMailQuery = new FriendByMailQuery();
 
-                    SuccessResponse successResponse = response.body();
+                    friendByMailQuery.setEmail(friendEmail.getText().toString().trim());
+                    friendByMailQuery.setToken(Person.getToken());
 
-                    if (successResponse == null) {
+                    Call<SuccessResponse> call = ServerApiUtil.initUser().addFriendByMail(requestId,
+                            friendByMailQuery);
 
-                    } else {
+                    call.enqueue(new Callback<SuccessResponse>() {
+                        @Override
+                        public void onResponse(Response<SuccessResponse> response, Retrofit retrofit) {
 
-                        if (successResponse.isSuccess()) {
+                            SuccessResponse successResponse = response.body();
 
-                            Snackbar.make(getActivity().findViewById(android.R.id.content),
-                                    R.string.successfull_add_friend, Snackbar.LENGTH_SHORT).show();
+                            if (successResponse == null) {
+
+                            } else {
+
+                                if (successResponse.isSuccess()) {
+
+                                    Snackbar.make(getActivity().findViewById(android.R.id.content),
+                                            R.string.successfull_add_friend, Snackbar.LENGTH_SHORT).show();
+                                }
+                            }
                         }
-                    }
+
+                        @Override
+                        public void onFailure(Throwable t) {
+
+                            Log.e(TAG, "onFailure: error while add friend by mail = " + Log.getStackTraceString(t));
+
+                            Snackbar.make(getActivity().findViewById(android.R.id.content), CONNECTION_ERROR, Snackbar.LENGTH_SHORT).show();
+                        }
+                    });
                 }
-
-                @Override
-                public void onFailure(Throwable t) {
-
-                    Log.e(TAG, "onFailure: error while add friend by mail = " + Log.getStackTraceString(t));
-
-                    Snackbar.make(getActivity().findViewById(android.R.id.content), CONNECTION_ERROR, Snackbar.LENGTH_SHORT).show();
-                }
-            });
             }
         });
 

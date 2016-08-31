@@ -382,7 +382,7 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
                 adapter.clear();
                 if (selectedItems.size() > 0) {
 
-                    for (FriendModel f :
+                    for (final FriendModel f :
                             selectedItems) {
 
                         float fSplitPrice = (float) spot.price / (selectedItems.size() + 1);
@@ -398,6 +398,8 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
                             public void onResponse(Response<SuccessResponse> response, Retrofit retrofit) {
 
                                 SuccessResponse success = response.body();
+
+                                f.setInviteSent(true);
 
                                 Log.d(TAG, "onResponse: success = " + success);
                             }

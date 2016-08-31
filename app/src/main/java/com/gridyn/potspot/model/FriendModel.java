@@ -55,6 +55,9 @@ public class FriendModel extends BaseObservable implements Parcelable {
     @Bindable
     float splitSize;
 
+    @Bindable
+    boolean inviteSent;
+
     protected FriendModel(Parcel in) {
         name = in.readString();
         email = in.readString();
@@ -65,6 +68,7 @@ public class FriendModel extends BaseObservable implements Parcelable {
         id = in.readString();
         selected = in.readByte() != 0;
         splitSize = in.readFloat();
+        inviteSent = in.readByte() != 0;
     }
 
     @Override
@@ -78,6 +82,7 @@ public class FriendModel extends BaseObservable implements Parcelable {
         dest.writeString(id);
         dest.writeByte((byte) (selected ? 1 : 0));
         dest.writeFloat(splitSize);
+        dest.writeByte((byte) (inviteSent ? 1 : 0));
     }
 
     @Override
@@ -96,6 +101,15 @@ public class FriendModel extends BaseObservable implements Parcelable {
             return new FriendModel[size];
         }
     };
+
+    public boolean isInviteSent() {
+        return inviteSent;
+    }
+
+    public void setInviteSent(boolean inviteSent) {
+        this.inviteSent = inviteSent;
+        notifyPropertyChanged(BR.inviteSent);
+    }
 
     /**
      *
