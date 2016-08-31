@@ -1,10 +1,13 @@
 package com.gridyn.potspot.activity;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -93,6 +96,35 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
         initFields();
         initRetrofit();
         initToolbar();
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
+                new IntentFilter(Constant.INTENT_INVITE_FRIEND));
+    }
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            Bundle args = intent.getExtras();
+
+            Log.d(TAG, "onReceive: received event ");
+
+            if (args != null) {
+
+                boolean success = args.getBoolean(Constant.SUCCESS);
+                String userId = args.getString(Constant.USER_ID);
+
+                Log.d(TAG, "onReceive: received args =  " + success + " user =" + userId);
+
+                adapter.updateItem(userId, success);
+            }
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        // Unregister since the activity is about to be closed.
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        super.onDestroy();
     }
 
     private void initFields() {

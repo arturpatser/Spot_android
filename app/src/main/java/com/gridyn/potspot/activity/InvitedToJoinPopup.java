@@ -100,6 +100,10 @@ public class InvitedToJoinPopup extends AppCompatActivity {
                         Toast.makeText(InvitedToJoinPopup.this, R.string.successfull_invite, Toast.LENGTH_SHORT).show();
 
                         finish();
+                    } else {
+
+                        Toast.makeText(InvitedToJoinPopup.this, R.string.credit_card_issue, Toast.LENGTH_SHORT).show();
+                        finish();
                     }
                 }
             }

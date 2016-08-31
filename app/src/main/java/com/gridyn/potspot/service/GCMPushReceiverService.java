@@ -8,6 +8,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
@@ -21,6 +22,7 @@ import com.gridyn.potspot.activity.MainActivity;
 import com.gridyn.potspot.model.AcceptRequestModel;
 import com.gridyn.potspot.model.BookRequestData;
 import com.gridyn.potspot.model.BookRequestModel;
+import com.gridyn.potspot.model.FriendInviteResultModel;
 import com.gridyn.potspot.model.bookInvite.BookInviteModel;
 import com.gridyn.potspot.model.bookInvite.Data;
 
@@ -124,7 +126,15 @@ public class GCMPushReceiverService extends GcmListenerService {
 
             case "book_friend_accept":
 
+                FriendInviteResultModel friendInviteResultModel = gson.fromJson(data, FriendInviteResultModel.class);
 
+                if (friendInviteResultModel.getData().isSuccess()) {
+                    Intent intent = new Intent(Constant.INTENT_INVITE_FRIEND);
+                    // You can also include some extra data.
+                    intent.putExtra(Constant.SUCCESS, friendInviteResultModel.getData().isSuccess());
+                    intent.putExtra(Constant.USER_ID, friendInviteResultModel.getData().getUserId());
+                    LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+                }
                 break;
 
             case "friend_invite":

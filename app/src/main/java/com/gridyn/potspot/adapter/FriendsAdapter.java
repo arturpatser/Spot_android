@@ -68,8 +68,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             @Override
             public void onClick(View v) {
 
-                Log.d(TAG, "onClick: clicked friend = " + friendModel);
-
                 int selectedCount = getSelectedCount();
 
                 if (selectedCount < partySize) {
@@ -81,6 +79,8 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                 } else {
                     Toast.makeText(context, R.string.party_size_alert, Toast.LENGTH_SHORT).show();
                 }
+
+                Log.d(TAG, "onClick: clicked friend = " + friendModel);
 
                 if (!friendModel.isSelected() && friendModel.isInviteSent()) {
 

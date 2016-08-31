@@ -43,4 +43,7 @@ public interface Constant {
     String ARG_SPOT_ID = "potspotid";
     String ARG_WHO_INVITE = "whoinvitename";
     String ARG_WHO_INVITE_ID = "whoinviteid";
+    String INTENT_INVITE_FRIEND = "invite";
+    String SUCCESS = "success";
+    String USER_ID = "userId";
 }

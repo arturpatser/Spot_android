@@ -113,6 +113,17 @@ public class SplitFriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         notifyDataSetChanged();
     }
 
+    public void updateItem(String userId, boolean success) {
+
+        for (FriendModel friendModel : arrayList) {
+
+            if (friendModel.getId().equals(userId))
+                friendModel.setAcceptedInvite(success);
+        }
+
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         ItemSplitFriendBinding binding;
