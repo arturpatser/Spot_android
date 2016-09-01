@@ -336,38 +336,59 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
 
             //buy process here
 
-            final Snackbar progress = Snackbar.make(findViewById(android.R.id.content),
-                    R.string.payment_progress, Snackbar.LENGTH_INDEFINITE);
-            progress.show();
+            if (paymentPartyReady()) {
 
-            Call<PaymentResponse> call = ServerApiUtil.initUser().startPaying(requestId, Person.getTokenMap());
+                final Snackbar progress = Snackbar.make(findViewById(android.R.id.content),
+                        R.string.payment_progress, Snackbar.LENGTH_INDEFINITE);
+                progress.show();
 
-            call.enqueue(new Callback<PaymentResponse>() {
-                @Override
-                public void onResponse(Response<PaymentResponse> response, Retrofit retrofit) {
+                Call<PaymentResponse> call = ServerApiUtil.initUser().startPaying(requestId, Person.getTokenMap());
 
-                    PaymentResponse payment = response.body();
+                call.enqueue(new Callback<PaymentResponse>() {
+                    @Override
+                    public void onResponse(Response<PaymentResponse> response, Retrofit retrofit) {
 
-                    Log.d(TAG, "onResponse: response = " + payment);
+                        PaymentResponse payment = response.body();
 
-                    if (payment.isSuccess()) {
+                        Log.d(TAG, "onResponse: response = " + payment);
 
-                        goToTabs(getString(R.string.successfull_payment));
+                        if (payment.isSuccess()) {
+
+                            goToTabs(getString(R.string.successfull_payment));
+
+                            progress.dismiss();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+
+                        Log.e(TAG, "onFailure: payment error = " + Log.getStackTraceString(t));
 
                         progress.dismiss();
+                        Snackbar.make(findViewById(android.R.id.content), R.string.error_connection, Snackbar.LENGTH_INDEFINITE).show();
                     }
-                }
+                });
+            } else {
 
-                @Override
-                public void onFailure(Throwable t) {
-
-                    Log.e(TAG, "onFailure: payment error = " + Log.getStackTraceString(t));
-
-                    progress.dismiss();
-                    Snackbar.make(findViewById(android.R.id.content), R.string.error_connection, Snackbar.LENGTH_INDEFINITE).show();
-                }
-            });
+                Snackbar.make(findViewById(android.R.id.content), R.string.not_all_friends_accepted, Snackbar.LENGTH_SHORT).show();
+            }
         }
+    }
+
+    private boolean paymentPartyReady() {
+
+        if (adapter.getItemCount() == 0)
+            return true;
+
+        for (FriendModel friendModel : adapter.getItems()) {
+
+            if (!friendModel.isAcceptedInvite())
+                return false;
+
+        }
+
+        return true;
     }
 
     private void goToTabs(String mes) {

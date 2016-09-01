@@ -194,4 +194,5 @@
     <string name="successfull_invite">Successfull invite</string>
     <string name="successfull_decline">Invite successfully declined</string>
     <string name="credit_card_issue">You need accepted credit card for this</string>
+    <string name="not_all_friends_accepted">Not all friends accepted or rejected invite</string>
 </resources>
