@@ -158,6 +158,12 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         return friendModelArrayList;
     }
 
+    public void addItem(FriendModel friendModel) {
+
+        friendModelArrayList.add(friendModel);
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         ItemFriendBinding binding;

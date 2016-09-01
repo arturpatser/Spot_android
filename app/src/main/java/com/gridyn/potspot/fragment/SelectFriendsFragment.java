@@ -141,6 +141,12 @@ public class SelectFriendsFragment extends Fragment implements SelectFriendsInte
 
                                     Snackbar.make(getActivity().findViewById(android.R.id.content),
                                             R.string.successfull_add_friend, Snackbar.LENGTH_SHORT).show();
+
+                                    FriendModel friendModel = new FriendModel("", true, friendEmail.getText().toString());
+
+                                    friendModel.setInviteSent(true);
+
+                                    adapter.addItem(friendModel);
                                 }
                             }
                         }

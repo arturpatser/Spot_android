@@ -65,6 +65,7 @@ public class GCMPushReceiverService extends GcmListenerService {
                     popupIntent.putExtra(Constant.SPOT_ID, acceptReqModel.getAcceptRequestData().getSpotId());
                     popupIntent.putExtra(Constant.REQUEST_ID, acceptReqModel.getAcceptRequestData().getRequestId());
                     popupIntent.putExtra(Constant.PARTY_SIZE, acceptReqModel.getAcceptRequestData().getPartySize());
+                    popupIntent.putExtra(Constant.SPOT_PRICE, acceptReqModel.getAcceptRequestData().getSpotPrice());
 
                     startActivity(popupIntent);
                 }
@@ -133,6 +134,7 @@ public class GCMPushReceiverService extends GcmListenerService {
                 // You can also include some extra data.
                 intent.putExtra(Constant.SUCCESS, friendInviteResultModel.getData().isSuccess());
                 intent.putExtra(Constant.USER_ID, friendInviteResultModel.getData().getUserId());
+                intent.putExtra(Constant.USER_NAME, friendInviteResultModel.getData().getUserName());
                 LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
                 break;
 

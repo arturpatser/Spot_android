@@ -47,4 +47,5 @@ public interface Constant {
     String SUCCESS = "success";
     String USER_ID = "userId";
     String SPOT_PRICE = "spotPrice";
+    String USER_NAME = "username" ;
 }

@@ -75,6 +75,7 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
     private int minsFrom = 0;
     private int minsTo = 0;
     private String partySize;
+    int spotPrice = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +86,7 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
         spotId = getIntent().getExtras().getString("id");
         requestId = getIntent().getExtras().getString(Constant.REQUEST_ID);
         partySize = getIntent().getExtras().getString(Constant.PARTY_SIZE);
+        spotPrice = getIntent().getExtras().getInt(Constant.SPOT_PRICE);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_buy_spot);
         binding.setShowSplit(true);
@@ -112,6 +114,7 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
 
                 boolean success = args.getBoolean(Constant.SUCCESS);
                 String userId = args.getString(Constant.USER_ID);
+                String userName = args.getString(Constant.USER_NAME);
 
                 Log.d(TAG, "onReceive: received args =  " + success + " user =" + userId);
 
@@ -170,6 +173,9 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
 
                     if (partySize == null)
                         partySize = String.valueOf(spot.maxGuests);
+
+                    if (spotPrice != 0)
+                        spot.price = spotPrice;
 
                     spot.price = spot.price / 100;
 

@@ -25,6 +25,22 @@ public class AcceptRequestData {
     @Expose
     String requestId;
 
+    @SerializedName("spot_price")
+    @Expose
+    int spotPrice;
+
+    @SerializedName("party_size")
+    @Expose
+    String partySize;
+
+    public int getSpotPrice() {
+        return spotPrice;
+    }
+
+    public void setSpotPrice(int spotPrice) {
+        this.spotPrice = spotPrice;
+    }
+
     public String getPartySize() {
         return partySize;
     }
@@ -32,10 +48,6 @@ public class AcceptRequestData {
     public void setPartySize(String partySize) {
         this.partySize = partySize;
     }
-
-    @SerializedName("party_size")
-    @Expose
-    String partySize;
 
     public String getRequestId() {
         return requestId;
