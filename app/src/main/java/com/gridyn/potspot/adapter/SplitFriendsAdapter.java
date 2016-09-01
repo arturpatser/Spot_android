@@ -124,6 +124,19 @@ public class SplitFriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         notifyDataSetChanged();
     }
 
+    public int acceptedCount() {
+
+        int cnt = 0;
+
+        for (FriendModel f: arrayList) {
+
+            if (f.isAcceptedInvite())
+                cnt++;
+        }
+
+        return cnt;
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         ItemSplitFriendBinding binding;

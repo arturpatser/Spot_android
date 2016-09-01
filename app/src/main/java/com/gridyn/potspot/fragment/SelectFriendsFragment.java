@@ -19,7 +19,7 @@ import com.gridyn.potspot.databinding.FragmentSelectFriendsBinding;
 import com.gridyn.potspot.interfaces.SelectFriendsInterface;
 import com.gridyn.potspot.model.FriendModel;
 import com.gridyn.potspot.query.FriendByMailQuery;
-import com.gridyn.potspot.response.SuccessResponse;
+import com.gridyn.potspot.response.UserInfoResponse;
 import com.gridyn.potspot.response.friendResponse.FriendsResponse;
 import com.gridyn.potspot.response.friendResponse.Message;
 import com.gridyn.potspot.utils.FragmentUtils;
@@ -124,29 +124,34 @@ public class SelectFriendsFragment extends Fragment implements SelectFriendsInte
                     friendByMailQuery.setEmail(friendEmail.getText().toString().trim());
                     friendByMailQuery.setToken(Person.getToken());
 
-                    Call<SuccessResponse> call = ServerApiUtil.initUser().addFriendByMail(requestId,
+                    Call<UserInfoResponse> call = ServerApiUtil.initUser().addFriendByMail(requestId,
                             friendByMailQuery);
 
-                    call.enqueue(new Callback<SuccessResponse>() {
+                    call.enqueue(new Callback<UserInfoResponse>() {
                         @Override
-                        public void onResponse(Response<SuccessResponse> response, Retrofit retrofit) {
+                        public void onResponse(Response<UserInfoResponse> response, Retrofit retrofit) {
 
-                            SuccessResponse successResponse = response.body();
+                            UserInfoResponse successResponse = response.body();
 
                             if (successResponse == null) {
 
                             } else {
 
-                                if (successResponse.isSuccess()) {
+                                if (successResponse.success) {
 
                                     Snackbar.make(getActivity().findViewById(android.R.id.content),
                                             R.string.successfull_add_friend, Snackbar.LENGTH_SHORT).show();
 
-                                    FriendModel friendModel = new FriendModel("", true, friendEmail.getText().toString());
+                                    FriendModel friendModel = new FriendModel(successResponse.message.get(0).id.$id,
+                                            true, successResponse.message.get(0).data.name);
 
                                     friendModel.setInviteSent(true);
 
                                     adapter.addItem(friendModel);
+
+                                    mListener.friendsSelected(adapter.getSelectedItems());
+
+                                    FragmentUtils.popBackStack(getContext());
                                 }
                             }
                         }

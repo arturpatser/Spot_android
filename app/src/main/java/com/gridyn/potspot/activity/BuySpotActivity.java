@@ -119,6 +119,11 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
                 Log.d(TAG, "onReceive: received args =  " + success + " user =" + userId);
 
                 adapter.updateItem(userId, success);
+
+                for (FriendModel friendModel : adapter.getItems()) {
+
+                    updateSplitPrice(friendModel);
+                }
             }
         }
     };
@@ -476,10 +481,7 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
                     for (final FriendModel f :
                             selectedItems) {
 
-                        float fSplitPrice = (float) spot.price / (selectedItems.size() + 1);
-
-                        //TODO change price
-                        f.setSplitSize(fSplitPrice);
+                        updateSplitPrice(f);
 
                         Call<SuccessResponse> call = ServerApiUtil.initUser()
                                 .addFriendToBooking(requestId, f.getId(), Person.getTokenMap());
@@ -515,5 +517,13 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
         });
 
         FragmentUtils.openFragment(select, R.id.content_frame, SelectFriendsFragment.TAG, this, true);
+    }
+
+    private void updateSplitPrice(FriendModel f) {
+
+        float fSplitPrice = (float) spot.price / (adapter.acceptedCount() + 1);
+
+        //TODO change price
+        f.setSplitSize(fSplitPrice);
     }
 }
