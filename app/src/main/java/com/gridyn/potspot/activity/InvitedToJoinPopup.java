@@ -22,7 +22,7 @@ import retrofit.Retrofit;
 public class InvitedToJoinPopup extends AppCompatActivity {
 
     ActivityInvitedToJoinPopupBinding binding;
-    String spotId, whoInviteName, whoInviteId, spotName, requestId;
+    String spotId, whoInviteName, whoInviteId, spotName, requestId, spotPrice;
     private String TAG = InvitedToJoinPopup.class.getName();
 
     @Override
@@ -40,6 +40,7 @@ public class InvitedToJoinPopup extends AppCompatActivity {
             whoInviteId = args.getString(Constant.ARG_WHO_INVITE_ID);
             spotName = args.getString(Constant.SPOT_NAME);
             requestId = args.getString(Constant.REQUEST_ID);
+            spotPrice = args.getString(Constant.SPOT_PRICE);
 
             binding.setSpotName(spotName);
             binding.setUserName(whoInviteName);

@@ -25,6 +25,18 @@ public class Data {
     @Expose
     private String requestId;
 
+    public String getSpotPrice() {
+        return spotPrice;
+    }
+
+    public void setSpotPrice(String spotPrice) {
+        this.spotPrice = spotPrice;
+    }
+
+    @SerializedName("spot_price")
+    @Expose
+    String spotPrice;
+
     /**
      * 
      * @return

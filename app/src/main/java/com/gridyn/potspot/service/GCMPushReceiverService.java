@@ -113,6 +113,7 @@ public class GCMPushReceiverService extends GcmListenerService {
                 popupIntentInvite.putExtra(Constant.ARG_WHO_INVITE_ID, inviteData.getUserId());
                 popupIntentInvite.putExtra(Constant.SPOT_NAME, inviteData.getSpotName());
                 popupIntentInvite.putExtra(Constant.REQUEST_ID, inviteData.getRequestId());
+                popupIntentInvite.putExtra(Constant.SPOT_PRICE, inviteData.getSpotPrice());
 
                 startActivity(popupIntentInvite);
 
@@ -128,13 +129,11 @@ public class GCMPushReceiverService extends GcmListenerService {
 
                 FriendInviteResultModel friendInviteResultModel = gson.fromJson(data, FriendInviteResultModel.class);
 
-                if (friendInviteResultModel.getData().isSuccess()) {
-                    Intent intent = new Intent(Constant.INTENT_INVITE_FRIEND);
-                    // You can also include some extra data.
-                    intent.putExtra(Constant.SUCCESS, friendInviteResultModel.getData().isSuccess());
-                    intent.putExtra(Constant.USER_ID, friendInviteResultModel.getData().getUserId());
-                    LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-                }
+                Intent intent = new Intent(Constant.INTENT_INVITE_FRIEND);
+                // You can also include some extra data.
+                intent.putExtra(Constant.SUCCESS, friendInviteResultModel.getData().isSuccess());
+                intent.putExtra(Constant.USER_ID, friendInviteResultModel.getData().getUserId());
+                LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
                 break;
 
             case "friend_invite":

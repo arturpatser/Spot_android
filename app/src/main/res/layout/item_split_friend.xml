@@ -21,17 +21,18 @@
             android:textAppearance="?android:textAppearanceSmall"
             android:text="@{friend.name}"
             android:layout_width="0dp"
-            android:textColor="@{friend.acceptedInvite ? @color/btnReviewGreen : @color/mainRed}"
+            android:textColor="@{friend.acceptedInvite ? @color/btnReviewGreen : @color/black}"
             android:layout_height="wrap_content"
             android:layout_weight="0.7" />
 
         <TextView
+            android:visibility="@{friend.acceptedInvite ? 0 : 8}"
             android:layout_margin="4dp"
             android:padding="4dp"
             android:textAppearance="?android:textAppearanceSmall"
             android:text='@{String.valueOf(friend.splitSize) + "$"}'
             android:layout_width="0dp"
-            android:textColor="@{friend.acceptedInvite ? @color/btnReviewGreen : @color/mainRed}"
+            android:textColor="@{friend.acceptedInvite ? @color/btnReviewGreen : @color/black}"
             android:gravity="center"
             android:layout_height="wrap_content"
             android:layout_weight="0.3" />

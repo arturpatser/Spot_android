@@ -237,37 +237,69 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
             @Override
             public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
 
-                minsFrom = hourOfDay * 60 + minute;
+                minsFrom = modifyHour(hourOfDay, view.getIsCurrentlyAmOrPm()) * 60 + minute;
 
-                sTimeFrom = Integer.toString(hourOfDay) + ":" + Integer.toString(minute);
+                sTimeFrom = Integer.toString(hourOfDay) + ":" + appendMinute(minute);
 
                 TimePickerDialog.OnTimeSetListener callback = new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
 
-                        minsTo = hourOfDay * 60 + minute;
+                        minsTo = modifyHour(hourOfDay, view.getIsCurrentlyAmOrPm()) * 60 + minute;
 
-                        sTimeTo = Integer.toString(hourOfDay) + ":" + Integer.toString(minute);
-
-                        Log.d(TAG, "onTimeSet: timestay = " + (minsTo - minsFrom));
+                        sTimeTo = Integer.toString(hourOfDay) + ":" + appendMinute(minute);
 
                         mTime.setText(sTimeFrom + " - " + sTimeTo);
+
+                        mTotalPrice.setText( "$" + calcTotalPrice() + "\ntotal price" );
                     }
                 };
                 final TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(
-                        callback, calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE), true
+                        callback, calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE), false
                 );
+                timePickerDialog.setTimeInterval(1, 30, 60);
                 timePickerDialog.setTitle(getString(R.string.time_to));
                 timePickerDialog.setAccentColor(getResources().getColor(R.color.mainRed));
                 timePickerDialog.show(getFragmentManager(), "TimePickerDialogTo");
             }
         };
         final TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(
-                callback, calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE), true
+                callback, calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE), false
         );
         timePickerDialog.setTitle(getString(R.string.time_from));
+        timePickerDialog.setTimeInterval(1, 30, 60);
         timePickerDialog.setAccentColor(getResources().getColor(R.color.mainRed));
         timePickerDialog.show(getFragmentManager(), "TimePickerDialogFrom");
+    }
+
+    private String appendMinute(int minute) {
+
+        if (minute > 10)
+            return String.valueOf(minute);
+
+        return "0"+minute;
+    }
+
+    /**
+     * convert PM hour to 24h hour
+     * @param hourOfDay - current hour
+     * @param isAM:
+     *            0 - AM
+     *            1 - PM
+     * @return modified time
+     */
+    private int modifyHour(int hourOfDay, int isAM) {
+
+        if (isAM == 0) {
+            //am selected
+            return hourOfDay;
+        }
+
+        return hourOfDay + 12;
+    }
+
+    private int calcTotalPrice() {
+        return (int) Math.ceil((float) ((minsTo - minsFrom) / 30) * spot.price);
     }
 
     public void onClickBuyPay(View view) {

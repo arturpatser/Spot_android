@@ -139,7 +139,7 @@ public class TimePeriodsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 }
             });
 
-            if (available.days != null) {
+            if (available.days != null && available.days.size() > 0) {
 
                 Log.d(TAG, "onBindViewHolder: available = " + available);
 

@@ -46,4 +46,5 @@ public interface Constant {
     String INTENT_INVITE_FRIEND = "invite";
     String SUCCESS = "success";
     String USER_ID = "userId";
+    String SPOT_PRICE = "spotPrice";
 }
