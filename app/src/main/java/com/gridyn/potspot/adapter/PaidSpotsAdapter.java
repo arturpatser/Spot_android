@@ -11,20 +11,22 @@ import android.widget.TextView;
 
 import com.gridyn.potspot.AssetsHelper;
 import com.gridyn.potspot.R;
-import com.gridyn.potspot.Spot;
+import com.gridyn.potspot.response.UserInfoResponse;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PaidSpotsAdapter extends RecyclerView.Adapter<PaidSpotsAdapter.Holder> {
 
-    private final List<Spot> mSpotList;
+    private List<UserInfoResponse.Message.Data.Spot> mSpotList;
     private final Context mContext;
     private final FragmentActivity mFragmentActivity;
 
-    public PaidSpotsAdapter(List<Spot> spotList, Context context, FragmentActivity activity) {
-        mSpotList = spotList;
+    public PaidSpotsAdapter(Context context, FragmentActivity activity) {
         mContext = context;
         mFragmentActivity = activity;
+
+        mSpotList = new ArrayList<>();
     }
 
     @Override
@@ -43,7 +45,13 @@ public class PaidSpotsAdapter extends RecyclerView.Adapter<PaidSpotsAdapter.Hold
 
     @Override
     public int getItemCount() {
-        return 1;
+        return mSpotList.size();
+    }
+
+    public void addAll(List<UserInfoResponse.Message.Data.Spot> message) {
+
+        mSpotList.addAll(message);
+        notifyDataSetChanged();
     }
 
     public static class Holder extends RecyclerView.ViewHolder {
