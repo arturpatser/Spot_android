@@ -13,7 +13,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.R;
 import com.gridyn.potspot.Spot;
@@ -43,7 +49,8 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 //
                 View map = LayoutInflater.from(mContext)
                         .inflate(R.layout.home_map, parent, false);
-                return new Map(map, mFragmentManager);
+
+                return new Map(map);
 
             case TYPE_ITEM:
 
@@ -76,23 +83,63 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             ((Holder) holder).mCardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     Log.i(Constant.LOG, "HomeAdapter: " + position);
-                    final Intent intent = new Intent(mContext, DescriptionSpotActivity.class);
-                    intent.putExtra("id", spot.getId());
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    mContext.startActivity(intent);
+
+                    showItem(spot);
                 }
             });
         } else if (holder instanceof Map) {
-//            ((Map) holder).mapFragment.getMapAsync(new OnMapReadyCallback() {
-//                @Override
-//                public void onMapReady(GoogleMap map) {
-//                    LatLng toronto = new LatLng(43.453505, 80.465284);
-//                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(toronto, 11));
-////                    setMarkers(map);
-//                }
-//            });
+
+            ((Map) holder).mapView.onCreate(null);
+            ((Map) holder).mapView.onResume();
+            ((Map) holder).mapView.getMapAsync(new OnMapReadyCallback() {
+                @Override
+                public void onMapReady(GoogleMap googleMap) {
+
+                    LatLng toronto = new LatLng(43.7001100, -79.4163000);
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(toronto, 11));
+
+                    for (Spot spot : mSpotList) {
+
+                        Marker marker = googleMap.addMarker(new MarkerOptions()
+                                .position(spot.getLatLng()));
+                    }
+
+                    googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                        @Override
+                        public boolean onMarkerClick(Marker marker) {
+
+                            Spot spot = findSpotByMarker(marker);
+
+                            if (spot != null)
+                                showItem(findSpotByMarker(marker));
+
+                            return true;
+                        }
+                    });
+                }
+            });
         }
+    }
+
+    private Spot findSpotByMarker(Marker marker) {
+
+        for (Spot spot : mSpotList) {
+
+            if (spot.getLatLng().equals(marker.getPosition()))
+                return spot;
+        }
+
+        return null;
+    }
+
+    private void showItem(Spot spot) {
+
+        final Intent intent = new Intent(mContext, DescriptionSpotActivity.class);
+        intent.putExtra("id", spot.getId());
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        mContext.startActivity(intent);
     }
 
     @Override
@@ -125,15 +172,12 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public static class Map extends RecyclerView.ViewHolder {
 
-        private SupportMapFragment mapFragment;
+        MapView mapView;
 
         public Map(View itemView) {
             super(itemView);
-        }
 
-        public Map(View itemView, FragmentManager fragmentManager) {
-            super(itemView);
-            mapFragment = (SupportMapFragment) fragmentManager.findFragmentById(R.id.map);
+            mapView = (MapView) itemView.findViewById(R.id.map);
         }
     }
 }
