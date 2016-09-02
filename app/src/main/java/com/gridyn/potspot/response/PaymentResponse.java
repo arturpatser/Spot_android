@@ -19,6 +19,18 @@ public class PaymentResponse {
     @Expose
     List<PaymentModel> paymentModelList;
 
+    public List<PaymentMessage> getPaymentMessages() {
+        return paymentMessages;
+    }
+
+    public void setPaymentMessages(List<PaymentMessage> paymentMessages) {
+        this.paymentMessages = paymentMessages;
+    }
+
+    @SerializedName("message")
+    @Expose
+    List<PaymentMessage> paymentMessages;
+
     public boolean isSuccess() {
         return success;
     }
@@ -40,6 +52,7 @@ public class PaymentResponse {
         return "PaymentResponse{" +
                 "success=" + success +
                 ", paymentModelList=" + paymentModelList +
+                ", paymentMessages=" + paymentMessages +
                 '}';
     }
 
@@ -60,6 +73,28 @@ public class PaymentResponse {
         @Override
         public String toString() {
             return "PaymentModel{" +
+                    "paymentMessage='" + paymentMessage + '\'' +
+                    '}';
+        }
+    }
+
+    public class PaymentMessage {
+
+        public String getPaymentMessage() {
+            return paymentMessage;
+        }
+
+        public void setPaymentMessage(String paymentMessage) {
+            this.paymentMessage = paymentMessage;
+        }
+
+        @SerializedName("payment")
+        @Expose
+        String paymentMessage;
+
+        @Override
+        public String toString() {
+            return "PaymentMessage{" +
                     "paymentMessage='" + paymentMessage + '\'' +
                     '}';
         }

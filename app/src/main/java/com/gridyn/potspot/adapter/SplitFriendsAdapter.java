@@ -137,6 +137,19 @@ public class SplitFriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return cnt;
     }
 
+    public void removeItem(String userId) {
+
+        for (FriendModel f : arrayList) {
+
+            if (f.getId().equals(userId)) {
+                arrayList.remove(f);
+                break;
+            }
+        }
+
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         ItemSplitFriendBinding binding;

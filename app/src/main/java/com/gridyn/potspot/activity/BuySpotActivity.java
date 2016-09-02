@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -113,16 +114,35 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
             if (args != null) {
 
                 boolean success = args.getBoolean(Constant.SUCCESS);
-                String userId = args.getString(Constant.USER_ID);
+                final String userId = args.getString(Constant.USER_ID);
                 String userName = args.getString(Constant.USER_NAME);
 
                 Log.d(TAG, "onReceive: received args =  " + success + " user =" + userId);
 
-                adapter.updateItem(userId, success);
+                if (success) {
 
-                for (FriendModel friendModel : adapter.getItems()) {
+                    adapter.updateItem(userId, success);
 
-                    updateSplitPrice(friendModel);
+                    for (FriendModel friendModel : adapter.getItems()) {
+
+                        updateSplitPrice(friendModel);
+                    }
+                } else {
+
+                    //if user declined invite we remove him from booking
+
+                    new CountDownTimer(10000, 1000) {
+                        @Override
+                        public void onTick(long millisUntilFinished) {
+
+                        }
+
+                        @Override
+                        public void onFinish() {
+
+                            adapter.removeItem(userId);
+                        }
+                    }.start();
                 }
             }
         }
@@ -395,11 +415,23 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
 
                         Log.d(TAG, "onResponse: response = " + payment);
 
+                        progress.dismiss();
+
                         if (payment.isSuccess()) {
 
                             goToTabs(getString(R.string.successfull_payment));
+                        } else {
 
-                            progress.dismiss();
+                            //some error occured
+
+                            String errorMessage = getString(R.string.error_connection);
+
+                            try {
+
+                                errorMessage = payment.getPaymentMessages().get(0).getPaymentMessage();
+                            } catch (Exception e) {}
+
+                            goToTabs(errorMessage);
                         }
                     }
 
