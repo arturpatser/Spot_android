@@ -11,9 +11,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <fragment
+        <com.gridyn.potspot.customView.MapViewForScrolling
             android:id="@+id/map_search"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="220dp"/>
 

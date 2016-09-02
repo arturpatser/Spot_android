@@ -25,6 +25,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.edmodo.rangebar.RangeBar;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
@@ -33,15 +42,6 @@ import com.gridyn.potspot.TextThumbSeekBar;
 import com.gridyn.potspot.query.SearchCriteriaQuery;
 import com.gridyn.potspot.response.SpotSearchResponse;
 import com.gridyn.potspot.service.SpotService;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.Circle;
-import com.google.android.gms.maps.model.CircleOptions;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,20 +85,27 @@ public class SearchCriteriaActivity extends AppCompatActivity implements OnMapRe
         initPriceRange();
         initNumberOfGuests();
         initSeekRadius();
-        initMap();
+        initMap(savedInstanceState);
     }
 
-    private void initMap() {
-        final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map_search);
-        mapFragment.getMapAsync(this);
+    private void initMap(Bundle savedInstanceState) {
+
+        MapView mapView = (MapView) findViewById(R.id.map_search);
+
+        mapView.onCreate(savedInstanceState);
+        mapView.onResume();
+
+        mapView.getMapAsync(this);
+//        final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+//                .findFragmentById(R.id.map_search);
+//        mapFragment.getMapAsync(this);
     }
 
     @Override
     public void onMapReady(GoogleMap map) {
         mMap = map;
         showCurrentLocation(mLocation);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLat, mLng), 11));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(43.7001100, -79.4163000), 11));
         drawCircle();
     }
 
@@ -367,6 +374,9 @@ public class SearchCriteriaActivity extends AppCompatActivity implements OnMapRe
         if (location != null) {
             mLat = location.getLatitude();
             mLng = location.getLongitude();
+
+            LatLng toronto = new LatLng(mLat, mLng);
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(toronto, 11));
         }
     }
 
