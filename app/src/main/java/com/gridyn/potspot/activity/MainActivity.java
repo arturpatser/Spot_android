@@ -22,17 +22,25 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.gson.Gson;
 import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
+import com.gridyn.potspot.query.FacebookLoginQuery;
 import com.gridyn.potspot.query.LoginQuery;
 import com.gridyn.potspot.response.UserInfoResponse;
 import com.gridyn.potspot.response.UserLoginResponse;
 import com.gridyn.potspot.service.GCMRegistrationIntentService;
 import com.gridyn.potspot.service.UserService;
+import com.gridyn.potspot.utils.ServerApiUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,14 +53,72 @@ import retrofit.Retrofit;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = MainActivity.class.getName();
     private BroadcastReceiver mRegistrationBroadcast;
     private ProgressDialog mProgressDialog;
+    CallbackManager callbackManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         onGoogleMessageService();
         ifLoginTrue();
+
+        FacebookSdk.sdkInitialize(this.getApplicationContext());
+        callbackManager = CallbackManager.Factory.create();
+
+        // Callback registration
+        LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                // App code
+
+                String token = loginResult.getAccessToken().getToken();
+                String id = loginResult.getAccessToken().getUserId();
+
+                Log.d(TAG, "fb id = " + id + " fb token = " + token);
+
+                mProgressDialog = new ProgressDialog(MainActivity.this);
+                mProgressDialog.setIndeterminate(true);
+                mProgressDialog.setMessage("Loading...");
+                mProgressDialog.show();
+
+                Call<UserLoginResponse> call = ServerApiUtil.initUser().loginViaFacebook(new FacebookLoginQuery(id, token));
+
+                call.enqueue(new Callback<UserLoginResponse>() {
+                    @Override
+                    public void onResponse(Response<UserLoginResponse> response, Retrofit retrofit) {
+                        UserLoginResponse res = response.body();
+
+                        if (res.success) {
+                            Log.i(Constant.LOG, "onResponse: true");
+                            Person.setId(res.message.get(1).id);
+                            Person.setToken(res.message.get(0).token);
+                            Log.i(Constant.LOG, "Token: " + res.message.get(0).token + "\nid: " + res.message.get(1).id);
+                            getUserInfo(null);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        if (mProgressDialog.isShowing()) {
+                            mProgressDialog.dismiss();
+                        }
+                        Snackbar.make(findViewById(android.R.id.content), Constant.CONNECTION_ERROR + ": user/login", Snackbar.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onCancel() {
+                // App code
+            }
+
+            @Override
+            public void onError(FacebookException exception) {
+                // App code
+            }
+        });
     }
 
     private void onGoogleMessageService() {
@@ -217,7 +283,7 @@ public class MainActivity extends AppCompatActivity {
     public void getUserInfo(UserService service) {
         Map<String, String> mapToken = new HashMap<>();
         mapToken.put("token", Person.getToken());
-        Call<UserInfoResponse> call = service.getUserInfo(Person.getId(), mapToken);
+        Call<UserInfoResponse> call = ServerApiUtil.initUser().getUserInfo(Person.getId(), mapToken);
 
         call.enqueue(new Callback<UserInfoResponse>() {
             @Override
@@ -253,5 +319,17 @@ public class MainActivity extends AppCompatActivity {
                 Log.i(Constant.LOG, "user/{id}" + t.getMessage());
             }
         });
+    }
+
+    public void loginViaFB(View view) {
+
+        LoginManager.getInstance().logInWithReadPermissions(this, Constant.FBpermissionNeeds);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 }

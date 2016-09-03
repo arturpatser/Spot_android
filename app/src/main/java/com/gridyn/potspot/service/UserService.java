@@ -2,6 +2,7 @@ package com.gridyn.potspot.service;
 
 import com.gridyn.potspot.query.BookQuery;
 import com.gridyn.potspot.query.EnableHostQuery;
+import com.gridyn.potspot.query.FacebookLoginQuery;
 import com.gridyn.potspot.query.FeedbackQuery;
 import com.gridyn.potspot.query.FriendByMailQuery;
 import com.gridyn.potspot.query.LoginQuery;
@@ -112,4 +113,7 @@ public interface UserService {
 
     @POST("booking/show/payed")
     Call<PayedSpotsResponse> showPayedSpotsFriend(@Body Map<String, String> token);
+
+    @POST("user/facebook_login")
+    Call<UserLoginResponse> loginViaFacebook(@Body FacebookLoginQuery facebookLoginQuery);
 }

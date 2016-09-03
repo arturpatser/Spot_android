@@ -1,5 +1,8 @@
 package com.gridyn.potspot;
 
+import java.util.Arrays;
+import java.util.List;
+
 public interface Constant {
     int BLUR_RADIUS = 40;
 
@@ -48,4 +51,5 @@ public interface Constant {
     String USER_ID = "userId";
     String SPOT_PRICE = "spotPrice";
     String USER_NAME = "username" ;
+    public static List<String> FBpermissionNeeds = Arrays.asList("email", "public_profile");
 }
