@@ -380,17 +380,17 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             GoogleSignInAccount googleSignInAccount = result.getSignInAccount();
 
             Log.d(TAG, "onActivityResult: result = " + result.getStatus());
-            Log.d(TAG, "onActivityResult: google acc = " + googleSignInAccount.getIdToken());
 
-            if (googleSignInAccount != null) {
 
-                String token = googleSignInAccount.getIdToken();
-
-                Log.d(TAG, "gplus token = " + token);
-
-                callGPlusReg(token);
-                // callServerReg();
-            }
+//            if (googleSignInAccount != null) {
+//
+//                String token = googleSignInAccount.getIdToken();
+//
+//                Log.d(TAG, "gplus token = " + token);
+//
+//                callGPlusReg(token);
+//                // callServerReg();
+//            }
         }
     }
 
