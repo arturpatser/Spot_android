@@ -5,6 +5,7 @@ import com.gridyn.potspot.query.EnableHostQuery;
 import com.gridyn.potspot.query.FacebookLoginQuery;
 import com.gridyn.potspot.query.FeedbackQuery;
 import com.gridyn.potspot.query.FriendByMailQuery;
+import com.gridyn.potspot.query.GPlusLoginQuery;
 import com.gridyn.potspot.query.LoginQuery;
 import com.gridyn.potspot.query.PhoneConfirmQuery;
 import com.gridyn.potspot.query.PhoneVerifyQuery;
@@ -116,4 +117,7 @@ public interface UserService {
 
     @POST("user/facebook_login")
     Call<UserLoginResponse> loginViaFacebook(@Body FacebookLoginQuery facebookLoginQuery);
+
+    @POST("user/google_login")
+    Call<UserLoginResponse> loginViaGPlus(@Body GPlusLoginQuery gPlusLoginQuery);
 }

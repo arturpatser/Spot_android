@@ -25,6 +25,7 @@ import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
 import com.gridyn.potspot.SelectPageUtil;
 import com.gridyn.potspot.adapter.TabsPagerFragmentAdapter;
+import com.gridyn.potspot.utils.SharedPrefsUtils;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -165,6 +166,10 @@ public class TabsActivity extends AppCompatActivity
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putBoolean(Constant.AP_LOG_IN, false);
                 editor.apply();
+
+                SharedPrefsUtils.setBooleanPreference(this, Constant.FB_APP_LOGIN, false);
+                SharedPrefsUtils.setBooleanPreference(this, Constant.GPLUS_APP_LOGIN, false);
+
                 startActivity(intent);
                 finish();
                 return true;

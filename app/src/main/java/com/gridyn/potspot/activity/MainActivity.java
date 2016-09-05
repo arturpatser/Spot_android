@@ -15,6 +15,7 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -28,19 +29,26 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.gson.Gson;
 import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
 import com.gridyn.potspot.query.FacebookLoginQuery;
+import com.gridyn.potspot.query.GPlusLoginQuery;
 import com.gridyn.potspot.query.LoginQuery;
 import com.gridyn.potspot.response.UserInfoResponse;
 import com.gridyn.potspot.response.UserLoginResponse;
 import com.gridyn.potspot.service.GCMRegistrationIntentService;
 import com.gridyn.potspot.service.UserService;
 import com.gridyn.potspot.utils.ServerApiUtil;
+import com.gridyn.potspot.utils.SharedPrefsUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,18 +59,29 @@ import retrofit.GsonConverterFactory;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = MainActivity.class.getName();
+    private static final int RC_SIGN_IN = 666;
     private BroadcastReceiver mRegistrationBroadcast;
     private ProgressDialog mProgressDialog;
     CallbackManager callbackManager;
+    private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         onGoogleMessageService();
         ifLoginTrue();
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
 
         FacebookSdk.sdkInitialize(this.getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
@@ -78,35 +97,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Log.d(TAG, "fb id = " + id + " fb token = " + token);
 
-                mProgressDialog = new ProgressDialog(MainActivity.this);
-                mProgressDialog.setIndeterminate(true);
-                mProgressDialog.setMessage("Loading...");
-                mProgressDialog.show();
-
-                Call<UserLoginResponse> call = ServerApiUtil.initUser().loginViaFacebook(new FacebookLoginQuery(id, token));
-
-                call.enqueue(new Callback<UserLoginResponse>() {
-                    @Override
-                    public void onResponse(Response<UserLoginResponse> response, Retrofit retrofit) {
-                        UserLoginResponse res = response.body();
-
-                        if (res.success) {
-                            Log.i(Constant.LOG, "onResponse: true");
-                            Person.setId(res.message.get(1).id);
-                            Person.setToken(res.message.get(0).token);
-                            Log.i(Constant.LOG, "Token: " + res.message.get(0).token + "\nid: " + res.message.get(1).id);
-                            getUserInfo(null);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Throwable t) {
-                        if (mProgressDialog.isShowing()) {
-                            mProgressDialog.dismiss();
-                        }
-                        Snackbar.make(findViewById(android.R.id.content), Constant.CONNECTION_ERROR + ": user/login", Snackbar.LENGTH_SHORT).show();
-                    }
-                });
+                callFbLogin(id, token);
             }
 
             @Override
@@ -117,6 +108,45 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onError(FacebookException exception) {
                 // App code
+            }
+        });
+    }
+
+    private void callFbLogin(final String id, final String token) {
+
+        mProgressDialog = new ProgressDialog(MainActivity.this);
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setMessage("Loading...");
+        mProgressDialog.show();
+
+        Call<UserLoginResponse> call = ServerApiUtil.initUser().loginViaFacebook(new FacebookLoginQuery(id, token));
+
+        call.enqueue(new Callback<UserLoginResponse>() {
+            @Override
+            public void onResponse(Response<UserLoginResponse> response, Retrofit retrofit) {
+                UserLoginResponse res = response.body();
+                mProgressDialog.dismiss();
+
+                if (res.success) {
+                    Log.i(Constant.LOG, "onResponse: true");
+                    Person.setId(res.message.get(1).id);
+                    Person.setToken(res.message.get(0).token);
+                    Log.i(Constant.LOG, "Token: " + res.message.get(0).token + "\nid: " + res.message.get(1).id);
+                    getUserInfo(null);
+
+                    SharedPrefsUtils.setBooleanPreference(MainActivity.this, Constant.FB_APP_LOGIN, true);
+
+                    SharedPrefsUtils.setStringPreference(MainActivity.this, Constant.FB_ID, id);
+                    SharedPrefsUtils.setStringPreference(MainActivity.this, Constant.FB_TOKEN, token);
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                if (mProgressDialog.isShowing()) {
+                    mProgressDialog.dismiss();
+                }
+                Snackbar.make(findViewById(android.R.id.content), Constant.CONNECTION_ERROR + ": user/login", Snackbar.LENGTH_SHORT).show();
             }
         });
     }
@@ -216,6 +246,13 @@ public class MainActivity extends AppCompatActivity {
                     Snackbar.make(findViewById(android.R.id.content), Constant.CONNECTION_ERROR + ": user/login", Snackbar.LENGTH_SHORT).show();
                 }
             });
+        } else if (SharedPrefsUtils.getBooleanPreference(this, Constant.FB_APP_LOGIN, false)) {
+
+            callFbLogin(SharedPrefsUtils.getStringPreference(this, Constant.FB_ID),
+                    SharedPrefsUtils.getStringPreference(this, Constant.FB_TOKEN));
+
+        } else if (SharedPrefsUtils.getBooleanPreference(this, Constant.GPLUS_APP_LOGIN, false)) {
+
         } else {
             setContentView(R.layout.activity_main);
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -326,10 +363,77 @@ public class MainActivity extends AppCompatActivity {
         LoginManager.getInstance().logInWithReadPermissions(this, Constant.FBpermissionNeeds);
     }
 
+    public void loginViaGPlus(View view) {
+
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         callbackManager.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RC_SIGN_IN) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            GoogleSignInAccount googleSignInAccount = result.getSignInAccount();
+
+            Log.d(TAG, "onActivityResult: result = " + result.getStatus());
+            Log.d(TAG, "onActivityResult: google acc = " + googleSignInAccount.getIdToken());
+
+            if (googleSignInAccount != null) {
+
+                String token = googleSignInAccount.getIdToken();
+
+                Log.d(TAG, "gplus token = " + token);
+
+                callGPlusReg(token);
+                // callServerReg();
+            }
+        }
+    }
+
+    private void callGPlusReg(final String token) {
+
+        mProgressDialog = new ProgressDialog(MainActivity.this);
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setMessage("Loading...");
+        mProgressDialog.show();
+
+        Call<UserLoginResponse> call = ServerApiUtil.initUser().loginViaGPlus(new GPlusLoginQuery(token));
+
+        call.enqueue(new Callback<UserLoginResponse>() {
+            @Override
+            public void onResponse(Response<UserLoginResponse> response, Retrofit retrofit) {
+                UserLoginResponse res = response.body();
+                mProgressDialog.dismiss();
+                if (res.success) {
+                    Log.i(Constant.LOG, "onResponse: true");
+                    Person.setId(res.message.get(1).id);
+                    Person.setToken(res.message.get(0).token);
+                    Log.i(Constant.LOG, "Token: " + res.message.get(0).token + "\nid: " + res.message.get(1).id);
+                    getUserInfo(null);
+
+                    SharedPrefsUtils.setBooleanPreference(MainActivity.this, Constant.GPLUS_APP_LOGIN, true);
+
+                    SharedPrefsUtils.setStringPreference(MainActivity.this, Constant.GPLUS_TOKEN, token);
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                if (mProgressDialog.isShowing()) {
+                    mProgressDialog.dismiss();
+                }
+                Snackbar.make(findViewById(android.R.id.content), Constant.CONNECTION_ERROR + ": user/login", Snackbar.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+        Log.e(TAG, "onConnectionFailed: google api client = "+ connectionResult.getErrorMessage() );
     }
 }

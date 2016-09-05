@@ -52,4 +52,9 @@ public interface Constant {
     String SPOT_PRICE = "spotPrice";
     String USER_NAME = "username" ;
     public static List<String> FBpermissionNeeds = Arrays.asList("email", "public_profile");
+    String FB_APP_LOGIN = "fblogin";
+    String GPLUS_APP_LOGIN = "gpluslogin";
+    String FB_ID = "fbid";
+    String FB_TOKEN = "fbtoken";
+    String GPLUS_TOKEN = "gplus";
 }

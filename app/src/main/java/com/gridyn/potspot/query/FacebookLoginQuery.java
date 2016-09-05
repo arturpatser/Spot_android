@@ -13,6 +13,10 @@ public class FacebookLoginQuery {
     @Expose
     String facebookId;
 
+    @SerializedName("facebook_token")
+    @Expose
+    String facebookToken;
+
     public FacebookLoginQuery(String id, String token) {
         this.facebookId = id;
         this.facebookToken = token;
@@ -33,10 +37,6 @@ public class FacebookLoginQuery {
     public void setFacebookId(String facebookId) {
         this.facebookId = facebookId;
     }
-
-    @SerializedName("facebook_token")
-    @Expose
-    String facebookToken;
 
     @Override
     public String toString() {
