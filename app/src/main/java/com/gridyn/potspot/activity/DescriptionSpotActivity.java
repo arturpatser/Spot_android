@@ -3,6 +3,7 @@ package com.gridyn.potspot.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.databinding.DataBindingUtil;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -20,9 +21,11 @@ import com.google.gson.Gson;
 import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
+import com.gridyn.potspot.databinding.ActivityDescriptionSpotBinding;
 import com.gridyn.potspot.fragment.OneTimeFragment;
 import com.gridyn.potspot.response.SpotCommentsResponse;
 import com.gridyn.potspot.response.SpotInfoResponse;
+import com.gridyn.potspot.response.SuccessResponse;
 import com.gridyn.potspot.utils.FragmentUtils;
 import com.gridyn.potspot.utils.ServerApiUtil;
 import com.gridyn.potspot.utils.SharedPrefsUtils;
@@ -47,6 +50,7 @@ import static com.gridyn.potspot.Constant.URL_IMAGE;
 
 public class DescriptionSpotActivity extends AppCompatActivity {
 
+    private static final String TAG = DescriptionSpotActivity.class.getName();
     private Context mContext;
     private ImageView mHeader;
     private ImageView mTypeImg;
@@ -65,12 +69,14 @@ public class DescriptionSpotActivity extends AppCompatActivity {
     private List<SpotCommentsResponse.Comment> mAllComment;
     private List<String> mShowComment;
     private ArrayAdapter<String> mCommentsAdapter;
+    ImageView favorite;
     SpotInfoResponse.Message.Spot spot;
+    ActivityDescriptionSpotBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_description_spot);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_description_spot);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 
@@ -105,6 +111,7 @@ public class DescriptionSpotActivity extends AppCompatActivity {
         mReviews = (TextView) findViewById(R.id.desc_spot_reviews);
         mBook = (Button) findViewById(R.id.desc_spot_book);
         mCommentView = (ListView) findViewById(R.id.desc_spot_comment);
+        favorite = (ImageView) findViewById(R.id.favorite);
 
         minus = (Button) findViewById(R.id.desc_spot_minus);
         plus = (Button) findViewById(R.id.desc_spot_plus);
@@ -192,6 +199,49 @@ public class DescriptionSpotActivity extends AppCompatActivity {
 
                     spot.price = spot.price / 100;
 
+                    binding.setInFavorites(spot.inFavorites);
+
+                    favorite.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            if (binding.getInFavorites()) {
+
+                                Call<SuccessResponse> remove = ServerApiUtil.initSpot().deleteFromFavorite(getIntent().getExtras().getString("id"), Person.getTokenMap());
+                                remove.enqueue(new Callback<SuccessResponse>() {
+                                    @Override
+                                    public void onResponse(Response<SuccessResponse> response, Retrofit retrofit) {
+
+                                        binding.setInFavorites(false);
+                                    }
+
+                                    @Override
+                                    public void onFailure(Throwable t) {
+
+                                        Log.e(TAG, "onFailure: error while remove from fav = " + Log.getStackTraceString(t));
+                                    }
+                                });
+                            } else {
+
+                                Call<SuccessResponse> add = ServerApiUtil.initSpot().addToFavorite(getIntent().getExtras().getString("id"), Person.getTokenMap());
+
+                                add.enqueue(new Callback<SuccessResponse>() {
+                                    @Override
+                                    public void onResponse(Response<SuccessResponse> response, Retrofit retrofit) {
+
+                                        binding.setInFavorites(true);
+                                    }
+
+                                    @Override
+                                    public void onFailure(Throwable t) {
+
+                                        Log.e(TAG, "onFailure: error while remove from fav = " + Log.getStackTraceString(t));
+                                    }
+                                });
+                            }
+                        }
+                    });
+
                     mPrice.setText("$ " + spot.price);
                     mName.setText(spot.name);
                     mAbout.setText(spot.about);
@@ -242,6 +292,8 @@ public class DescriptionSpotActivity extends AppCompatActivity {
             @Override
             public void onFailure(Throwable t) {
                 Snackbar.make(findViewById(android.R.id.content), CONNECTION_ERROR, Snackbar.LENGTH_SHORT).show();
+
+                Log.e(TAG, "onFailure: error while show spot = " + Log.getStackTraceString(t));
             }
         });
     }

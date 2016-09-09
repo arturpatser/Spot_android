@@ -371,7 +371,7 @@ public class SearchCriteriaActivity extends AppCompatActivity implements OnMapRe
     }
 
     protected void showCurrentLocation(Location location) {
-        if (location != null) {
+        if (location != null && mMap != null) {
             mLat = location.getLatitude();
             mLng = location.getLongitude();
 

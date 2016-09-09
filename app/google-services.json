@@ -1,20 +1,35 @@
 {
   "project_info": {
-    "project_number": "1077141053757",
-    "project_id": "potspot-1372"
+    "project_number": "361315588006",
+    "firebase_url": "https://potspot-142716.firebaseio.com",
+    "project_id": "potspot-142716",
+    "storage_bucket": "potspot-142716.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1077141053757:android:12366c714e2f4eef",
+        "mobilesdk_app_id": "1:361315588006:android:331620d7071d015e",
         "android_client_info": {
-          "package_name": "com.example.gridyn.potspot"
+          "package_name": "com.gridyn.potspot"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "361315588006-dc2iljmdg3der2uulrsheqh6gless6uv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gridyn.potspot",
+            "certificate_hash": "41B124D43F959956E2E20B12421731084017CF15"
+          }
+        },
+        {
+          "client_id": "361315588006-i4lal5mo7os4urvp20lo8gmbt5o4jml1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyB7VxO1OpgcI3qiAkvqMhQarsWsy3zCkm0"
+          "current_key": "AIzaSyDOMjB9w9XyKo5VEBsGSOckTPAbq22Pflw"
         }
       ],
       "services": {
@@ -22,11 +37,16 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "361315588006-i4lal5mo7os4urvp20lo8gmbt5o4jml1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
-          "status": 1
+          "status": 2
         }
       }
     }

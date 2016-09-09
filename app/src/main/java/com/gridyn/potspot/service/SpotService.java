@@ -9,6 +9,7 @@ import com.gridyn.potspot.response.SpotDeleteResponse;
 import com.gridyn.potspot.response.SpotInfoResponse;
 import com.gridyn.potspot.response.SpotSearchResponse;
 import com.gridyn.potspot.response.SpotUpdateResponse;
+import com.gridyn.potspot.response.SuccessResponse;
 
 import java.util.Map;
 
@@ -39,4 +40,10 @@ public interface SpotService {
 
     @POST("spot/delete")
     Call<SpotDeleteResponse> deleteSpot(@Body Map<String, String> token);
+
+    @POST("spot/{id}/favorites/add")
+    Call<SuccessResponse> addToFavorite(@Path("id") String id, @Body Map<String, String> token);
+
+    @POST("spot/{id}/favorites/delete")
+    Call<SuccessResponse> deleteFromFavorite(@Path("id") String id, @Body Map<String, String> token);
 }

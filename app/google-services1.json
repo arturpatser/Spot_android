@@ -1,0 +1,35 @@
+{
+  "project_info": {
+    "project_number": "1077141053757",
+    "project_id": "potspot-1372"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1077141053757:android:12366c714e2f4eef",
+        "android_client_info": {
+          "package_name": "com.example.gridyn.potspot"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7VxO1OpgcI3qiAkvqMhQarsWsy3zCkm0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -35,6 +35,9 @@ public class SpotInfoResponse {
             @SerializedName("price")
             @Expose
             public int price;
+            @SerializedName("inFavorites")
+            @Expose
+            public boolean inFavorites;
             @SerializedName("maxGuests")
             @Expose
             public int maxGuests;

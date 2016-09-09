@@ -1,4 +1,5 @@
 <resources>
+    <string name="accept">Accept</string>
     <string name="app_name">potspot</string>
     <string name="potspot">POTSPOT</string>
     <string name="under_potspot">book a patio, balcony, backyard</string>
