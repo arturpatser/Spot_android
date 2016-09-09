@@ -14,6 +14,16 @@ public class Spot {
     private String address;
     private LatLng latLng;
 
+    public boolean isInFavorites() {
+        return inFavorites;
+    }
+
+    public void setInFavorites(boolean inFavorites) {
+        this.inFavorites = inFavorites;
+    }
+
+    private boolean inFavorites;
+
     public Spot(String image) {
         this.image = image;
     }
@@ -47,13 +57,15 @@ public class Spot {
         latLng = new LatLng(lat, lng);
     }
 
-    public Spot(String id, String title, Integer price, String typeListing, String image, float lat, float lng) {
+    public Spot(String id, String title, Integer price, String typeListing, String image, float lat,
+                float lng, boolean inFavorites) {
         this.id = id;
         this.title = title;
         this.price = price;
         this.typeListing = typeListing;
         this.image = image;
         latLng = new LatLng(lat, lng);
+        this.inFavorites = inFavorites;
     }
 
     public LatLng getLatLng() {

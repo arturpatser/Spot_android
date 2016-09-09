@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "361315588006-0e8daeui0ankjri3eggh369affgto7bg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gridyn.potspot",
+            "certificate_hash": "4AC266DEC8F0FC0168182F1C5C335FDE671080F9"
+          }
+        },
+        {
           "client_id": "361315588006-dc2iljmdg3der2uulrsheqh6gless6uv.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -29,7 +37,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDOMjB9w9XyKo5VEBsGSOckTPAbq22Pflw"
+          "current_key": "AIzaSyBnrvoC_ztAo47Ry4ptT5hG02xo3I4-iz8"
         }
       ],
       "services": {

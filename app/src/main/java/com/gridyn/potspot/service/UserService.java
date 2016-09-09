@@ -16,6 +16,7 @@ import com.gridyn.potspot.response.PayedSpotsResponse;
 import com.gridyn.potspot.response.PaymentResponse;
 import com.gridyn.potspot.response.PhoneConfirmResponse;
 import com.gridyn.potspot.response.PhoneVerifyResponse;
+import com.gridyn.potspot.response.SpotSearchResponse;
 import com.gridyn.potspot.response.SuccessResponse;
 import com.gridyn.potspot.response.UserCommentCreateResponse;
 import com.gridyn.potspot.response.UserCommentDeleteResponse;
@@ -120,4 +121,7 @@ public interface UserService {
 
     @POST("user/google_login")
     Call<UserLoginResponse> loginViaGPlus(@Body GPlusLoginQuery gPlusLoginQuery);
+
+    @POST("spot/favorites/")
+    Call<SpotSearchResponse> getFavorites(@Body Map<String, String> token);
 }

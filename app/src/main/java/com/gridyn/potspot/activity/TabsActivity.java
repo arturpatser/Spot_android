@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -20,6 +21,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
@@ -31,7 +38,7 @@ import com.squareup.picasso.Picasso;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class TabsActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = TabActivity.class.getName();
     private Toolbar mToolbar;
@@ -146,7 +153,7 @@ public class TabsActivity extends AppCompatActivity
                 intent = new Intent(this, PaidSpotsActivity.class);
                 break;
             case R.id.nav_favourites:
-
+                intent = new Intent(this, FavoritesActivity.class);
                 break;
             case R.id.nav_my_spot:
                 intent = new Intent(this, MySpotsActivity.class);
@@ -171,6 +178,31 @@ public class TabsActivity extends AppCompatActivity
                 SharedPrefsUtils.setBooleanPreference(this, Constant.GPLUS_APP_LOGIN, false);
 
                 startActivity(intent);
+
+                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestEmail()
+                        .requestProfile()
+                        .requestIdToken("361315588006-i4lal5mo7os4urvp20lo8gmbt5o4jml1.apps.googleusercontent.com")
+                        .build();
+
+                GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(this)
+                        .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                        .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                        .build();
+
+                mGoogleApiClient.connect();
+
+                if (mGoogleApiClient.isConnected()) {
+
+                    Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                            new ResultCallback<Status>() {
+                                @Override
+                                public void onResult(Status status) {
+
+                                }
+                            });
+                }
+
                 finish();
                 return true;
         }
@@ -183,5 +215,10 @@ public class TabsActivity extends AppCompatActivity
         mDrawer.closeDrawer(GravityCompat.START);
 
         return true;
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 }

@@ -27,15 +27,24 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.gridyn.potspot.Constant;
+import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
 import com.gridyn.potspot.Spot;
 import com.gridyn.potspot.activity.DescriptionSpotActivity;
+import com.gridyn.potspot.response.SuccessResponse;
+import com.gridyn.potspot.utils.ServerApiUtil;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
+
 public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private static final String TAG = HomeAdapter.class.getName();
     private final int TYPE_MAP = 0;
     private final int TYPE_ITEM = 1;
     private final List<Spot> mSpotList;
@@ -95,6 +104,59 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     showItem(spot);
                 }
             });
+
+            if (spot.isInFavorites()) {
+
+                ((Holder) holder).favorite.setImageResource(R.drawable.ic_favorite_black_24dp);
+
+            } else {
+
+                ((Holder) holder).favorite.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+            }
+
+            ((Holder) holder).favorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if (spot.isInFavorites()) {
+
+                        Call<SuccessResponse> remove = ServerApiUtil.initSpot().deleteFromFavorite(spot.getId(), Person.getTokenMap());
+                        remove.enqueue(new Callback<SuccessResponse>() {
+                            @Override
+                            public void onResponse(Response<SuccessResponse> response, Retrofit retrofit) {
+
+                                spot.setInFavorites(false);
+                                updateSpot(spot, position);
+                            }
+
+                            @Override
+                            public void onFailure(Throwable t) {
+
+                                Log.e(TAG, "onFailure: error while remove from fav = " + Log.getStackTraceString(t));
+                            }
+                        });
+                    } else {
+
+                        Call<SuccessResponse> add = ServerApiUtil.initSpot().addToFavorite(spot.getId(), Person.getTokenMap());
+
+                        add.enqueue(new Callback<SuccessResponse>() {
+                            @Override
+                            public void onResponse(Response<SuccessResponse> response, Retrofit retrofit) {
+
+                                spot.setInFavorites(true);
+                                updateSpot(spot, position);
+                            }
+
+                            @Override
+                            public void onFailure(Throwable t) {
+
+                                Log.e(TAG, "onFailure: error while remove from fav = " + Log.getStackTraceString(t));
+                            }
+                        });
+                    }
+                }
+            });
+
         } else if (holder instanceof Map) {
 
             ((Map) holder).mapView.onCreate(null);
@@ -128,6 +190,12 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
             });
         }
+    }
+
+    private void updateSpot(Spot spot, int position) {
+
+        mSpotList.set(position, spot);
+        notifyItemChanged(position);
     }
 
     private Bitmap getMarkerBitmap(Spot spot) {
@@ -184,6 +252,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private TextView mPrice;
         private CardView mCardView;
         private ImageView mHeader;
+        private ImageView favorite;
 
         public Holder(View itemView) {
             super(itemView);
@@ -192,6 +261,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             mPrice = (TextView) itemView.findViewById(R.id.home_price);
             mHeader = (ImageView) itemView.findViewById(R.id.home_post);
             mCardView = (CardView) itemView.findViewById(R.id.home_card);
+            favorite = (ImageView) itemView.findViewById(R.id.favorite);
         }
     }
 

@@ -76,6 +76,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
+                .requestProfile()
+                .requestIdToken("361315588006-i4lal5mo7os4urvp20lo8gmbt5o4jml1.apps.googleusercontent.com")
                 .build();
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -377,20 +379,37 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            handleSignInResult(result);
+        }
+
+        if (requestCode == RC_SIGN_IN) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             GoogleSignInAccount googleSignInAccount = result.getSignInAccount();
 
             Log.d(TAG, "onActivityResult: result = " + result.getStatus());
 
 
-//            if (googleSignInAccount != null) {
-//
-//                String token = googleSignInAccount.getIdToken();
-//
-//                Log.d(TAG, "gplus token = " + token);
-//
-//                callGPlusReg(token);
-//                // callServerReg();
-//            }
+            if (googleSignInAccount != null) {
+
+                String token = googleSignInAccount.getIdToken();
+
+                Log.d(TAG, "gplus token = " + token);
+
+                callGPlusReg(token);
+                // callServerReg();
+            }
+        }
+    }
+
+    private void handleSignInResult(GoogleSignInResult result) {
+
+        if (result.isSuccess()) {
+            GoogleSignInAccount acct = result.getSignInAccount();
+            String idToken = acct.getIdToken();
+            Log.d(TAG, "ID Token: " + idToken);
+            // TODO(user): send token to server and validate server-side
+        } else {
+            Log.d(TAG, "ID Token: null");
         }
     }
 
