@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -40,11 +41,16 @@ import com.gridyn.potspot.activity.SearchResultActivity;
 import com.gridyn.potspot.activity.SpaceActivity;
 import com.gridyn.potspot.activity.VerificationActivity;
 import com.gridyn.potspot.adapter.HomeAdapter;
+import com.gridyn.potspot.model.events.AddToFavoriteEvent;
 import com.gridyn.potspot.query.SearchCriteriaQuery;
 import com.gridyn.potspot.response.SpotSearchResponse;
 import com.gridyn.potspot.service.SpotService;
 import com.gridyn.potspot.utils.FragmentUtils;
 import com.gridyn.potspot.utils.SharedPrefsUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +68,8 @@ public class HomeFragment extends Fragment /*implements OnMapReadyCallback */ {
     private List<Spot> mSpotList;
     private boolean flag;
     private SpotService mService;
+    SwipeRefreshLayout homeRefresher;
+    HomeAdapter adapter;
 
 
     public static HomeFragment getInstance() {
@@ -74,7 +82,7 @@ public class HomeFragment extends Fragment /*implements OnMapReadyCallback */ {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        EventBus.getDefault().register(this);
         setHasOptionsMenu(true);
     }
 
@@ -128,6 +136,13 @@ public class HomeFragment extends Fragment /*implements OnMapReadyCallback */ {
             flag = true;
             mView = inflater.inflate(R.layout.fragment_home, container, false);
 
+            homeRefresher = (SwipeRefreshLayout) mView.findViewById(R.id.home_refresher);
+            homeRefresher.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    initSpot();
+                }
+            });
             initRetrofit();
             initSpot();
             onClickFab();
@@ -178,6 +193,7 @@ public class HomeFragment extends Fragment /*implements OnMapReadyCallback */ {
             @Override
             public void onResponse(Response<SpotSearchResponse> response, Retrofit retrofit) {
                 if (response.body().success) {
+                    homeRefresher.setRefreshing(false);
                     Log.d(TAG, "onResponse: " + new GsonBuilder().setPrettyPrinting().create().toJson(response.body()));
                     for (SpotSearchResponse.Spots spot : response.body().message.get(0).spots) {
                         mSpotList.add(new Spot(spot.id.$id, spot.data.name, spot.data.price / 100,
@@ -195,7 +211,7 @@ public class HomeFragment extends Fragment /*implements OnMapReadyCallback */ {
             public void onFailure(Throwable t) {
 
                 Log.d(TAG, "onFailure: error while load spots = " + Log.getStackTraceString(t));
-
+                homeRefresher.setRefreshing(false);
                 Snackbar.make(getView(), Constant.CONNECTION_ERROR, Snackbar.LENGTH_SHORT).show();
             }
         });
@@ -240,7 +256,7 @@ public class HomeFragment extends Fragment /*implements OnMapReadyCallback */ {
 
     private void initRecyclerView() {
         RecyclerView recyclerView = (RecyclerView) mView.findViewById(R.id.home_recycler_view);
-        HomeAdapter adapter = new HomeAdapter(mSpotList, getContext(), getChildFragmentManager());
+        adapter = new HomeAdapter(mSpotList, getContext(), getChildFragmentManager());
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 1, LinearLayoutManager.VERTICAL, false);
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
 
@@ -280,5 +296,21 @@ public class HomeFragment extends Fragment /*implements OnMapReadyCallback */ {
     public void onResume() {
         super.onResume();
         SelectPageUtil.selectHome();
+    }
+
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onFavoriteSelected(AddToFavoriteEvent addToFavoriteEvent) {
+
+        Log.d(TAG, "onFavoriteSelected: event = " + addToFavoriteEvent);
+
+        adapter.updateSpot(addToFavoriteEvent.getSpotId(), addToFavoriteEvent.isFavorite());
+
+        EventBus.getDefault().removeStickyEvent(addToFavoriteEvent);
     }
 }

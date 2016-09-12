@@ -8,6 +8,7 @@ import android.graphics.Typeface;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,16 +22,23 @@ import com.gridyn.potspot.activity.DescriptionSpotActivity;
 import com.gridyn.potspot.activity.SpaceActivity;
 import com.gridyn.potspot.activity.VerificationActivity;
 import com.gridyn.potspot.response.SpotSearchResponse;
+import com.gridyn.potspot.response.SuccessResponse;
+import com.gridyn.potspot.utils.ServerApiUtil;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int TYPE_BANNER = 1;
     private static final int TYPE_ITEM = 0;
+    private static final String TAG = SearchResultAdapter.class.getName();
     private final List<SpotSearchResponse.Spots> mSpotList;
     private final Context mContext;
     private final FragmentManager mFragment;
@@ -111,6 +119,58 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         mContext.startActivity(intent);
                 }
             });
+
+            if (spot.data.inFavorites) {
+
+                ((Holder) holder).favorite.setImageResource(R.drawable.ic_favorite_black_24dp);
+
+            } else {
+
+                ((Holder) holder).favorite.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+            }
+
+            ((Holder) holder).favorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if (spot.data.inFavorites) {
+
+                        Call<SuccessResponse> remove = ServerApiUtil.initSpot().deleteFromFavorite(spot.id.$id, Person.getTokenMap());
+                        remove.enqueue(new Callback<SuccessResponse>() {
+                            @Override
+                            public void onResponse(Response<SuccessResponse> response, Retrofit retrofit) {
+
+                                spot.data.inFavorites = false;
+                                updateSpot(spot);
+                            }
+
+                            @Override
+                            public void onFailure(Throwable t) {
+
+                                Log.e(TAG, "onFailure: error while remove from fav = " + Log.getStackTraceString(t));
+                            }
+                        });
+                    } else {
+
+                        Call<SuccessResponse> add = ServerApiUtil.initSpot().addToFavorite(spot.id.$id, Person.getTokenMap());
+
+                        add.enqueue(new Callback<SuccessResponse>() {
+                            @Override
+                            public void onResponse(Response<SuccessResponse> response, Retrofit retrofit) {
+
+                                spot.data.inFavorites = true;
+                                updateSpot(spot);
+                            }
+
+                            @Override
+                            public void onFailure(Throwable t) {
+
+                                Log.e(TAG, "onFailure: error while remove from fav = " + Log.getStackTraceString(t));
+                            }
+                        });
+                    }
+                }
+            });
         }
 
         if (holder instanceof Banner) {
@@ -139,6 +199,23 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
+    private void updateSpot(SpotSearchResponse.Spots spot) {
+
+        int position = -1;
+
+        for (int i = 0; i < mSpotList.size(); i++) {
+
+            SpotSearchResponse.Spots spot1 = mSpotList.get(i);
+            if (spot1.id.$id.equals(spot.id.$id))
+                position = i;
+        }
+
+        if (position != -1) {
+            mSpotList.set(position, spot);
+            notifyDataSetChanged();
+        }
+    }
+
     @Override
     public int getItemViewType(int position) {
 
@@ -161,6 +238,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         private TextView tvUp;
         private TextView tvDown;
         private CardView card;
+        private ImageView favorite;
 
         public Holder(View itemView) {
             super(itemView);
@@ -170,6 +248,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             price = (TextView) itemView.findViewById(R.id.sch_res_price);
             tvUp = (TextView) itemView.findViewById(R.id.sch_res_tv_up);
             tvDown = (TextView) itemView.findViewById(R.id.sch_res_tv_down);
+            favorite = (ImageView) itemView.findViewById(R.id.favorite);
         }
     }
 

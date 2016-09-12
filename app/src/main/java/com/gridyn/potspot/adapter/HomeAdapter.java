@@ -126,7 +126,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             public void onResponse(Response<SuccessResponse> response, Retrofit retrofit) {
 
                                 spot.setInFavorites(false);
-                                updateSpot(spot, position);
+                                updateSpot(spot);
                             }
 
                             @Override
@@ -144,7 +144,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             public void onResponse(Response<SuccessResponse> response, Retrofit retrofit) {
 
                                 spot.setInFavorites(true);
-                                updateSpot(spot, position);
+                                updateSpot(spot);
                             }
 
                             @Override
@@ -192,10 +192,21 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-    private void updateSpot(Spot spot, int position) {
+    private void updateSpot(Spot spot) {
 
-        mSpotList.set(position, spot);
-        notifyItemChanged(position);
+        int position = -1;
+
+        for (int i = 0; i < mSpotList.size(); i++) {
+
+            Spot spot1 = mSpotList.get(i);
+            if (spot1.getId().equals(spot.getId()))
+                position = i;
+        }
+
+        if (position != -1) {
+            mSpotList.set(position, spot);
+            notifyDataSetChanged();
+        }
     }
 
     private Bitmap getMarkerBitmap(Spot spot) {
@@ -243,6 +254,15 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public int getItemViewType(int position) {
         return position == 0 ? TYPE_MAP : TYPE_ITEM;
+    }
+
+    public void updateSpot(String spotId, boolean favorite) {
+
+        for (Spot spot : mSpotList)
+            if (spot.getId().equals(spotId))
+                spot.setInFavorites(favorite);
+
+        notifyDataSetChanged();
     }
 
     public static class Holder extends RecyclerView.ViewHolder {

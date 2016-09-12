@@ -23,6 +23,7 @@ import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
 import com.gridyn.potspot.databinding.ActivityDescriptionSpotBinding;
 import com.gridyn.potspot.fragment.OneTimeFragment;
+import com.gridyn.potspot.model.events.AddToFavoriteEvent;
 import com.gridyn.potspot.response.SpotCommentsResponse;
 import com.gridyn.potspot.response.SpotInfoResponse;
 import com.gridyn.potspot.response.SuccessResponse;
@@ -30,6 +31,8 @@ import com.gridyn.potspot.utils.FragmentUtils;
 import com.gridyn.potspot.utils.ServerApiUtil;
 import com.gridyn.potspot.utils.SharedPrefsUtils;
 import com.squareup.picasso.Picasso;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,6 +75,7 @@ public class DescriptionSpotActivity extends AppCompatActivity {
     ImageView favorite;
     SpotInfoResponse.Message.Spot spot;
     ActivityDescriptionSpotBinding binding;
+    private String spotId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +90,8 @@ public class DescriptionSpotActivity extends AppCompatActivity {
 
             FragmentUtils.openFragment(oneTimeFragment, R.id.content_frame, Constant.SPOT_ONE_TIME, this, true);
         }
+
+        spotId = getIntent().getExtras().getString("id");
 
         initFields();
         initFonts();
@@ -213,6 +219,8 @@ public class DescriptionSpotActivity extends AppCompatActivity {
                                     public void onResponse(Response<SuccessResponse> response, Retrofit retrofit) {
 
                                         binding.setInFavorites(false);
+
+                                        EventBus.getDefault().postSticky(new AddToFavoriteEvent(false, spotId));
                                     }
 
                                     @Override
@@ -230,6 +238,8 @@ public class DescriptionSpotActivity extends AppCompatActivity {
                                     public void onResponse(Response<SuccessResponse> response, Retrofit retrofit) {
 
                                         binding.setInFavorites(true);
+
+                                        EventBus.getDefault().postSticky(new AddToFavoriteEvent(true, spotId));
                                     }
 
                                     @Override

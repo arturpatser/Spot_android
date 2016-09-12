@@ -57,7 +57,8 @@ public class PaidSpotsActivity extends AppCompatActivity {
 
                 Log.d(TAG, "onResponse: paid = " + payedSpotsResponse);
 
-                adapter.addAll(payedSpotsResponse.getMessage());
+
+//                adapter.addAll(payedSpotsResponse.getMessage());
             }
 
             @Override
