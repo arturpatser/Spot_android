@@ -18,6 +18,7 @@ import com.gridyn.potspot.activity.BuySpotActivity;
 import com.gridyn.potspot.databinding.ItemBookRequestBinding;
 import com.gridyn.potspot.databinding.ItemBookVerifiedBinding;
 import com.gridyn.potspot.model.notificationsModels.Message;
+import com.gridyn.potspot.response.PaymentResponse;
 import com.gridyn.potspot.response.SuccessResponse;
 import com.gridyn.potspot.utils.ServerApiUtil;
 import com.squareup.picasso.Picasso;
@@ -105,6 +106,34 @@ public class NotifsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     intent.putExtra(Constant.PARTY_SIZE, String.valueOf(notif.getData().getGuests()));
                     intent.putExtra(Constant.SPOT_PRICE, notif.getSpot().getData().getPrice());
                     context.startActivity(intent);
+                }
+            });
+
+            ((BookVirifiedHolder) holder).remove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Call<PaymentResponse> call = ServerApiUtil.initUser().cancelPaying(notif.getId().get$id(),
+                            Person.getTokenMap());
+
+                    call.enqueue(new Callback<PaymentResponse>() {
+                        @Override
+                        public void onResponse(Response<PaymentResponse> response, Retrofit retrofit) {
+
+                            PaymentResponse paymentResponse = response.body();
+
+                            if (paymentResponse.isSuccess()) {
+
+                                removeItem(notif, position);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Throwable t) {
+
+                            Log.e(TAG, "onFailure: error while cancel req = " + Log.getStackTraceString(t));
+                        }
+                    });
                 }
             });
         }
@@ -240,6 +269,9 @@ public class NotifsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         @BindView(R.id.host_avatar)
         ImageView avatar;
+
+        @BindView(R.id.remove)
+        ImageView remove;
 
         public BookVirifiedHolder(ItemBookVerifiedBinding itemView) {
             super(itemView.getRoot());

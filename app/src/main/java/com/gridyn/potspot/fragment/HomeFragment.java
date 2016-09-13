@@ -196,7 +196,7 @@ public class HomeFragment extends Fragment /*implements OnMapReadyCallback */ {
 
                     for (SpotSearchResponse.Spots spot : response.body().message.get(0).spots) {
                         mSpotList.add(new Spot(spot.id.$id, spot.data.name, spot.data.price / 100,
-                                spot.data.type, spot.data.imgs.get(0),
+                                spot.data.type, spot.data.imgs.size() > 0 ? spot.data.imgs.get(0) : null,
                                 spot.data.googlemapsapi.geometry.location.lat, spot.data.googlemapsapi.geometry.location.lat
                         ,spot.data.inFavorites));
                     }

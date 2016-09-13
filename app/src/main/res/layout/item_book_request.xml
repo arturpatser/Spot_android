@@ -29,8 +29,7 @@
             android:background="@color/white"
             android:layout_width="match_parent"
             android:layout_height="@dimen/toolbar_height"
-            android:layout_centerInParent="true"
-            android:layout_margin="10dp">
+            android:layout_centerInParent="true">
 
             <ImageView
                 android:id="@+id/spot_img"
@@ -132,17 +131,6 @@
             </LinearLayout>
 
         </RelativeLayout>
-
-        <ImageView
-            tools:targetApi="lollipop"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/cross"
-            android:id="@+id/imageView5"
-            android:layout_gravity="right|top"
-            android:layout_alignParentRight="true"
-            android:elevation="4dp"
-            android:background="@color/transparent" />
 
     </RelativeLayout>
 </layout>

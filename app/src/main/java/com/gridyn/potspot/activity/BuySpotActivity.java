@@ -431,7 +431,7 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
                                 errorMessage = payment.getPaymentMessages().get(0).getPaymentMessage();
                             } catch (Exception e) {}
 
-                            goToTabs(errorMessage);
+                            Snackbar.make(findViewById(android.R.id.content), errorMessage, Snackbar.LENGTH_SHORT).show();
                         }
                     }
 
