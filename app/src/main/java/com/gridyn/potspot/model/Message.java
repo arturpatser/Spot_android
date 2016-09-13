@@ -77,4 +77,8 @@ public class Message {
     public void setSpotName(String spotName) {
         this.spotName = spotName;
     }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 }

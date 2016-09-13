@@ -180,15 +180,19 @@ public class TimePeriodsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private String unWrapTime(String s) {
 
         String time = "";
-
-        if (s.length() == 3)
-            time = "0" + s;
-        else
-            time = s;
+        if (s != null)
+            if (s.length() == 3)
+                time = "0" + s;
+            else
+                time = s;
 
         Log.d(TAG, "unWrapTime: time = " + time + " s = " + s);
 
-        time = time.substring(0,2) + ":" + time.substring(2,4);
+        try {
+            time = time.substring(0, 2) + ":" + time.substring(2, 4);
+        } catch (StringIndexOutOfBoundsException e) {
+            e.printStackTrace();
+        }
 
         return time;
     }

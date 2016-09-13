@@ -20,6 +20,6 @@ public class BitmapHelper {
     }
 
     public static Bitmap scaleBitmap(Bitmap bitmap) {
-        return Bitmap.createScaledBitmap(bitmap, (int) (bitmap.getWidth() * 0.8), (int) (bitmap.getHeight() * 0.8), true);
+        return Bitmap.createScaledBitmap(bitmap, (int) (bitmap.getWidth() * 0.5), (int) (bitmap.getHeight() * 0.5), true);
     }
 }

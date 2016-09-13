@@ -15,15 +15,15 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.GsonBuilder;
 import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.MessageUtil;
 import com.gridyn.potspot.Person;
@@ -31,6 +31,7 @@ import com.gridyn.potspot.R;
 import com.gridyn.potspot.adapter.ChatAdapter;
 import com.gridyn.potspot.model.Message;
 import com.gridyn.potspot.query.SendMessageQuery;
+import com.gridyn.potspot.response.MessageHistoryResponse;
 import com.gridyn.potspot.response.MessageSendResponse;
 import com.gridyn.potspot.service.ChatService;
 import com.squareup.picasso.Picasso;
@@ -44,8 +45,10 @@ import retrofit.GsonConverterFactory;
 import retrofit.Response;
 import retrofit.Retrofit;
 
+import static com.gridyn.potspot.Constant.*;
+
 public class ChatActivity extends AppCompatActivity {
-    private Button mBtnSend;
+    private ImageButton mBtnSend;
     private EditText mInputMsg;
 
     // Chat messages list adapter
@@ -57,6 +60,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private String mNameUser;
     private String mNameSpot;
+    private String mUserId;
 
     private ChatService mService;
 
@@ -68,24 +72,38 @@ public class ChatActivity extends AppCompatActivity {
         initRetrofit();
         initFields();
         initHeader();
-        initRecyclerView();
-        initToolbar();
         loadHistory();
+        initToolbar();
         receiveMessage();
     }
 
     private void initHeader() {
-        final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.header_chat, (ViewGroup) findViewById(R.id.chat_header), false);
-        final TextView nameUser = (TextView) view.findViewById(R.id.ch_h_name);
-        final TextView nameSpot = (TextView) view.findViewById(R.id.ch_h_about);
+        final TextView nameUser = (TextView) findViewById(R.id.ch_h_name);
+        final TextView nameSpot = (TextView) findViewById(R.id.ch_h_about);
+        final ImageView background = (ImageView) findViewById(R.id.ch_h_back);
+        final ImageView imageUser = (ImageView) findViewById(R.id.ch_h_img);
         nameUser.setText(mNameUser);
         nameSpot.setText(mNameSpot);
-        Picasso.with(getApplicationContext())
-                .load(Constant.URL_IMAGE + getIntent().getExtras().getString("imgSpot"))
-                .into((ImageView) view.findViewById(R.id.ch_h_back));
-        Picasso.with(getApplicationContext())
-                .load(Constant.URL_IMAGE + getIntent().getExtras().getString("imgUser"))
-                .into((ImageView) view.findViewById(R.id.ch_h_img));
+
+        if (getIntent().getExtras().getString("imgSpot") != null) {
+            Picasso.with(this)
+                    .load(URL_IMAGE + getIntent().getExtras().getString("imgSpot"))
+                    .into(background);
+        } else {
+            Picasso.with(this)
+                    .load(URL_IMAGE + BASE_IMAGE_OF_SPOT)
+                    .into(background);
+        }
+
+        if (getIntent().getExtras().getString("imgUser") != null) {
+            Picasso.with(this)
+                    .load(URL_IMAGE + getIntent().getExtras().getString("imgUser"))
+                    .into(imageUser);
+        } else {
+            Picasso.with(this)
+                    .load(BASE_IMAGE)
+                    .into(imageUser);
+        }
     }
 
     private void receiveMessage() {
@@ -95,12 +113,12 @@ public class ChatActivity extends AppCompatActivity {
 /*                if (intent.getAction().equals(GCMRegistrationIntentService.REGISTRATION_SUCCESS)) {
                     String token = intent.getStringExtra("token");
                     Log.i(Constant.LOG, "GCM token:" + token);
-                    sendMessageToServer(token, false);
+                    appendMessage(token, false);
                 } else if (intent.getAction().equals(GCMRegistrationIntentService.REGISTRATION_ERROR)) {
                     Log.i(Constant.LOG, "GCM registration error!!!");
                 }*/
                 String message = intent.getStringExtra("message");
-                sendMessageToServer(message, false);
+                appendMessage(message, false);
             }
         };
 
@@ -129,15 +147,15 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void initFields() {
-        mBtnSend = (Button) findViewById(R.id.chat_send);
+        mBtnSend = (ImageButton) findViewById(R.id.chat_send);
         mInputMsg = (EditText) findViewById(R.id.chat_input);
         utils = new MessageUtil(getApplicationContext());
         listMessages = new ArrayList<Message>();
 
         Bundle args = getIntent().getExtras();
-        mNameUser = args.getString("userName");
+        mNameUser = args.getString("fromName");
         mNameSpot = args.getString("spotName");
-
+        mUserId = args.getString("userId");
     }
 
     private void initToolbar() {
@@ -154,16 +172,39 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void loadHistory() {
+        Call<MessageHistoryResponse> call = mService.showHistoryMessage(mUserId, Person.getTokenMap());
+        call.enqueue(new Callback<MessageHistoryResponse>() {
+            @Override
+            public void onResponse(Response<MessageHistoryResponse> response, Retrofit retrofit) {
+                Log.i("log", "onResponse: " + new GsonBuilder().setPrettyPrinting().create().toJson(response.body()));
+                List<MessageHistoryResponse.Message.Message_> messages = response.body().message.get(0).messages;
+                for (MessageHistoryResponse.Message.Message_ message : messages) {
+                    Log.i("log", "onResponse: " + message.data.message);
+                    if (message.system.owner.equals(Person.getId())) {
+                        listMessages.add(new Message(Person.getName(), message.data.message, true));
+                    } else {
+                        listMessages.add(new Message(mNameUser, message.data.message, false));
+                    }
+                }
+                initRecyclerView();
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Snackbar.make(findViewById(android.R.id.content), Constant.CONNECTION_ERROR, Snackbar.LENGTH_LONG).show();
+            }
+        });
     }
 
-    private void sendMessageToServer(String message, boolean isSelf) {
+    private void appendMessage(String message, boolean isSelf) {
         Message msg;
         if (isSelf) {
             msg = new Message("Dyuha", mInputMsg.getText().toString().trim(), true);
         } else {
             msg = new Message(mNameUser, message, false);
         }
-        appendMessage(msg);
+        listMessages.add(msg);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -171,24 +212,6 @@ public class ChatActivity extends AppCompatActivity {
         super.onDestroy();
 
     }
-
-    /**
-     * Appending message to list view
-     */
-    private void appendMessage(final Message m) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                listMessages.add(m);
-
-                adapter.notifyDataSetChanged();
-
-                // Playing device's notification
-//                playBeep();
-            }
-        });
-    }
-
 
     public void playBeep() {
 
@@ -220,12 +243,12 @@ public class ChatActivity extends AppCompatActivity {
             final SendMessageQuery query = new SendMessageQuery();
             query.token = Person.getToken();
             query.message = mInputMsg.getText().toString().trim();
-            Call<MessageSendResponse> call = mService.sendMessage("userId", query);
+            Call<MessageSendResponse> call = mService.sendMessage(mUserId, query);
             call.enqueue(new Callback<MessageSendResponse>() {
                 @Override
                 public void onResponse(Response<MessageSendResponse> response, Retrofit retrofit) {
                     if (response.body().success) {
-                        sendMessageToServer(query.message, true);
+                        appendMessage(query.message, true);
                         mInputMsg.setText(null);
                     }
                 }

@@ -25,20 +25,36 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <FrameLayout
-                android:id="@+id/space_header"
+            <LinearLayout
+                android:id="@+id/list_edit_blur"
                 android:layout_width="match_parent"
-                android:layout_height="220dp">
-                <Button
-                    android:layout_width="250dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center"
-                    android:text="@string/add_photos"
-                    android:textColor="@color/mainRed"
-                    android:background="@android:color/white"
-                    android:textAllCaps="false"
-                    android:onClick="onClickAddPhotoSpace" />
-            </FrameLayout>
+                android:layout_height="220dp"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:id="@+id/space_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <Button
+                        android:layout_width="250dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:text="@string/add_photos"
+                        android:textColor="@color/mainRed"
+                        android:background="@android:color/white"
+                        android:textAllCaps="false"
+                        android:onClick="onClickAddPhotoSpace" />
+                </FrameLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/space_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

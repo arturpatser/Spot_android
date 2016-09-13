@@ -8,6 +8,9 @@ import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -23,6 +26,7 @@ import com.gridyn.potspot.BitmapHelper;
 import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.FastBlur;
 import com.gridyn.potspot.R;
+import com.gridyn.potspot.adapter.ListingEditAdapter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -58,6 +62,7 @@ public class SpaceActivity extends AppCompatActivity {
         initToolbar();
         initHeader();
         initSpinners();
+        initRecycler();
     }
 
     private void initFields() {
@@ -72,6 +77,15 @@ public class SpaceActivity extends AppCompatActivity {
         mHeatedSpinner = (Spinner) findViewById(R.id.space_heated);
         mHandicapSpinner = (Spinner) findViewById(R.id.space_handicap);
         setDefaultValues();
+    }
+
+    private void initRecycler() {
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.space_recycler);
+        ListingEditAdapter adapter = new ListingEditAdapter(mEncodedImages, getApplicationContext());
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), 1, LinearLayoutManager.HORIZONTAL, false);
+
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(gridLayoutManager);
     }
 
     private void setDefaultValues() {
@@ -213,7 +227,7 @@ public class SpaceActivity extends AppCompatActivity {
                         .scaleBitmap(MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage));
                 mEncodedImages.add(Constant.URL_BASE64 + BitmapHelper.encodeToString(thumbnailBitmap));
 //                mEncodedImage = BitmapHelper.encodeToString(thumbnailBitmap);
-                Log.i("profileEdit", "EncodedAvatar: \n\n" + mEncodedImage);
+                Log.i("profileEdit", "EncodedAvatar: \n\n" + mEncodedImages.get(0));
             }
         } catch (Exception e) {
             e.printStackTrace();

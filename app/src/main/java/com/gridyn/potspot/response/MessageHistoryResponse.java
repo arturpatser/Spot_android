@@ -73,7 +73,8 @@ public class MessageHistoryResponse {
                 public String iPUpdated;
 
             }
-        }
-    }
 
+        }
+
+    }
 }

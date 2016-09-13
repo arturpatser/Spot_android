@@ -10,6 +10,10 @@ public final class Person {
     private static String id;
     private static String androidId;
 
+    private static String name;
+    private static String email;
+    private static String avatar;
+
     public static String getName() {
         return name;
     }
@@ -21,10 +25,6 @@ public final class Person {
     public static String getAvatar() {
         return avatar;
     }
-
-    private static String name;
-    private static String email;
-    private static String avatar;
 
     private Person() {
     }

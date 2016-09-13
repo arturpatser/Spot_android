@@ -47,6 +47,7 @@ public class NotificationHostAdapter extends RecyclerView.Adapter<NotificationHo
         Spot spot = mSpotList.get(position);
         AssetManager asset = mContext.getAssets();
 
+
         holder.background.setBackground(AssetsHelper.loadImageFromAsset(mContext, spot.getImage()));
         holder.name.setText(spot.getName());
         holder.description.setText(spot.getDescription());

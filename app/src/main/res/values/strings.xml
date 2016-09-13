@@ -187,14 +187,17 @@
     <string name="payment_progress">We are progressing your payment...</string>
     <string name="request_process">We are processing your request</string>
     <string name="select_time">Select time please</string>
-    <string name="successfull_add_friend">Wait until friend accept invite</string>
     <string name="yes">YES!</string>
     <string name="no_thanks">No, thanks</string>
     <string name="hi_its">Hi! It is</string>
     <string name="join_spot">Do you want to join a spot?</string>
+    <string name="card_number">Number of card</string>
+    <string name="cvv_code">CVV code</string>
+    <string name="expiry_date">Expiry date</string>
     <string name="successfull_invite">Successfull invite</string>
     <string name="successfull_decline">Invite successfully declined</string>
     <string name="credit_card_issue">You need accepted credit card for this</string>
     <string name="not_all_friends_accepted">Not all friends accepted or rejected invite</string>
     <string name="facebook_app_id">625863117589801</string>
+    <string name="successfull_add_friend">change</string>
 </resources>

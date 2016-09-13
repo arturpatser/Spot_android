@@ -40,7 +40,7 @@ public class PaidSpotsAdapter extends RecyclerView.Adapter<PaidSpotsAdapter.Hold
     public void onBindViewHolder(Holder holder, int position) {
 //        Spot spot = mSpotList.get(position);
 
-        holder.imageView.setImageDrawable(AssetsHelper.loadImageFromAsset(mContext, "images/mountain.jpg"));
+        holder.background.setImageDrawable(AssetsHelper.loadImageFromAsset(mContext, "images/mountain.jpg"));
     }
 
     @Override
@@ -56,7 +56,7 @@ public class PaidSpotsAdapter extends RecyclerView.Adapter<PaidSpotsAdapter.Hold
 
     public static class Holder extends RecyclerView.ViewHolder {
 
-        private ImageView imageView;
+        private ImageView background;
         private TextView description;
         private TextView from;
         private TextView price;
@@ -64,7 +64,7 @@ public class PaidSpotsAdapter extends RecyclerView.Adapter<PaidSpotsAdapter.Hold
 
         public Holder(View itemView) {
             super(itemView);
-            imageView = (ImageView) itemView.findViewById(R.id.paid_image);
+            background = (ImageView) itemView.findViewById(R.id.paid_image);
             description = (TextView) itemView.findViewById(R.id.paid_desc);
             from = (TextView) itemView.findViewById(R.id.paid_from);
             price = (TextView) itemView.findViewById(R.id.paid_price);

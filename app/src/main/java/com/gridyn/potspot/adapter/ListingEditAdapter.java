@@ -1,29 +1,26 @@
 package com.gridyn.potspot.adapter;
 
 import android.content.Context;
-import android.support.v4.app.FragmentActivity;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.gridyn.potspot.AssetsHelper;
+import com.gridyn.potspot.BitmapHelper;
 import com.gridyn.potspot.R;
-import com.gridyn.potspot.Spot;
 
 import java.util.List;
 
 public class ListingEditAdapter extends RecyclerView.Adapter<ListingEditAdapter.Holder> {
 
-    private final List<Spot> mSpotList;
+    private final List<String> mImages;
     private final Context mContext;
-    private final FragmentActivity mFragment;
 
-    public ListingEditAdapter(List<Spot> spotList, Context context, FragmentActivity fragmentManager) {
-        mSpotList = spotList;
+    public ListingEditAdapter(List<String> images, Context context) {
+        mImages = images;
         mContext = context;
-        mFragment = fragmentManager;
 
     }
 
@@ -36,14 +33,13 @@ public class ListingEditAdapter extends RecyclerView.Adapter<ListingEditAdapter.
 
     @Override
     public void onBindViewHolder(Holder holder, int position) {
-        final Spot spot = mSpotList.get(position);
+        holder.imageView.setImageDrawable(new BitmapDrawable(mContext.getResources(), BitmapHelper.decodeToBitmap(mImages.get(position))));
 
-        holder.imageView.setImageDrawable(AssetsHelper.loadImageFromAsset(mContext, spot.getImage()));
     }
 
     @Override
     public int getItemCount() {
-        return mSpotList.size();
+        return mImages.size();
     }
 
     public static class Holder extends RecyclerView.ViewHolder {

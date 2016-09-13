@@ -286,7 +286,7 @@ public class DescriptionSpotActivity extends AppCompatActivity {
 
                     }
                     mUserName.setText(" " + spot.username);
-                    mBook.setText("Book for $" + spot.price);
+                    mBook.setText("Book for $" + (spot.price / 100));
                     if (spot.userImgs.size() != 0) {
                         Picasso.with(mContext)
                                 .load(URL_IMAGE + spot.userImgs.get(0))

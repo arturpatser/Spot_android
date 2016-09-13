@@ -24,6 +24,7 @@ import com.gridyn.potspot.response.MessageLastResponse;
 import com.gridyn.potspot.response.UserInfoResponse;
 import com.gridyn.potspot.service.ChatService;
 import com.gridyn.potspot.service.UserService;
+import com.gridyn.potspot.utils.ServerApiUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,11 +42,14 @@ import retrofit.Retrofit;
 public class MessageActivity extends AppCompatActivity {
 
     private List<Message> mMessageList;
+    private List<String> mIdOwnerList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
+        mMessageList = new ArrayList<>();
+        mIdOwnerList = new ArrayList<>();
         initSpots();
         initToolbar();
     }
@@ -66,18 +70,24 @@ public class MessageActivity extends AppCompatActivity {
         call.enqueue(new Callback<MessageLastResponse>() {
             @Override
             public void onResponse(Response<MessageLastResponse> response, Retrofit retrofit) {
-                mMessageList = new ArrayList<>();
                 Log.i(Constant.LOG, "MessageListResponse: " + new GsonBuilder().setPrettyPrinting().create().toJson(response.body()));
                 if (response.body().success && response.body().message.get(0).messages.size() != 0) {
-                    List<MessageLastResponse.Message.Message_> messages = response.body().message.get(0).messages.get(0);
+                    List<List<MessageLastResponse.Message.Message_>> messages = response.body().message.get(0).messages;
                     for(int messageCount = 0; messageCount < messages.size(); messageCount++) {
-                        mMessageList.add(new Message(messages.get(messageCount).system.user,
-                                messages.get(messageCount).data.message, new SimpleDateFormat("dd.MM")
-                                .format(new Date((long) messages.get(messageCount).system.timeCreated * 1000))));
-                        loadInfoAboutUser(retrofit, messages.get(messageCount).system.user, messageCount);
+                        mMessageList.add(new Message());
+                        mMessageList.get(messageCount).setMessage(messages.get(messageCount).get(0).data.message);
+                        mMessageList.get(messageCount).setDate(new SimpleDateFormat("dd.MM")
+                                .format(new Date((long) messages.get(messageCount).get(0).system.timeCreated * 1000)));
+                        final String ownerId;
+                        if (messages.get(messageCount).get(0).system.user.equals(Person.getId())) {
+                            ownerId = messages.get(messageCount).get(0).system.owner;
+                        } else {
+                            ownerId = messages.get(messageCount).get(0).system.user;
+                        }
+                        mIdOwnerList.add(ownerId);
                     }
+                    loadInfoAboutUser();
                 }
-                initRecyclerView();
             }
 
             @Override
@@ -88,30 +98,40 @@ public class MessageActivity extends AppCompatActivity {
         });
     }
 
-    private void loadInfoAboutUser(Retrofit retrofit, String user, final Integer messageCount) {
-        final UserService service = retrofit.create(UserService.class);
-        final Map<String, String> map = new HashMap<>();
-        map.put("token", Person.getToken());
-        Call<UserInfoResponse> call = service.getUserInfo(user, map);
-        call.enqueue(new Callback<UserInfoResponse>() {
-            @Override
-            public void onResponse(Response<UserInfoResponse> response, Retrofit retrofit) {
-                if(response.body().success) {
-                    UserInfoResponse.Message.Data user = response.body().message.get(0).data;
-                    mMessageList.get(messageCount).setFromName(user.name);
-                    mMessageList.get(messageCount).setImgUser(user.imgs.get(0));
-                    if (!user.spot.isEmpty()) {
-                        mMessageList.get(messageCount).setSpotName(user.spot.get(0).data.name);
+    private void loadInfoAboutUser() {
+        for (int messageCount = 0; messageCount < mIdOwnerList.size(); messageCount++) {
+            final int finalMessageCount = messageCount;
+            Call<UserInfoResponse> call = ServerApiUtil.initUser().getUserInfo(mIdOwnerList.get(finalMessageCount), Person.getTokenMap());
+            call.enqueue(new Callback<UserInfoResponse>() {
+                @Override
+                public void onResponse(Response<UserInfoResponse> response, Retrofit retrofit) {
+                    if (response.body().success) {
+                        UserInfoResponse.Message.Data user = response.body().message.get(0).data;
+                        Log.i("log", "Owner name: " + user.name);
+                        mMessageList.get(finalMessageCount).setFromName(user.name);
+                        if (user.imgs.size() != 0) {
+                            mMessageList.get(finalMessageCount).setImgUser(user.imgs.get(0));
+                            Log.i("log", "Owner img: " + mMessageList.get(finalMessageCount).getImgUser());
+                        } else {
+                            Log.i("log", "user " + finalMessageCount + " haven`t image. He has id " + response.body().message.get(0).id.$id);
+                        }
+                        if (user.spot.size() != 0) {
+                            mMessageList.get(finalMessageCount).setSpotName(user.spot.get(0).data.name);
+                        }
+                        mMessageList.get(finalMessageCount).setId(mIdOwnerList.get(finalMessageCount));
+                        if (finalMessageCount == mIdOwnerList.size() - 1) {
+                            initRecyclerView();
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onFailure(Throwable t) {
-                Snackbar.make(findViewById(android.R.id.content),
-                        Constant.CONNECTION_ERROR, Snackbar.LENGTH_LONG).show();
-            }
-        });
+                @Override
+                public void onFailure(Throwable t) {
+                    Snackbar.make(findViewById(android.R.id.content),
+                            Constant.CONNECTION_ERROR, Snackbar.LENGTH_LONG).show();
+                }
+            });
+        }
     }
 
     private void initToolbar() {

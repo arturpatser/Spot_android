@@ -12,6 +12,7 @@ public interface Constant {
     String BASE_URL = "http://potspot.podkolpakom.net/API/";
     String URL_IMAGE = "http://potspot.podkolpakom.net/imgs/";
     String BASE_IMAGE = "https://vk.com/images/camera_200.png";
+    String BASE_IMAGE_OF_SPOT = "1471540131_bf57bd9810a85c7e1f94d0ea94168c19.jpg";
     String URL_BASE64 = "data:image/jpeg;base64,";
     String CONNECTION_ERROR = "Connection error";
     String SP = "settings";
@@ -33,7 +34,8 @@ public interface Constant {
     String SPOT_ONE_TIME = "spotOneTime";
     String PROFILE_ONE_TIME = "profOneTime";
     String ADD_SPOT_ONE_TIME = "addSpotOneTime";
-    String STRIPE_KEY = "sk_test_volRoAtAFfrYZEKLPVOTQh68";
+    //    String STRIPE_KEY = "sk_test_volRoAtAFfrYZEKLPVOTQh68";
+    String STRIPE_KEY = "pk_test_Pb367hjLuJ7NikNs8hxaatHl";
     String SPOT_NAME = "spotname";
     String NOTIF_TEXT = "notiftext";
     String SPOT_ID = "spotid";

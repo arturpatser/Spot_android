@@ -17,7 +17,6 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.google.gson.GsonBuilder;
 import com.gridyn.potspot.Constant;
@@ -32,7 +31,6 @@ import com.gridyn.potspot.response.SpotInfoResponse;
 import com.gridyn.potspot.response.SpotUpdateResponse;
 import com.gridyn.potspot.utils.ServerApiUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit.Call;
@@ -64,7 +62,6 @@ public class ListingEditActivity extends AppCompatActivity {
 
         initFields();
         loadFields();
-        initSpotList();
         initToolbar();
         initRecycler();
         setHeaderBackground();
@@ -152,19 +149,6 @@ public class ListingEditActivity extends AppCompatActivity {
                 mSpotList.get(0).getImage(), getResources());
     }
 
-    private void initSpotList() {
-        mSpotList = new ArrayList<>();
-        mSpotList.add(new Spot("images/balcony.jpg"));
-        mSpotList.add(new Spot("images/chairs.jpg"));
-        mSpotList.add(new Spot("images/mountain.jpg"));
-        mSpotList.add(new Spot("images/balcony.jpg"));
-        mSpotList.add(new Spot("images/chairs.jpg"));
-        mSpotList.add(new Spot("images/mountain.jpg"));
-        mSpotList.add(new Spot("images/balcony.jpg"));
-        mSpotList.add(new Spot("images/chairs.jpg"));
-        mSpotList.add(new Spot("images/mountain.jpg"));
-    }
-
     private void initToolbar() {
         final Toolbar toolbar = (Toolbar) findViewById(R.id.list_edit_toolbar);
         toolbar.setTitle("");
@@ -181,7 +165,7 @@ public class ListingEditActivity extends AppCompatActivity {
 
     private void initRecycler() {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.list_edit_recycler);
-        ListingEditAdapter adapter = new ListingEditAdapter(mSpotList, getApplicationContext(), this);
+        ListingEditAdapter adapter = new ListingEditAdapter(null, getApplicationContext()); //TODO: null -> List<String>
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), 1, LinearLayoutManager.HORIZONTAL, false);
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
 
@@ -203,10 +187,23 @@ public class ListingEditActivity extends AppCompatActivity {
             call.enqueue(new Callback<SpotDeleteResponse>() {
                 @Override
                 public void onResponse(Response<SpotDeleteResponse> response, Retrofit retrofit) {
-                    Toast.makeText(getApplicationContext(), "Spot was completed", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(ListingEditActivity.this, TabsActivity.class);
-                    intent.addFlags(android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                    intent.putExtra("name", Person.getName());
+                    intent.putExtra("email", Person.getEmail());
+
+                    try {
+                        intent.putExtra("avatar", Person.getAvatar());
+
+                    } catch (IndexOutOfBoundsException e) {
+                        intent.putExtra("avatar", Constant.BASE_IMAGE);
+                    }
+
                     startActivity(intent);
+
                 }
 
                 @Override

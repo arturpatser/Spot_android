@@ -45,7 +45,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.Holder> 
     public void onBindViewHolder(Holder holder, int position) {
         final Message message = mMessageList.get(position);
 
-        Log.i(Constant.LOG, "imageOfUser: " + message.getImgUser());
+        Log.i(Constant.LOG, "imageOfUser: " + position + " " + message.getImgUser());
+        Log.i(Constant.LOG, "nameOfUser: " + position + " " + message.getFromName());
 
         Picasso.with(mContext)
                 .load(Constant.URL_IMAGE + message.getImgUser())
@@ -68,6 +69,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.Holder> 
                 intent.putExtra("fromName", message.getFromName());
                 intent.putExtra("imgSpot", message.getImgSpot());
                 intent.putExtra("imgUser", message.getImgUser());
+                intent.putExtra("userId", message.getId());
                 mContext.startActivity(intent);
             }
         });

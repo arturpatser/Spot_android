@@ -336,6 +336,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
                 UserInfoResponse res = response.body();
                 UserInfoResponse.Message message = res.message.get(0);
+                Log.i(TAG, "User name: " + message.data.name);
+                Person.setName(message.data.name);
                 Person.setHost(message.system.isVerified);
                 intent.putExtra("name", message.data.name);
                 intent.putExtra("email", message.data.email);
