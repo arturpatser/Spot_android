@@ -1,5 +1,6 @@
 package com.gridyn.potspot.service;
 
+import com.gridyn.potspot.model.NotificationModel;
 import com.gridyn.potspot.query.BookQuery;
 import com.gridyn.potspot.query.EnableHostQuery;
 import com.gridyn.potspot.query.FacebookLoginQuery;
@@ -124,4 +125,7 @@ public interface UserService {
 
     @POST("spot/favorites/")
     Call<SpotSearchResponse> getFavorites(@Body Map<String, String> token);
+
+    @POST("booking/show/notifications")
+    Call<NotificationModel> getAllNotifs(@Body Map<String, String> tokenMap);
 }
