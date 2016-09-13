@@ -15,6 +15,15 @@ android {
         javaMaxHeapSize "4g"
     }
 
+    signingConfigs {
+        potspot {
+            keyAlias "Aplus"
+            keyPassword "potspot5412"
+            storeFile file('../potspot.jks')
+            storePassword "potspot5412"
+        }
+    }
+
     defaultConfig {
         applicationId "com.gridyn.potspot"
         minSdkVersion 18
@@ -25,8 +34,15 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.potspot
+        }
+
+        debug {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.potspot
         }
     }
 

@@ -53,6 +53,7 @@ public class NotifsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         if (holder instanceof BookVirifiedHolder) {
 
             ((BookVirifiedHolder) holder).binding.setSpotName(notif.getSpot().getData().getName());
+            ((BookVirifiedHolder) holder).binding.setMessage(context.getString(R.string.book_request_accepted));
         }
     }
 
