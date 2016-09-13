@@ -25,7 +25,7 @@ import com.gridyn.potspot.databinding.ActivityDescriptionSpotBinding;
 import com.gridyn.potspot.fragment.OneTimeFragment;
 import com.gridyn.potspot.model.events.AddToFavoriteEvent;
 import com.gridyn.potspot.response.SpotCommentsResponse;
-import com.gridyn.potspot.response.SpotInfoResponse;
+import com.gridyn.potspot.response.SpotSearchResponse;
 import com.gridyn.potspot.response.SuccessResponse;
 import com.gridyn.potspot.utils.FragmentUtils;
 import com.gridyn.potspot.utils.ServerApiUtil;
@@ -73,7 +73,7 @@ public class DescriptionSpotActivity extends AppCompatActivity {
     private List<String> mShowComment;
     private ArrayAdapter<String> mCommentsAdapter;
     ImageView favorite;
-    SpotInfoResponse.Message.Spot spot;
+    SpotSearchResponse.Spots spot;
     ActivityDescriptionSpotBinding binding;
     private String spotId;
 
@@ -181,21 +181,21 @@ public class DescriptionSpotActivity extends AppCompatActivity {
     }
 
     private void getSpot() {
-        Call<SpotInfoResponse> call = ServerApiUtil.initSpot().getSpot(getIntent().getExtras().getString("id"), Person.getTokenMap());
-        call.enqueue(new Callback<SpotInfoResponse>() {
+        Call<SpotSearchResponse> call = ServerApiUtil.initSpot().getSpotS(getIntent().getExtras().getString("id"), Person.getTokenMap());
+        call.enqueue(new Callback<SpotSearchResponse>() {
             @Override
-            public void onResponse(Response<SpotInfoResponse> response, Retrofit retrofit) {
+            public void onResponse(Response<SpotSearchResponse> response, Retrofit retrofit) {
                 if (response.body().success) {
 
                     minus.setEnabled(true);
                     plus.setEnabled(true);
 
                     Log.i(LOG, new Gson().toJson(response.body()));
-                    spot = response.body().message.get(0).spots.get(1);
+                    spot = response.body().message.get(0).spots.get(0);
 
-                    if (spot.imgs.size() != 0) {
+                    if (spot.data.imgs.size() != 0) {
                         Picasso.with(mContext)
-                                .load(URL_IMAGE + spot.imgs.get(0))
+                                .load(URL_IMAGE + spot.data.imgs.get(0))
                                 .into(mHeader);
                     } else {
                         Picasso.with(mContext)
@@ -203,9 +203,9 @@ public class DescriptionSpotActivity extends AppCompatActivity {
                                 .into(mHeader);
                     }
 
-                    spot.price = spot.price / 100;
+                    spot.data.price = spot.data.price / 100;
 
-                    binding.setInFavorites(spot.inFavorites);
+                    binding.setInFavorites(spot.data.inFavorites);
 
                     favorite.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -252,13 +252,13 @@ public class DescriptionSpotActivity extends AppCompatActivity {
                         }
                     });
 
-                    mPrice.setText("$ " + spot.price);
-                    mName.setText(spot.name);
-                    mAbout.setText(spot.about);
-                    mGuest.setText(spot.maxGuests + "guests");
-                    mType.setText(spot.type);
-                    mTypeBy.setText(spot.type);
-                    switch (spot.type) {
+                    mPrice.setText("$ " + spot.data.price);
+                    mName.setText(spot.data.name);
+                    mAbout.setText(spot.data.about);
+                    mGuest.setText(spot.data.maxGuests + "guests");
+                    mType.setText(spot.data.type);
+                    mTypeBy.setText(spot.data.type);
+                    switch (spot.data.type) {
                         case "backyard":
                             mTypeImg.setImageDrawable(getResources().getDrawable(R.drawable.backyard));
                             break;
@@ -285,11 +285,11 @@ public class DescriptionSpotActivity extends AppCompatActivity {
                             break;
 
                     }
-                    mUserName.setText(" " + spot.username);
-                    mBook.setText("Book for $" + (spot.price / 100));
-                    if (spot.userImgs.size() != 0) {
+                    mUserName.setText(" " + spot.data.username);
+                    mBook.setText("Book for $" + spot.data.price);
+                    if (spot.data.userImgs.size() != 0) {
                         Picasso.with(mContext)
-                                .load(URL_IMAGE + spot.userImgs.get(0))
+                                .load(URL_IMAGE + spot.data.userImgs.get(0))
                                 .into(mAvatar);
                     } else {
                         Picasso.with(mContext)
@@ -332,7 +332,7 @@ public class DescriptionSpotActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Integer i = Integer.parseInt(mCountGuests.getText().toString());
-                if (i >= 1 && i < spot.maxGuests - 1) {
+                if (i >= 1 && i < Integer.parseInt(spot.data.maxGuests) - 1) {
                     i++;
                 }
                 mCountGuests.setText(Integer.toString(i));

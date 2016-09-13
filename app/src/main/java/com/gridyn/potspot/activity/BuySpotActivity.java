@@ -31,7 +31,7 @@ import com.gridyn.potspot.model.FriendModel;
 import com.gridyn.potspot.query.BookQuery;
 import com.gridyn.potspot.response.BookResponse;
 import com.gridyn.potspot.response.PaymentResponse;
-import com.gridyn.potspot.response.SpotInfoResponse;
+import com.gridyn.potspot.response.SpotSearchResponse;
 import com.gridyn.potspot.response.SuccessResponse;
 import com.gridyn.potspot.service.SpotService;
 import com.gridyn.potspot.utils.FragmentUtils;
@@ -65,7 +65,7 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
     private TextView mTime;
     private Button mPay;
     private Calendar mCalendar;
-    SpotInfoResponse.Message.Spot spot;
+    SpotSearchResponse.Spots spot;
     RecyclerView splitFriendsRecycler;
     private SplitFriendsAdapter adapter;
     ActivityBuySpotBinding binding;
@@ -186,37 +186,37 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
 
         final SpotService service = ServerApiUtil.initSpot();
 
-        Call<SpotInfoResponse> call = service.getSpot(spotId, Person.getTokenMap());
-        call.enqueue(new Callback<SpotInfoResponse>() {
+        Call<SpotSearchResponse> call = service.getSpotS(spotId, Person.getTokenMap());
+        call.enqueue(new Callback<SpotSearchResponse>() {
             @Override
-            public void onResponse(Response<SpotInfoResponse> response, Retrofit retrofit) {
+            public void onResponse(Response<SpotSearchResponse> response, Retrofit retrofit) {
                 if (response.body().success) {
                     Log.i(Constant.LOG, new Gson().toJson(response.body()));
 
-                    //TODO check class parse
-                    spot = response.body().message.get(0).spots.get(1);
+
+                    spot = response.body().message.get(0).spots.get(0);
 
                     if (partySize == null)
-                        partySize = String.valueOf(spot.maxGuests);
+                        partySize = String.valueOf(spot.data.maxGuests);
 
                     if (spotPrice != 0)
-                        spot.price = spotPrice;
+                        spot.data.price = spotPrice;
 
-                    spot.price = spot.price / 100;
+                    spot.data.price = spot.data.price / 100;
 
                     Log.d(TAG, "onResponse: spot = " + spot);
 
-                    if (spot.imgs.size() > 0)
+                    if (spot.data.imgs.size() > 0)
                     Picasso.with(mContext)
-                            .load(Constant.URL_IMAGE + spot.imgs.get(0))
+                            .load(Constant.URL_IMAGE + spot.data.imgs.get(0))
                             .into(mHeader);
 
-                    mName.setText(spot.name);
-                    mUnderName.setText(spot.type + " | " + "спроси у Ильи про дату");
+                    mName.setText(spot.data.name);
+                    mUnderName.setText(spot.data.type + " | " + "спроси у Ильи про дату");
                     mPartySize.setText(partySize + "\nparty size");
-                    mTotalPrice.setText("$" + spot.price + "\ntotal price");
+                    mTotalPrice.setText("$" + spot.data.price + "\ntotal price");
                     if (!forBook) {
-                        mPay.setText("pay $" + spot.price);
+                        mPay.setText("pay $" + spot.data.price);
                     }
                 }
             }
@@ -330,7 +330,7 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
     }
 
     private int calcTotalPrice() {
-        return (int) Math.ceil((float) ((minsTo - minsFrom) / 30) * spot.price);
+        return (int) Math.ceil((float) ((minsTo - minsFrom) / 30) * spot.data.price);
     }
 
     public void onClickBuyPay(View view) {
@@ -489,7 +489,7 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
 
     public void onClickSplitPayment(View view) {
 
-        if (spot != null && spot.maxGuests != 1) {
+        if (spot != null && Integer.parseInt(spot.data.maxGuests) != 1) {
             showSplitFriends();
         } else
             Snackbar.make(findViewById(android.R.id.content), R.string.cannot_split, Snackbar.LENGTH_SHORT).show();
@@ -553,7 +553,7 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
 
     private void updateSplitPrice(FriendModel f) {
 
-        float fSplitPrice = (float) spot.price / (adapter.acceptedCount() + 1);
+        float fSplitPrice = (float) spot.data.price / (adapter.acceptedCount() + 1);
 
         //TODO change price
         f.setSplitSize(fSplitPrice);

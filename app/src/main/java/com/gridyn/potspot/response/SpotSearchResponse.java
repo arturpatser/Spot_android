@@ -65,6 +65,9 @@ public class SpotSearchResponse {
         @SerializedName("about")
         @Expose
         public String about;
+        @SerializedName("username")
+        @Expose
+        public String username;
         @SerializedName("inFavorites")
         @Expose
         public boolean inFavorites;
