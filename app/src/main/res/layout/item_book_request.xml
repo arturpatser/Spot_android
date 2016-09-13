@@ -1,0 +1,148 @@
+<layout>
+
+    <data>
+
+        <variable
+            name="spotName"
+            type="String" />
+        <variable
+            name="timerTime"
+            type="String" />
+
+    </data>
+
+    <RelativeLayout
+        android:background="@color/transparent"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        tools:context=".activity.ClientPopup">
+
+
+        <RelativeLayout
+
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_height"
+            android:layout_centerInParent="true"
+            android:layout_margin="10dp">
+
+            <ImageView
+                android:id="@+id/spot_img"
+                android:scaleType="centerCrop"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/chat_right" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="@{spotName}"
+                    android:id="@+id/textView14"
+                    android:layout_gravity="center_horizontal"
+                    android:textStyle="bold"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="@string/have_new_book"
+                    android:id="@+id/textView15"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:padding="4dp"
+                android:textColor="@color/white"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@{timerTime}"
+                android:id="@+id/textView13"
+                android:layout_below="@+id/textView12"
+                android:gravity="left"
+                android:layout_centerInParent="true" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="false"
+                android:layout_marginLeft="0dp"
+                android:layout_alignParentTop="false"
+                android:layout_marginTop="0dp"
+                android:layout_alignParentBottom="true">
+
+                <TextView
+                    android:layout_margin="4dp"
+                    android:padding="4dp"
+                    android:textColor="@color/white"
+                    android:textAllCaps="true"
+                    android:gravity="center"
+                    android:textAppearance="?android:textAppearanceMedium"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/details"
+                    android:id="@+id/details_button"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:layout_margin="4dp"
+                    android:padding="4dp"
+                    android:textColor="@color/white"
+                    android:textAppearance="?android:textAppearanceMedium"
+                    android:textAllCaps="true"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/accept"
+                    android:id="@+id/accept_button"
+                    android:layout_gravity="left|bottom"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:layout_margin="4dp"
+                    android:padding="4dp"
+                    android:textColor="@color/white"
+                    android:textAllCaps="true"
+                    android:gravity="center"
+                    android:textAppearance="?android:textAppearanceMedium"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/reject"
+                    android:id="@+id/reject_button"
+                    android:layout_gravity="right|bottom"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <ImageView
+            tools:targetApi="lollipop"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/cross"
+            android:id="@+id/imageView5"
+            android:layout_gravity="right|top"
+            android:layout_alignParentRight="true"
+            android:elevation="4dp"
+            android:background="@color/transparent" />
+
+    </RelativeLayout>
+</layout>

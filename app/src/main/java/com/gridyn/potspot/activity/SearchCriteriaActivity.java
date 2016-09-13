@@ -42,6 +42,7 @@ import com.gridyn.potspot.TextThumbSeekBar;
 import com.gridyn.potspot.query.SearchCriteriaQuery;
 import com.gridyn.potspot.response.SpotSearchResponse;
 import com.gridyn.potspot.service.SpotService;
+import com.gridyn.potspot.utils.ServerApiUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -163,7 +164,7 @@ public class SearchCriteriaActivity extends AppCompatActivity implements OnMapRe
                 .baseUrl(Constant.BASE_URL)
                 .build();
 
-        mService = retrofit.create(SpotService.class);
+        mService = ServerApiUtil.initSpot();
     }
 
     private void initSeekRadius() {

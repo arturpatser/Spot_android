@@ -46,6 +46,7 @@ import com.gridyn.potspot.query.SearchCriteriaQuery;
 import com.gridyn.potspot.response.SpotSearchResponse;
 import com.gridyn.potspot.service.SpotService;
 import com.gridyn.potspot.utils.FragmentUtils;
+import com.gridyn.potspot.utils.ServerApiUtil;
 import com.gridyn.potspot.utils.SharedPrefsUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -161,7 +162,7 @@ public class HomeFragment extends Fragment /*implements OnMapReadyCallback */ {
                 .baseUrl(Constant.BASE_URL)
                 .build();
 
-        mService = retrofit.create(SpotService.class);
+        mService = ServerApiUtil.initSpot();
     }
 
     private void initSpot() {
@@ -186,15 +187,13 @@ public class HomeFragment extends Fragment /*implements OnMapReadyCallback */ {
         query.type.add("smokingRooms");
         query.type.add("balcony");
 
-        Log.d(TAG, "initSpot: query = " + new GsonBuilder().setPrettyPrinting().create().toJson(query));
-
         Call<SpotSearchResponse> call = mService.searchSpot(query);
         call.enqueue(new Callback<SpotSearchResponse>() {
             @Override
             public void onResponse(Response<SpotSearchResponse> response, Retrofit retrofit) {
                 if (response.body().success) {
                     homeRefresher.setRefreshing(false);
-                    Log.d(TAG, "onResponse: " + new GsonBuilder().setPrettyPrinting().create().toJson(response.body()));
+
                     for (SpotSearchResponse.Spots spot : response.body().message.get(0).spots) {
                         mSpotList.add(new Spot(spot.id.$id, spot.data.name, spot.data.price / 100,
                                 spot.data.type, spot.data.imgs.get(0),

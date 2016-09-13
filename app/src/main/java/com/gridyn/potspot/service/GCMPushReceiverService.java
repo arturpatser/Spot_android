@@ -70,9 +70,9 @@ public class GCMPushReceiverService extends GcmListenerService {
                     popupIntent.putExtra(Constant.PARTY_SIZE, acceptReqModel.getAcceptRequestData().getPartySize());
                     popupIntent.putExtra(Constant.SPOT_PRICE, acceptReqModel.getAcceptRequestData().getSpotPrice());
 
-                    startActivity(popupIntent);
-
                     EventBus.getDefault().postSticky(new ReceivedNotifEvent());
+
+                    startActivity(popupIntent);
                 }
             break;
 
@@ -94,6 +94,8 @@ public class GCMPushReceiverService extends GcmListenerService {
                 popupIntent.putExtra(Constant.SPOT_NAME, bookData.getSpotName());
                 popupIntent.putExtra(Constant.SPOT_ID, bookData.getSpotId());
                 popupIntent.putExtra(Constant.REQUEST_ID, bookData.getRequestId());
+
+                EventBus.getDefault().postSticky(new ReceivedNotifEvent());
 
                 startActivity(popupIntent);
                 break;
