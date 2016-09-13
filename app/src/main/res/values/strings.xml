@@ -200,4 +200,5 @@
     <string name="not_all_friends_accepted">Not all friends accepted or rejected invite</string>
     <string name="facebook_app_id">625863117589801</string>
     <string name="successfull_add_friend">change</string>
+    <string name="available">Available</string>
 </resources>

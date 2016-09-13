@@ -23,6 +23,8 @@
         tools:targetApi="lollipop">
 
         <ImageView
+            android:id="@+id/spot_img"
+            android:scaleType="centerCrop"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
@@ -44,7 +46,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="@string/details"
-                android:id="@+id/button2"
+                android:id="@+id/details_button"
                 android:layout_gravity="left|bottom"
                 android:layout_weight="1"
                 android:onClick="onDetailsClick"/>
@@ -60,7 +62,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="@string/close"
-                android:id="@+id/button3"
+                android:id="@+id/cancel_button"
                 android:layout_gravity="right|bottom"
                 android:layout_weight="1" />
         </LinearLayout>

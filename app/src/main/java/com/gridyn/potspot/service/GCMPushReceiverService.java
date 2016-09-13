@@ -25,6 +25,9 @@ import com.gridyn.potspot.model.BookRequestModel;
 import com.gridyn.potspot.model.FriendInviteResultModel;
 import com.gridyn.potspot.model.bookInvite.BookInviteModel;
 import com.gridyn.potspot.model.bookInvite.Data;
+import com.gridyn.potspot.model.events.ReceivedNotifEvent;
+
+import org.greenrobot.eventbus.EventBus;
 
 import static com.gridyn.potspot.Constant.LOG;
 import static com.gridyn.potspot.Constant.MESSAGE_ACTION;
@@ -68,6 +71,8 @@ public class GCMPushReceiverService extends GcmListenerService {
                     popupIntent.putExtra(Constant.SPOT_PRICE, acceptReqModel.getAcceptRequestData().getSpotPrice());
 
                     startActivity(popupIntent);
+
+                    EventBus.getDefault().postSticky(new ReceivedNotifEvent());
                 }
             break;
 
