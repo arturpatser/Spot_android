@@ -1,0 +1,140 @@
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="userName"
+            type="String" />
+
+        <variable
+            name="spotName"
+            type="String" />
+
+        <variable
+            name="date"
+            type="String" />
+
+        <variable
+            name="time"
+            type="String" />
+
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_margin="16dp"
+        android:layout_height="@dimen/toolbar_height"
+        android:elevation="4dp"
+        tools:targetApi="lollipop">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/grey21"
+            android:id="@+id/spot_img" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_height"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:id="@+id/user_pic"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@{userName}"
+                android:id="@+id/textView14"
+                android:layout_gravity="center_horizontal"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:layout_margin="4dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@{spotName}"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/white"
+                android:layout_margin="4dp" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="@{date}"
+                    android:id="@+id/textView23"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="@{time}"
+                    android:id="@+id/textView24"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="false"
+                android:layout_marginLeft="0dp"
+                android:layout_alignParentTop="false"
+                android:layout_marginTop="0dp"
+                android:layout_alignParentBottom="true" >
+
+                <TextView
+                    android:layout_margin="4dp"
+                    android:padding="4dp"
+                    android:textColor="@color/white"
+                    android:textAllCaps="true"
+                    android:gravity="center"
+                    android:textAppearance="?android:textAppearanceMedium"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/details"
+                    android:id="@+id/details_button"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:layout_margin="4dp"
+                    android:padding="4dp"
+                    android:textColor="@color/white"
+                    android:textAllCaps="true"
+                    android:gravity="center"
+                    android:textAppearance="?android:textAppearanceMedium"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/send_message"
+                    android:id="@+id/send_message_button"
+                    android:layout_gravity="right|bottom"
+                    android:layout_weight="1" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.2"
+            android:background="@color/mainRed"/>
+
+    </FrameLayout>
+</layout>

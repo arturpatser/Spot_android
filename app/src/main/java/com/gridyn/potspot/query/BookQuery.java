@@ -25,6 +25,54 @@ public class BookQuery {
     @Expose
     String token;
 
+    public String getsAmPmFrom() {
+        return sAmPmFrom;
+    }
+
+    public void setsAmPmFrom(String sAmPmFrom) {
+        this.sAmPmFrom = sAmPmFrom;
+    }
+
+    public String getsAmPmTo() {
+        return sAmPmTo;
+    }
+
+    public void setsAmPmTo(String sAmPmTo) {
+        this.sAmPmTo = sAmPmTo;
+    }
+
+    public String getsTimeFrom() {
+        return sTimeFrom;
+    }
+
+    public void setsTimeFrom(String sTimeFrom) {
+        this.sTimeFrom = sTimeFrom;
+    }
+
+    public String getsTimeTo() {
+        return sTimeTo;
+    }
+
+    public void setsTimeTo(String sTimeTo) {
+        this.sTimeTo = sTimeTo;
+    }
+
+    @SerializedName("amPmTimeFrom")
+    @Expose
+    String sAmPmFrom;
+
+    @SerializedName("amPmTimeTo")
+    @Expose
+    String sAmPmTo;
+
+    @SerializedName("bookTimeFrom")
+    @Expose
+    String sTimeFrom;
+
+    @SerializedName("bookTimeTo")
+    @Expose
+    String sTimeTo;
+
     public String getToken() {
         return token;
     }

@@ -21,7 +21,7 @@ import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
 import com.gridyn.potspot.model.Available;
 import com.gridyn.potspot.response.SpotCommentsResponse;
-import com.gridyn.potspot.response.SpotInfoResponse;
+import com.gridyn.potspot.response.SpotSearchResponse;
 import com.gridyn.potspot.utils.ServerApiUtil;
 import com.squareup.picasso.Picasso;
 
@@ -53,7 +53,7 @@ public class ListingActivity extends AppCompatActivity {
     private String mId;
     private ImageView mTypeImg;
     private ImageView mHeader;
-    SpotInfoResponse.Message.Spot spot;
+    SpotSearchResponse.Spots spot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,22 +73,22 @@ public class ListingActivity extends AppCompatActivity {
 
     private void loadSpotInfo() {
 
-        Call<SpotInfoResponse> call = ServerApiUtil.initSpot().getSpot(mId, Person.getTokenMap());
-        call.enqueue(new Callback<SpotInfoResponse>() {
+        Call<SpotSearchResponse> call = ServerApiUtil.initSpot().getSpotS(mId, Person.getTokenMap());
+        call.enqueue(new Callback<SpotSearchResponse>() {
             @Override
-            public void onResponse(Response<SpotInfoResponse> response, Retrofit retrofit) {
+            public void onResponse(Response<SpotSearchResponse> response, Retrofit retrofit) {
 
-             spot = response.body().message.get(0).spots.get(1);
+             spot = response.body().message.get(0).spots.get(0);
 
                 if (response.body().success) {
                     Log.i(Constant.LOG, "Id of spot: " + mId);
-                    mDescription.setText(spot.name);
-                    mTypeSpot.setText(spot.type);
-                    mProfileTypeSpot.setText(spot.type);
-                    mGuests.setText(String.valueOf(spot.maxGuests));
-                    mNameProfile.setText(" " + spot.username);
-                    mProfileDescription.setText(spot.about);
-                    switch (spot.type) {
+                    mDescription.setText(spot.data.name);
+                    mTypeSpot.setText(spot.data.type);
+                    mProfileTypeSpot.setText(spot.data.type);
+                    mGuests.setText(String.valueOf(spot.data.maxGuests));
+                    mNameProfile.setText(" " + spot.data.username);
+                    mProfileDescription.setText(spot.data.about);
+                    switch (spot.data.type) {
                         case "backyard":
                             mTypeImg.setImageDrawable(getResources().getDrawable(R.drawable.backyard));
                             break;
@@ -114,18 +114,18 @@ public class ListingActivity extends AppCompatActivity {
                             mTypeImg.setImageDrawable(getResources().getDrawable(R.drawable.balcony));
                             break;
                     }
-                    if (spot.imgs.size() != 0) {
+                    if (spot.data.imgs.size() != 0) {
                         Picasso.with(getApplicationContext())
-                                .load(Constant.URL_IMAGE + spot.imgs.get(0))
+                                .load(Constant.URL_IMAGE + spot.data.imgs.get(0))
                                 .into(mHeader);
                     } else {
                         Picasso.with(getApplicationContext())
                                 .load(Constant.BASE_IMAGE)
                                 .into(mHeader);
                     }
-                    if (spot.userImgs.size() != 0) {
+                    if (spot.data.userImgs.size() != 0) {
                         Picasso.with(getApplicationContext())
-                                .load(Constant.URL_IMAGE + spot.userImgs.get(0))
+                                .load(Constant.URL_IMAGE + spot.data.userImgs.get(0))
                                 .into(mProfileImage);
                     }
                 }
@@ -226,7 +226,7 @@ public class ListingActivity extends AppCompatActivity {
             if (spot != null) {
                 final Intent intent = new Intent(this, ListingSettingActivityNew.class);
                 intent.putExtra("reqCode", Constant.EDIT_TIME_CODE);
-                intent.putExtra(Constant.ARG_POTSPOT_AVAILABLE, new ArrayList<>(spot.availables));
+                intent.putExtra(Constant.ARG_POTSPOT_AVAILABLE, new ArrayList<>(spot.data.availables));
                 startActivityForResult(intent, Constant.EDIT_TIME_CODE);
             }
             return true;

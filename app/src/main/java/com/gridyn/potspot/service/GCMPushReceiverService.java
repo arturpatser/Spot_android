@@ -134,10 +134,12 @@ public class GCMPushReceiverService extends GcmListenerService {
                 break;
 
             case "book_friend_remove":
-
+                EventBus.getDefault().postSticky(new ReceivedNotifEvent());
                 break;
 
             case "book_friend_accept":
+
+                EventBus.getDefault().postSticky(new ReceivedNotifEvent());
 
                 FriendInviteResultModel friendInviteResultModel = gson.fromJson(data, FriendInviteResultModel.class);
 
@@ -150,11 +152,11 @@ public class GCMPushReceiverService extends GcmListenerService {
                 break;
 
             case "friend_invite":
-
+                EventBus.getDefault().postSticky(new ReceivedNotifEvent());
                 break;
 
             case "friend_accept":
-
+                EventBus.getDefault().postSticky(new ReceivedNotifEvent());
                 break;
 
             case "spot_comment":
@@ -163,6 +165,10 @@ public class GCMPushReceiverService extends GcmListenerService {
 
             case "user_comment":
 
+                break;
+
+            case "book_payed":
+                EventBus.getDefault().postSticky(new ReceivedNotifEvent());
                 break;
         }
 

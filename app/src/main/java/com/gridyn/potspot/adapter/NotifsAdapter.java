@@ -17,6 +17,7 @@ import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
 import com.gridyn.potspot.activity.BuySpotActivity;
+import com.gridyn.potspot.databinding.ItemBookCompletedBinding;
 import com.gridyn.potspot.databinding.ItemBookFriendInviteBinding;
 import com.gridyn.potspot.databinding.ItemBookRequestBinding;
 import com.gridyn.potspot.databinding.ItemBookVerifiedBinding;
@@ -48,6 +49,8 @@ public class NotifsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private static final int BOOK_REQUEST = 1;
     private static final int BOOK_PENDING_VERIFY = 2;
     private static final int BOOK_INVITED = 3;
+    private static final int BOOK_COMPLETED = 4;
+    private static final int BOOK_STUB = -1;
     LayoutInflater layoutInflater;
     Context context;
     List<Message> notifsList;
@@ -100,7 +103,15 @@ public class NotifsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             return new BookFriendInviteHolder(bookFriendInviteBinding);
         }
 
-        if (viewType == -1)
+        if (viewType == BOOK_COMPLETED) {
+
+            ItemBookCompletedBinding itemBookCompletedBinding = DataBindingUtil.inflate(layoutInflater,
+                    R.layout.item_book_completed, parent, true);
+
+            return new BookCompletedHolder(itemBookCompletedBinding);
+        }
+
+        if (viewType == BOOK_STUB)
             return new StubHolder(new View(context));
 
         return null;
@@ -361,6 +372,43 @@ public class NotifsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 }
             });
         }
+
+        if (holder instanceof BookCompletedHolder) {
+
+            ((BookCompletedHolder) holder).itemBookCompletedBinding.setUserName(notif.getUser().getData().getName());
+            ((BookCompletedHolder) holder).itemBookCompletedBinding.setSpotName(notif.getSpot().getData().getName());
+
+            if (notif.getSpot().getData().getImgs().size() > 0)
+                Picasso.with(context)
+                        .load(Constant.URL_IMAGE + notif.getSpot().getData().getImgs().get(0))
+                        .into(((BookCompletedHolder) holder).spotImg);
+
+            if (notif.getUser().getData().getImgs().size() > 0)
+                Picasso.with(context)
+                        .load(Constant.URL_IMAGE + notif.getUser().getData().getImgs().get(0))
+                        .resize(96, 96)
+                        .transform(new CircleTransform(96))
+                        .into(((BookCompletedHolder) holder).userPic);
+
+            ((BookCompletedHolder) holder).itemBookCompletedBinding.setDate(notif.getData().getDate());
+            ((BookCompletedHolder) holder).itemBookCompletedBinding.setTime(notif.getData().getsTimeFrom()
+                    + "-" + notif.getData().getsTimeTo());
+
+            ((BookCompletedHolder) holder).detailsBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+
+            ((BookCompletedHolder) holder).sendMessageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    //TODO open chat here
+                }
+            });
+        }
     }
 
     private void removeItem(Message notif, int position) {
@@ -393,9 +441,16 @@ public class NotifsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
             case "book_pending_invite":
                 return BOOK_INVITED;
+
+            case "book_completed":
+
+                if (!Person.getId().equals(message.getUser().getId().get$id()))
+                    return BOOK_COMPLETED;
+                else
+                    return BOOK_STUB;
         }
 
-        return -1;
+        return BOOK_STUB;
     }
 
     private Message getItem(int position) {
@@ -500,6 +555,31 @@ public class NotifsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             this.itemBookFriendInviteBinding = bookFriendInviteBinding;
 
             ButterKnife.bind(this, bookFriendInviteBinding.getRoot());
+        }
+    }
+
+    public class BookCompletedHolder extends RecyclerView.ViewHolder {
+
+        ItemBookCompletedBinding itemBookCompletedBinding;
+
+        @BindView(R.id.spot_img)
+        ImageView spotImg;
+
+        @BindView(R.id.user_pic)
+        ImageView userPic;
+
+        @BindView(R.id.details_button)
+        TextView detailsBtn;
+
+        @BindView(R.id.send_message_button)
+        TextView sendMessageButton;
+
+        public BookCompletedHolder(ItemBookCompletedBinding itemBookCompletedBinding) {
+            super(itemBookCompletedBinding.getRoot());
+
+            this.itemBookCompletedBinding = itemBookCompletedBinding;
+
+            ButterKnife.bind(this, itemBookCompletedBinding.getRoot());
         }
     }
 }

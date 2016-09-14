@@ -80,6 +80,7 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
     private int minsTo = 0;
     private String partySize;
     int spotPrice = 0;
+    private String sAmPmFrom, sAmPmTo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -276,6 +277,7 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
                 minsFrom = modifyHour(hourOfDay, view.getIsCurrentlyAmOrPm()) * 60 + minute;
 
                 sTimeFrom = Integer.toString(hourOfDay) + ":" + appendMinute(minute);
+                sAmPmFrom = view.getIsCurrentlyAmOrPm() == 0 ? "AM" : "PM";
 
                 TimePickerDialog.OnTimeSetListener callback = new TimePickerDialog.OnTimeSetListener() {
                     @Override
@@ -284,6 +286,7 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
                         minsTo = modifyHour(hourOfDay, view.getIsCurrentlyAmOrPm()) * 60 + minute;
 
                         sTimeTo = Integer.toString(hourOfDay) + ":" + appendMinute(minute);
+                        sAmPmTo = view.getIsCurrentlyAmOrPm() == 0 ? "AM" : "PM";
 
                         mTime.setText(sTimeFrom + " - " + sTimeTo);
 
@@ -367,6 +370,10 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
                     bookQuery.setTimeStay(timeStay);
                     bookQuery.setDate(formatter.format(date));
                     bookQuery.setToken(Person.getToken());
+                    bookQuery.setsTimeFrom(sTimeFrom);
+                    bookQuery.setsTimeTo(sTimeTo);
+                    bookQuery.setsAmPmFrom(sAmPmFrom);
+                    bookQuery.setsAmPmTo(sAmPmTo);
 
                     Call<BookResponse> bookResponseCall = ServerApiUtil.initUser().bookSpot(spotId,
                             bookQuery);
@@ -438,7 +445,7 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
                                 errorMessage = payment.getPaymentMessages().get(0).getPaymentMessage();
                             } catch (Exception e) {}
 
-                            Snackbar.make(findViewById(android.R.id.content), errorMessage, Snackbar.LENGTH_SHORT).show();
+                            goToTabs(errorMessage);
                         }
                     }
 
