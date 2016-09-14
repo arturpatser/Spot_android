@@ -30,6 +30,7 @@ import com.gridyn.potspot.response.SuccessResponse;
 import com.gridyn.potspot.utils.FragmentUtils;
 import com.gridyn.potspot.utils.ServerApiUtil;
 import com.gridyn.potspot.utils.SharedPrefsUtils;
+import com.gridyn.potspot.utils.picassoTransform.CircleTransform;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
@@ -290,6 +291,8 @@ public class DescriptionSpotActivity extends AppCompatActivity {
                     if (spot.data.userImgs.size() != 0) {
                         Picasso.with(mContext)
                                 .load(URL_IMAGE + spot.data.userImgs.get(0))
+                                .resize(96,96)
+                                .transform(new CircleTransform(96))
                                 .into(mAvatar);
                     } else {
                         Picasso.with(mContext)

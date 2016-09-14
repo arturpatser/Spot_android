@@ -22,6 +22,7 @@ import com.gridyn.potspot.model.notificationsModels.Message;
 import com.gridyn.potspot.response.PaymentResponse;
 import com.gridyn.potspot.response.SuccessResponse;
 import com.gridyn.potspot.utils.ServerApiUtil;
+import com.gridyn.potspot.utils.picassoTransform.CircleTransform;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -48,6 +49,7 @@ public class NotifsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     Context context;
     List<Message> notifsList;
     private RecyclerView parent;
+    private int avaSize = 96;
 
     public NotifsAdapter(Context context) {
 
@@ -87,6 +89,9 @@ public class NotifsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             return new BookVirifiedHolder(itemBookVerifiedBinding);
         }
 
+        if (viewType == -1)
+            return new StubHolder(new View(context));
+
         return null;
     }
 
@@ -108,6 +113,8 @@ public class NotifsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             if (notif.getSpot().getData().getUserImgs().size() > 0)
             Picasso.with(context)
                     .load(Constant.URL_IMAGE + notif.getSpot().getData().getUserImgs().get(0))
+                    .resize(avaSize,avaSize)
+                    .transform(new CircleTransform(avaSize))
                     .into(((BookVirifiedHolder) holder).avatar);
 
             ((BookVirifiedHolder) holder).available.setOnClickListener(new View.OnClickListener() {
@@ -268,7 +275,7 @@ public class NotifsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 return BOOK_PENDING_VERIFY;
         }
 
-        return 0;
+        return -1;
     }
 
     private Message getItem(int position) {
@@ -339,6 +346,12 @@ public class NotifsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             this.itemBookRequestBinding = itemBookRequestBinding;
 
             ButterKnife.bind(this, itemBookRequestBinding.getRoot());
+        }
+    }
+
+    private class StubHolder extends RecyclerView.ViewHolder {
+        public StubHolder(View view) {
+            super(view);
         }
     }
 }
