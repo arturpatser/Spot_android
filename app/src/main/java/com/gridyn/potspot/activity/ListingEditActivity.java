@@ -20,14 +20,13 @@ import android.widget.Spinner;
 
 import com.google.gson.GsonBuilder;
 import com.gridyn.potspot.Constant;
-import com.gridyn.potspot.FastBlur;
 import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
 import com.gridyn.potspot.Spot;
 import com.gridyn.potspot.adapter.ListingEditAdapter;
 import com.gridyn.potspot.query.UpdateSpotQuery;
 import com.gridyn.potspot.response.SpotDeleteResponse;
-import com.gridyn.potspot.response.SpotInfoResponse;
+import com.gridyn.potspot.response.SpotSearchResponse;
 import com.gridyn.potspot.response.SpotUpdateResponse;
 import com.gridyn.potspot.utils.ServerApiUtil;
 
@@ -63,7 +62,6 @@ public class ListingEditActivity extends AppCompatActivity {
         initFields();
         loadFields();
         initToolbar();
-        initRecycler();
         setHeaderBackground();
     }
 
@@ -80,22 +78,24 @@ public class ListingEditActivity extends AppCompatActivity {
     }
 
     private void loadFields() {
-        Call<SpotInfoResponse> call = ServerApiUtil.initSpot().getSpot(getIntent().getExtras().getString("id"), Person.getTokenMap());
-        call.enqueue(new Callback<SpotInfoResponse>() {
+        Call<SpotSearchResponse> call = ServerApiUtil.initSpot().getSpotS(getIntent().getExtras().getString("id"), Person.getTokenMap());
+        call.enqueue(new Callback<SpotSearchResponse>() {
             @Override
-            public void onResponse(Response<SpotInfoResponse> response, Retrofit retrofit) {
-                SpotInfoResponse.Message.Spot spot = response.body().message.get(0).spots.get(1);
-                mTitle.setText(spot.name);
-                mDescription.setText(spot.about);
-                mAddress.setText(spot.address);
-                mPrice.setText(String.valueOf(spot.price / 100));
-                mGuests.setText(String.valueOf(spot.maxGuests));
+            public void onResponse(Response<SpotSearchResponse> response, Retrofit retrofit) {
+                SpotSearchResponse.Spots spot = response.body().message.get(0).spots.get(0);
+                mTitle.setText(spot.data.name);
+                mDescription.setText(spot.data.about);
+                mAddress.setText(spot.data.address);
+                mPrice.setText(String.valueOf(spot.data.price / 100));
+                mGuests.setText(String.valueOf(spot.data.maxGuests));
 
                 mTobaccoSpinner.setSelection(1);
                 mHeatedSpinner.setSelection(1);
                 mHandicapSpinner.setSelection(1);
 
-                for (String badge : spot.badge) {
+                initRecycler(spot.data.imgs);
+
+                for (String badge : spot.data.badge) {
                     if (badge.equals(getResources().getString(R.string.tobacco_friendly))) {
                         mTobaccoSpinner.setSelection(0);
                     }
@@ -107,7 +107,7 @@ public class ListingEditActivity extends AppCompatActivity {
                     }
                 }
 
-                switch (spot.type) {
+                switch (spot.data.type) {
                     case "patio":
                         mListingTypeSpinner.setSelection(0);
                         break;
@@ -145,8 +145,8 @@ public class ListingEditActivity extends AppCompatActivity {
 
     private void setHeaderBackground() {
         final LinearLayout backgroundHead = (LinearLayout) findViewById(R.id.list_edit_blur);
-        FastBlur.setBackgroundBlur(backgroundHead, getApplicationContext(),
-                mSpotList.get(0).getImage(), getResources());
+//        FastBlur.setBackgroundBlur(backgroundHead, getApplicationContext(),
+//                mSpotList.get(0).getImage(), getResources());
     }
 
     private void initToolbar() {
@@ -163,9 +163,9 @@ public class ListingEditActivity extends AppCompatActivity {
 
     }
 
-    private void initRecycler() {
+    private void initRecycler(List<String> imgs) {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.list_edit_recycler);
-        ListingEditAdapter adapter = new ListingEditAdapter(null, getApplicationContext()); //TODO: null -> List<String>
+        ListingEditAdapter adapter = new ListingEditAdapter(imgs, getApplicationContext()); //TODO: null -> List<String>
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), 1, LinearLayoutManager.HORIZONTAL, false);
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
 
