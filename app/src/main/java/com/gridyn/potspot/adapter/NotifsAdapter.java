@@ -11,11 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
 import com.gridyn.potspot.activity.BuySpotActivity;
+import com.gridyn.potspot.databinding.ItemBookFriendInviteBinding;
 import com.gridyn.potspot.databinding.ItemBookRequestBinding;
 import com.gridyn.potspot.databinding.ItemBookVerifiedBinding;
 import com.gridyn.potspot.model.notificationsModels.Message;
@@ -45,6 +47,7 @@ public class NotifsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private static final int BOOK_VERIFIED = 0;
     private static final int BOOK_REQUEST = 1;
     private static final int BOOK_PENDING_VERIFY = 2;
+    private static final int BOOK_INVITED = 3;
     LayoutInflater layoutInflater;
     Context context;
     List<Message> notifsList;
@@ -89,6 +92,14 @@ public class NotifsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             return new BookVirifiedHolder(itemBookVerifiedBinding);
         }
 
+        if (viewType == BOOK_INVITED) {
+
+            ItemBookFriendInviteBinding bookFriendInviteBinding = DataBindingUtil.inflate(layoutInflater,
+                    R.layout.item_book_friend_invite, parent, true);
+
+            return new BookFriendInviteHolder(bookFriendInviteBinding);
+        }
+
         if (viewType == -1)
             return new StubHolder(new View(context));
 
@@ -99,6 +110,8 @@ public class NotifsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
 
         final Message notif = getItem(position);
+        
+        final String requestId = notif.getId().get$id();
 
         if (holder instanceof BookVirifiedHolder) {
 
@@ -244,6 +257,110 @@ public class NotifsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             });
             
         }
+
+        if (holder instanceof BookFriendInviteHolder) {
+
+            ((BookFriendInviteHolder) holder).itemBookFriendInviteBinding.setSpotName(notif.getSpot().getData().getName());
+            ((BookFriendInviteHolder) holder).itemBookFriendInviteBinding.setUserName(notif.getUser().getData().getName());
+
+            if (notif.getSpot().getData().getImgs().size() > 0)
+                Picasso.with(context)
+                        .load(Constant.URL_IMAGE + notif.getSpot().getData().getImgs().get(0))
+                        .into(((BookFriendInviteHolder) holder).spotImg);
+
+            if (notif.getUser().getData().getImgs().size() > 0)
+                Picasso.with(context)
+                        .load(Constant.URL_IMAGE + notif.getUser().getData().getImgs().get(0))
+                        .resize(96, 96)
+                        .transform(new CircleTransform(96))
+                        .into(((BookFriendInviteHolder) holder).userPic);
+
+            ((BookFriendInviteHolder) holder).yesButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Call<SuccessResponse> call = ServerApiUtil.initUser().confirmInvite(requestId, Person.getTokenMap());
+
+                    call.enqueue(new Callback<SuccessResponse>() {
+                        @Override
+                        public void onResponse(Response<SuccessResponse> response, Retrofit retrofit) {
+
+                            SuccessResponse successResponse = response.body();
+
+                            if (successResponse == null) {
+
+                                Toast.makeText(context, R.string.error_connection, Toast.LENGTH_SHORT).show();
+                            } else {
+
+                                if (successResponse.isSuccess()) {
+
+                                    Toast.makeText(context, R.string.successfull_invite, Toast.LENGTH_SHORT).show();
+
+                                    removeItem(notif, position);
+                                } else {
+
+                                    Toast.makeText(context, R.string.credit_card_issue, Toast.LENGTH_SHORT).show();
+                                    
+                                    removeItem(notif, position);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Throwable t) {
+
+                            Toast.makeText(context, R.string.error_connection, Toast.LENGTH_SHORT).show();
+
+                            Log.e(TAG, "onFailure: error while accept invite = " + Log.getStackTraceString(t));
+                        }
+                    });
+                }
+            });
+            
+            ((BookFriendInviteHolder) holder).noButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Call<SuccessResponse> call = ServerApiUtil.initUser().declineInvite(requestId, Person.getTokenMap());
+
+                    call.enqueue(new Callback<SuccessResponse>() {
+                        @Override
+                        public void onResponse(Response<SuccessResponse> response, Retrofit retrofit) {
+
+                            SuccessResponse successResponse = response.body();
+
+                            if (successResponse == null) {
+
+                                Toast.makeText(context, R.string.error_connection, Toast.LENGTH_SHORT).show();
+                            } else {
+
+                                if (successResponse.isSuccess()) {
+
+                                    Toast.makeText(context, R.string.successfull_decline, Toast.LENGTH_SHORT).show();
+
+                                    removeItem(notif, position);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Throwable t) {
+
+                            Toast.makeText(context, R.string.error_connection, Toast.LENGTH_SHORT).show();
+
+                            Log.e(TAG, "onFailure: error while decline invite = " + Log.getStackTraceString(t));
+                        }
+                    });
+                }
+            });
+
+            ((BookFriendInviteHolder) holder).readMore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+        }
     }
 
     private void removeItem(Message notif, int position) {
@@ -273,6 +390,9 @@ public class NotifsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
             case "book_pending_verify":
                 return BOOK_PENDING_VERIFY;
+
+            case "book_pending_invite":
+                return BOOK_INVITED;
         }
 
         return -1;
@@ -352,6 +472,34 @@ public class NotifsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private class StubHolder extends RecyclerView.ViewHolder {
         public StubHolder(View view) {
             super(view);
+        }
+    }
+
+    public class BookFriendInviteHolder extends RecyclerView.ViewHolder {
+
+        ItemBookFriendInviteBinding itemBookFriendInviteBinding;
+
+        @BindView(R.id.yes_btn)
+        TextView yesButton;
+
+        @BindView(R.id.no_btn)
+        TextView noButton;
+
+        @BindView(R.id.spot_img)
+        ImageView spotImg;
+
+        @BindView(R.id.user_pic)
+        ImageView userPic;
+
+        @BindView(R.id.read_more)
+        TextView readMore;
+
+        public BookFriendInviteHolder(ItemBookFriendInviteBinding bookFriendInviteBinding) {
+            super(bookFriendInviteBinding.getRoot());
+
+            this.itemBookFriendInviteBinding = bookFriendInviteBinding;
+
+            ButterKnife.bind(this, bookFriendInviteBinding.getRoot());
         }
     }
 }

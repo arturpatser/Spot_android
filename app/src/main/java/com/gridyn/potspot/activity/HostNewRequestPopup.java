@@ -12,8 +12,11 @@ import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
 import com.gridyn.potspot.databinding.ActivityHostNewRequestPopupBinding;
+import com.gridyn.potspot.model.events.ReceivedNotifEvent;
 import com.gridyn.potspot.response.SuccessResponse;
 import com.gridyn.potspot.utils.ServerApiUtil;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.concurrent.TimeUnit;
 
@@ -77,6 +80,8 @@ public class HostNewRequestPopup extends AppCompatActivity {
                 SuccessResponse success = response.body();
 
                 Log.d(TAG, "onResponse: resp = " + success);
+
+                EventBus.getDefault().postSticky(new ReceivedNotifEvent());
                 finish();
             }
 
@@ -98,6 +103,8 @@ public class HostNewRequestPopup extends AppCompatActivity {
 
                 SuccessResponse success = response.body();
                 finish();
+
+                EventBus.getDefault().postSticky(new ReceivedNotifEvent());
 
                 Log.d(TAG, "onResponse: resp = " + success);
             }

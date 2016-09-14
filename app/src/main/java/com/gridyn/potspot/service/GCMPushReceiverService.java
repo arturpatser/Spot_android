@@ -82,6 +82,8 @@ public class GCMPushReceiverService extends GcmListenerService {
 
                 BookRequestData bookData = bookRequestModel.getBookRequestData();
 
+                EventBus.getDefault().postSticky(new ReceivedNotifEvent());
+
                 Log.d(TAG, "onMessageReceived: book " + bookRequestModel);
 
                 notificationMessage = getString(R.string.have_new_book);
@@ -109,6 +111,8 @@ public class GCMPushReceiverService extends GcmListenerService {
                 BookInviteModel bookInviteModel = gson.fromJson(data, BookInviteModel.class);
 
                 Data inviteData = bookInviteModel.getData();
+
+                EventBus.getDefault().postSticky(new ReceivedNotifEvent());
 
                 notificationMessage = getString(R.string.join_spot);
 
