@@ -86,6 +86,8 @@ public class NotificationFragment extends Fragment {
         notifsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         notifsRecyclerView.setAdapter(notifsAdapter);
 
+        notifsAdapter.setParent(notifsRecyclerView);
+
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

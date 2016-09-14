@@ -11,6 +11,10 @@
             name="message"
             type="String" />
 
+        <variable
+            name="isPending"
+            type="boolean" />
+
     </data>
 
     <RelativeLayout
@@ -51,6 +55,7 @@
             android:textAppearance="?android:textAppearanceMedium"
             android:text="@{spotName}"
             android:id="@+id/textView12"
+            android:textStyle="bold"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
             android:layout_below="@+id/host_avatar"
@@ -74,9 +79,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/available"
+            android:text="@{isPending ? @string/pending : @string/available}"
             android:textAllCaps="true"
-            android:background="@drawable/round_bound_green"
+            android:background="@{isPending ? @drawable/round_bound_black : @drawable/round_bound_green}"
             android:textColor="@color/white"
             android:id="@+id/available"
             android:layout_below="@+id/textView13"

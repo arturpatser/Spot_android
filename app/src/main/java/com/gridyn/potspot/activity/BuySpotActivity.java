@@ -28,6 +28,7 @@ import com.gridyn.potspot.databinding.ActivityBuySpotBinding;
 import com.gridyn.potspot.fragment.SelectFriendsFragment;
 import com.gridyn.potspot.interfaces.BuySpotInterface;
 import com.gridyn.potspot.model.FriendModel;
+import com.gridyn.potspot.model.events.ReceivedNotifEvent;
 import com.gridyn.potspot.query.BookQuery;
 import com.gridyn.potspot.response.BookResponse;
 import com.gridyn.potspot.response.PaymentResponse;
@@ -40,6 +41,8 @@ import com.squareup.picasso.Picasso;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -379,6 +382,8 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
                             if (bookResp.isSuccess()) {
 
                                 goToTabs(getString(R.string.successfull_request));
+
+                                EventBus.getDefault().postSticky(new ReceivedNotifEvent());
                             }
                         }
 

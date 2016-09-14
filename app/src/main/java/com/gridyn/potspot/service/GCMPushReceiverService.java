@@ -55,6 +55,8 @@ public class GCMPushReceiverService extends GcmListenerService {
 
                 Log.d(TAG, "onMessageReceived: acceptReqModel = " + acceptReqModel);
 
+                EventBus.getDefault().postSticky(new ReceivedNotifEvent());
+
                 if (acceptReqModel.getAcceptRequestData().isSuccess()) {
 
                     notificationMessage = getString(R.string.book_request_accepted);
@@ -69,8 +71,6 @@ public class GCMPushReceiverService extends GcmListenerService {
                     popupIntent.putExtra(Constant.REQUEST_ID, acceptReqModel.getAcceptRequestData().getRequestId());
                     popupIntent.putExtra(Constant.PARTY_SIZE, acceptReqModel.getAcceptRequestData().getPartySize());
                     popupIntent.putExtra(Constant.SPOT_PRICE, acceptReqModel.getAcceptRequestData().getSpotPrice());
-
-                    EventBus.getDefault().postSticky(new ReceivedNotifEvent());
 
                     startActivity(popupIntent);
                 }

@@ -3,6 +3,7 @@ package com.gridyn.potspot.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,12 +40,14 @@ import retrofit.Retrofit;
  */
 public class NotifsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private static final String TAG = NotifsAdapter.class.getName();
     private static final int BOOK_VERIFIED = 0;
     private static final int BOOK_REQUEST = 1;
-    private static final String TAG = NotifsAdapter.class.getName();
+    private static final int BOOK_PENDING_VERIFY = 2;
     LayoutInflater layoutInflater;
     Context context;
     List<Message> notifsList;
+    private RecyclerView parent;
 
     public NotifsAdapter(Context context) {
 
@@ -61,6 +64,8 @@ public class NotifsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             ItemBookVerifiedBinding itemBookVerifiedBinding = DataBindingUtil.inflate(layoutInflater,
                     R.layout.item_book_verified, parent, true);
 
+            itemBookVerifiedBinding.setIsPending(false);
+
             return new BookVirifiedHolder(itemBookVerifiedBinding);
         }
 
@@ -72,18 +77,28 @@ public class NotifsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             return new BookRequestHolder(itemBookRequestBinding);
         }
 
+        if (viewType == BOOK_PENDING_VERIFY) {
+
+            ItemBookVerifiedBinding itemBookVerifiedBinding = DataBindingUtil.inflate(layoutInflater,
+                    R.layout.item_book_verified, parent, true);
+
+            itemBookVerifiedBinding.setIsPending(true);
+
+            return new BookVirifiedHolder(itemBookVerifiedBinding);
+        }
+
         return null;
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
 
         final Message notif = getItem(position);
 
         if (holder instanceof BookVirifiedHolder) {
 
             ((BookVirifiedHolder) holder).binding.setSpotName(notif.getSpot().getData().getName());
-            ((BookVirifiedHolder) holder).binding.setMessage(context.getString(R.string.book_request_accepted));
+            ((BookVirifiedHolder) holder).binding.setMessage(notif.getSpot().getData().getAddress());
 
             if (notif.getSpot().getData().getImgs().size() > 0)
             Picasso.with(context)
@@ -99,13 +114,17 @@ public class NotifsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 @Override
                 public void onClick(View v) {
 
-                    Intent intent = new Intent(context, BuySpotActivity.class);
-                    intent.putExtra("id", notif.getSpot().getId().get$id());
-                    intent.putExtra(Constant.REQUEST_ID, notif.getId().get$id());
-                    intent.putExtra(Constant.OPEN_FOR_BOOK, false);
-                    intent.putExtra(Constant.PARTY_SIZE, String.valueOf(notif.getData().getGuests()));
-                    intent.putExtra(Constant.SPOT_PRICE, notif.getSpot().getData().getPrice());
-                    context.startActivity(intent);
+                    if (!((BookVirifiedHolder) holder).binding.getIsPending()) {
+
+                        Intent intent = new Intent(context, BuySpotActivity.class);
+                        intent.putExtra("id", notif.getSpot().getId().get$id());
+                        intent.putExtra(Constant.REQUEST_ID, notif.getId().get$id());
+                        intent.putExtra(Constant.OPEN_FOR_BOOK, false);
+                        intent.putExtra(Constant.PARTY_SIZE, String.valueOf(notif.getData().getGuests()));
+                        intent.putExtra(Constant.SPOT_PRICE, notif.getSpot().getData().getPrice());
+                        context.startActivity(intent);
+                    } else
+                        Snackbar.make(parent, context.getString(R.string.request_process), Snackbar.LENGTH_SHORT).show();
                 }
             });
 
@@ -132,6 +151,8 @@ public class NotifsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         public void onFailure(Throwable t) {
 
                             Log.e(TAG, "onFailure: error while cancel req = " + Log.getStackTraceString(t));
+
+                            Snackbar.make(parent, R.string.error_connection, Snackbar.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -161,12 +182,17 @@ public class NotifsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                             SuccessResponse success = response.body();
 
                             Log.d(TAG, "onResponse: resp = " + success);
+
+                            if (success.isSuccess())
+                                removeItem(notif, position);
                         }
 
                         @Override
                         public void onFailure(Throwable t) {
 
                             Log.e(TAG, "onFailure: error while accept request = " + Log.getStackTraceString(t));
+
+                            Snackbar.make(parent, R.string.error_connection, Snackbar.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -195,6 +221,8 @@ public class NotifsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         public void onFailure(Throwable t) {
 
                             Log.e(TAG, "onFailure: error while accept request = " + Log.getStackTraceString(t));
+
+                            Snackbar.make(parent, R.string.error_connection, Snackbar.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -235,6 +263,9 @@ public class NotifsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
             case "book_request":
                 return BOOK_REQUEST;
+
+            case "book_pending_verify":
+                return BOOK_PENDING_VERIFY;
         }
 
         return 0;
@@ -255,6 +286,10 @@ public class NotifsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         this.notifsList.clear();
         notifyDataSetChanged();
+    }
+
+    public void setParent(RecyclerView parent) {
+        this.parent = parent;
     }
 
     public class BookVirifiedHolder extends RecyclerView.ViewHolder {
