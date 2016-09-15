@@ -13,6 +13,7 @@ import com.gridyn.potspot.databinding.ItemPaymentHistoryBinding;
 import com.gridyn.potspot.model.PaymentHistoryItem;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by dmytro_vodnik on 8/23/16.
@@ -115,6 +116,17 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         this.latestPaymentDate = s;
         this.pendingMoney = s1;
 
+        notifyDataSetChanged();
+    }
+
+    public void clean() {
+
+
+    }
+
+    public void addAll(List<PaymentHistoryItem> notifsArray) {
+
+        this.paymentHistoryItems.addAll(notifsArray);
         notifyDataSetChanged();
     }
 

@@ -50,7 +50,7 @@ public class PaidSpotsAdapter extends RecyclerView.Adapter<PaidSpotsAdapter.Hold
 
         holder.description.setText(spot.getSpot().getData().getAbout());
         holder.from.setText(spot.getSpot().getData().getAddress() + ", " + spot.getSpot().getData().getCountry());
-        holder.price.setText("$ " + spot.getSpot().getData().getPrice() / 100);
+        holder.price.setText("$ " + spot.getSystem().getFullPrice() / 100);
         holder.date.setText(spot.getData().getDate() + " " + buildBookTime(spot));
 
         holder.fab.setOnClickListener(new View.OnClickListener() {

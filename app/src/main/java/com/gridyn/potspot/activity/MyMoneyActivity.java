@@ -9,19 +9,31 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
 import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
 import com.gridyn.potspot.adapter.PaymentHistoryAdapter;
 import com.gridyn.potspot.databinding.ActivityMyMoneyHostBinding;
+import com.gridyn.potspot.model.NotificationModel;
 import com.gridyn.potspot.model.PaymentHistoryItem;
+import com.gridyn.potspot.model.notificationsModels.Message;
+import com.gridyn.potspot.utils.ServerApiUtil;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.Date;
+import java.util.List;
+
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 public class MyMoneyActivity extends AppCompatActivity {
 
+    private static final String TAG = MyMoneyActivity.class.getName();
     /**
      * Do not forget check binding != null, because we have two content views at this class
      */
@@ -87,21 +99,85 @@ public class MyMoneyActivity extends AppCompatActivity {
         //TODO change blank values by real, implement retrofit logic here
         binding.setMoneyValue("20");
 
-        paymentHistoryAdapter.setMyMoneyDetails("01/07", "55");
+//        paymentHistoryAdapter.setMyMoneyDetails("01/07", "55");
+//
+//        final ArrayList<PaymentHistoryItem> paymentHistoryItemArrayList = new ArrayList<>();
+//
+//        Random r = new Random();
+//
+//        for (int i = 0; i < 10; i++) {
+//
+//            int randDay = Math.abs(r.nextInt() % 31);
+//            int randMonth = Math.abs(r.nextInt() % 12);
+//            int randValue = Math.abs(r.nextInt() % 200);
+//            paymentHistoryItemArrayList.add(new PaymentHistoryItem(randDay + "/" + randMonth, "" + randValue));
+//        }
+//
+//        paymentHistoryAdapter.addItems(paymentHistoryItemArrayList);
 
-        ArrayList<PaymentHistoryItem> paymentHistoryItemArrayList = new ArrayList<>();
+        Call<NotificationModel> call = ServerApiUtil.initUser().showPayedSpots(Person.getTokenMap());
 
-        Random r = new Random();
+        call.enqueue(new Callback<NotificationModel>() {
+            @Override
+            public void onResponse(Response<NotificationModel> response, Retrofit retrofit) {
 
-        for (int i = 0; i < 10; i++) {
+                NotificationModel paidSpots = response.body();
 
-            int randDay = Math.abs(r.nextInt() % 31);
-            int randMonth = Math.abs(r.nextInt() % 12);
-            int randValue = Math.abs(r.nextInt() % 200);
-            paymentHistoryItemArrayList.add(new PaymentHistoryItem(randDay + "/" + randMonth, "" + randValue));
-        }
+                Log.d(TAG, "onResponse: paid = " + paidSpots);
 
-        paymentHistoryAdapter.addItems(paymentHistoryItemArrayList);
+                paymentHistoryAdapter.clean();
+
+                List<Message> notifsArray = paidSpots.getMessage().get(0);
+
+                ArrayList<PaymentHistoryItem> paymentHistoryItems = new ArrayList<>();
+
+                SimpleDateFormat format = new SimpleDateFormat("MM-dd");
+
+                for (Message message : notifsArray) {
+
+                    PaymentHistoryItem paymentHistoryItem = new PaymentHistoryItem(format
+                            .format(new Date(message.getSystem().getTimeCreated())),
+                            String.valueOf(message.getSystem().getFullPrice() / 100) );
+
+                    paymentHistoryItems.add(paymentHistoryItem);
+
+                }
+
+                paymentHistoryAdapter.addAll(paymentHistoryItems);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        });
+
+        Call<NotificationModel> call1 = ServerApiUtil.initUser().showPayedSpotsHost(Person.getTokenMap());
+
+        call1.enqueue(new Callback<NotificationModel>() {
+            @Override
+            public void onResponse(Response<NotificationModel> response, Retrofit retrofit) {
+                NotificationModel paidSpots = response.body();
+
+                Log.d(TAG, "onResponse: paid = " + paidSpots);
+
+                List<Message> notifsArray = paidSpots.getMessage().get(0);
+
+                int totalGet = 0;
+
+                for (Message message : notifsArray) {
+
+                    totalGet += message.getSystem().getFullPrice() / 100;
+                }
+
+                binding.setMoneyValue(""+totalGet);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        });
     }
 
     //onclick for no host

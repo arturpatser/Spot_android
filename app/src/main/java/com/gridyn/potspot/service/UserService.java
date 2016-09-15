@@ -116,6 +116,9 @@ public interface UserService {
     @POST("booking/show/user_payed")
     Call<NotificationModel> showPayedSpots(@Body Map<String, String> token);
 
+    @POST("booking/show/host_payed")
+    Call<NotificationModel> showPayedSpotsHost(@Body Map<String, String> token);
+
     @POST("user/facebook_login")
     Call<UserLoginResponse> loginViaFacebook(@Body FacebookLoginQuery facebookLoginQuery);
 
