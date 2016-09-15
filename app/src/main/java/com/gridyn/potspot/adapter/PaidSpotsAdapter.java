@@ -9,16 +9,18 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.gridyn.potspot.AssetsHelper;
+import com.github.clans.fab.FloatingActionButton;
+import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.R;
-import com.gridyn.potspot.response.UserInfoResponse;
+import com.gridyn.potspot.model.notificationsModels.Message;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PaidSpotsAdapter extends RecyclerView.Adapter<PaidSpotsAdapter.Holder> {
 
-    private List<UserInfoResponse.Message.Data.Spot> mSpotList;
+    private List<Message> mSpotList;
     private final Context mContext;
     private final FragmentActivity mFragmentActivity;
 
@@ -38,9 +40,33 @@ public class PaidSpotsAdapter extends RecyclerView.Adapter<PaidSpotsAdapter.Hold
 
     @Override
     public void onBindViewHolder(Holder holder, int position) {
-//        Spot spot = mSpotList.get(position);
 
-        holder.background.setImageDrawable(AssetsHelper.loadImageFromAsset(mContext, "images/mountain.jpg"));
+        Message spot = mSpotList.get(position);
+
+        if (spot.getSpot().getData().getImgs().size() > 0)
+            Picasso.with(mContext)
+                    .load(Constant.URL_IMAGE + spot.getSpot().getData().getImgs().get(0))
+                    .into(holder.background);
+
+        holder.description.setText(spot.getSpot().getData().getAbout());
+        holder.from.setText(spot.getSpot().getData().getAddress() + ", " + spot.getSpot().getData().getCountry());
+        holder.price.setText("$ " + spot.getSpot().getData().getPrice() / 100);
+        holder.date.setText(spot.getData().getDate() + " " + buildBookTime(spot));
+
+        holder.fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //TODO call chat here
+            }
+        });
+    }
+
+    private String buildBookTime(Message notif) {
+
+        return notif.getData().getsTimeFrom() + " " + notif.getData().getsAmPmFrom() + " - " +
+                notif.getData().getsTimeTo() + " " + notif.getData().getsAmPmTo();
+
     }
 
     @Override
@@ -48,9 +74,15 @@ public class PaidSpotsAdapter extends RecyclerView.Adapter<PaidSpotsAdapter.Hold
         return mSpotList.size();
     }
 
-    public void addAll(List<UserInfoResponse.Message.Data.Spot> message) {
+    public void addAll(List<Message> message) {
 
         mSpotList.addAll(message);
+        notifyDataSetChanged();
+    }
+
+    public void clean() {
+
+        mSpotList.clear();
         notifyDataSetChanged();
     }
 
@@ -61,6 +93,7 @@ public class PaidSpotsAdapter extends RecyclerView.Adapter<PaidSpotsAdapter.Hold
         private TextView from;
         private TextView price;
         private TextView date;
+        FloatingActionButton fab;
 
         public Holder(View itemView) {
             super(itemView);
@@ -69,6 +102,7 @@ public class PaidSpotsAdapter extends RecyclerView.Adapter<PaidSpotsAdapter.Hold
             from = (TextView) itemView.findViewById(R.id.paid_from);
             price = (TextView) itemView.findViewById(R.id.paid_price);
             date = (TextView) itemView.findViewById(R.id.paid_date);
+            fab = (FloatingActionButton) itemView.findViewById(R.id.paid_email);
         }
     }
 }

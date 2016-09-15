@@ -13,7 +13,6 @@ import com.gridyn.potspot.query.PhoneVerifyQuery;
 import com.gridyn.potspot.query.UserUpdateQuery;
 import com.gridyn.potspot.response.BookResponse;
 import com.gridyn.potspot.response.MySpotResponse;
-import com.gridyn.potspot.response.PayedSpotsResponse;
 import com.gridyn.potspot.response.PaymentResponse;
 import com.gridyn.potspot.response.PhoneConfirmResponse;
 import com.gridyn.potspot.response.PhoneVerifyResponse;
@@ -115,7 +114,7 @@ public interface UserService {
     Call<SuccessResponse> declineInvite(@Path("id") String requestId, @Body Map<String, String> token);
 
     @POST("booking/show/user_payed")
-    Call<PayedSpotsResponse> showPayedSpots(@Body Map<String, String> token);
+    Call<NotificationModel> showPayedSpots(@Body Map<String, String> token);
 
     @POST("user/facebook_login")
     Call<UserLoginResponse> loginViaFacebook(@Body FacebookLoginQuery facebookLoginQuery);

@@ -2,6 +2,8 @@ package com.gridyn.potspot.activity;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -16,7 +18,8 @@ import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
 import com.gridyn.potspot.Spot;
 import com.gridyn.potspot.adapter.PaidSpotsAdapter;
-import com.gridyn.potspot.response.PayedSpotsResponse;
+import com.gridyn.potspot.model.NotificationModel;
+import com.gridyn.potspot.model.notificationsModels.Message;
 import com.gridyn.potspot.utils.ServerApiUtil;
 
 import java.util.List;
@@ -31,6 +34,7 @@ public class PaidSpotsActivity extends AppCompatActivity {
     private static final String TAG = PaidSpotsActivity.class.getName();
     private List<Spot> mSpotList;
     PaidSpotsAdapter adapter;
+    SwipeRefreshLayout psRefresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,24 +51,33 @@ public class PaidSpotsActivity extends AppCompatActivity {
 
     private void loadPaidSpots() {
 
-        Call<PayedSpotsResponse> call = ServerApiUtil.initUser().showPayedSpots(Person.getTokenMap());
+        Call<NotificationModel> call = ServerApiUtil.initUser().showPayedSpots(Person.getTokenMap());
 
-        call.enqueue(new Callback<PayedSpotsResponse>() {
+        call.enqueue(new Callback<NotificationModel>() {
             @Override
-            public void onResponse(Response<PayedSpotsResponse> response, Retrofit retrofit) {
+            public void onResponse(Response<NotificationModel> response, Retrofit retrofit) {
 
-                PayedSpotsResponse payedSpotsResponse = response.body();
+                psRefresh.setRefreshing(false);
 
-                Log.d(TAG, "onResponse: paid = " + payedSpotsResponse);
+                NotificationModel paidSpots = response.body();
 
+                Log.d(TAG, "onResponse: paid = " + paidSpots);
 
-//                adapter.addAll(payedSpotsResponse.getMessage());
+                adapter.clean();
+
+                List<Message> notifsArray = paidSpots.getMessage().get(0);
+
+                adapter.addAll(notifsArray);
             }
 
             @Override
             public void onFailure(Throwable t) {
 
                 Log.e(TAG, "onFailure: error while load paid spots = " + Log.getStackTraceString(t));
+
+                Snackbar.make(findViewById(android.R.id.content), R.string.error_connection, Snackbar.LENGTH_SHORT).show();
+
+                psRefresh.setRefreshing(false);
             }
         });
     }
@@ -89,5 +102,15 @@ public class PaidSpotsActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setItemAnimator(itemAnimator);
+
+        psRefresh = (SwipeRefreshLayout) findViewById(R.id.ps_refresher);
+
+        psRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                loadPaidSpots();
+            }
+        });
     }
 }
