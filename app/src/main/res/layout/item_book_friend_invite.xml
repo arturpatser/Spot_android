@@ -14,169 +14,127 @@
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="220dp"
         android:layout_margin="16dp"
         android:elevation="4dp"
         tools:context=".activity.ClientPopup"
         tools:targetApi="lollipop">
 
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/spot_img"
+            android:layout_weight="0.3"
+            android:padding="4dp"
+            android:background="@color/grey21" />
+
+        <ImageView
+
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/user_pic"
+            android:layout_weight="0.3"
+            android:padding="4dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@{userName}"
+            android:id="@+id/textView19"
+            android:padding="4dp"
+            android:textColor="@color/white"
+            android:layout_below="@+id/user_pic"
+            android:layout_centerHorizontal="true"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/join_spot"
+            android:id="@+id/textView20"
+            android:padding="4dp"
+            android:textColor="@color/white"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_below="@+id/textView19"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@{spotName}"
+            android:id="@+id/textView21"
+            android:textColor="@color/grey"
+            android:padding="4dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_below="@+id/textView20"
+            android:layout_centerHorizontal="true" />
+
         <LinearLayout
             android:orientation="vertical"
-            android:background="@color/white"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/toolbar_height"
-            android:layout_centerInParent="true">
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
 
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:id="@+id/user_info_layout"
-                android:layout_weight="0.4">
-
-                <ImageView
-
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:id="@+id/user_pic"
-                    android:layout_weight="0.3"
-                    android:layout_margin="4dp"
-                    android:padding="4dp" />
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.7">
-
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.7">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:textColor="@color/grey"
-                            android:text="@string/hi_its"
-                            android:id="@+id/textView18"
-                            android:layout_margin="4dp"
-                            android:padding="4dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:text="@{userName}"
-                            android:id="@+id/textView19"
-                            android:layout_margin="4dp"
-                            android:padding="4dp"
-                            android:textColor="@color/mainRed" />
-
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:text="@string/join_spot"
-                        android:id="@+id/textView20"
-                        android:layout_margin="4dp"
-                        android:padding="4dp"
-                        android:textColor="@color/grey"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.4">
-
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:id="@+id/spot_img"
-                    android:layout_weight="0.3"
-                    android:layout_margin="4dp"
-                    android:padding="4dp" />
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.7">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:text="@{spotName}"
-                        android:id="@+id/textView21"
-                        android:textColor="@color/grey"
-                        android:layout_margin="4dp"
-                        android:padding="4dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:text="@string/read_more"
-                        android:textAllCaps="true"
-                        android:textColor="@color/mainRed"
-                        android:id="@+id/read_more"
-                        android:layout_margin="4dp"
-                        android:padding="4dp" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_alignParentLeft="false"
-                android:layout_marginLeft="0dp"
                 android:layout_alignParentTop="false"
-                android:layout_marginTop="0dp"
                 android:layout_alignParentBottom="true"
-                android:id="@+id/buttons_layout"
-                android:layout_weight="0.2">
+                android:id="@+id/buttons_layout">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textAppearance="?android:textAppearanceMedium"
+                    android:text="@string/details"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:id="@+id/read_more"
+                    android:layout_margin="4dp"
+                    android:padding="4dp"
+                    android:layout_weight="1"
+                    android:gravity="center" />
 
                 <TextView
                     android:layout_margin="4dp"
                     android:padding="4dp"
-                    android:textColor="@color/mainRed"
+                    android:textColor="@color/white"
                     android:textAppearance="?android:textAppearanceMedium"
                     android:textAllCaps="true"
                     android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="@string/yes"
+                    android:text="@string/accept"
                     android:id="@+id/yes_btn"
                     android:layout_gravity="left|bottom"
                     android:layout_weight="1"
                     android:onClick="onClickYes"/>
 
                 <TextView
-                    android:onClick="onClickNo"
                     android:layout_margin="4dp"
                     android:padding="4dp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textAllCaps="true"
                     android:gravity="center"
                     android:textAppearance="?android:textAppearanceMedium"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="@string/no_thanks"
+                    android:text="@string/reject"
                     android:id="@+id/no_btn"
                     android:layout_gravity="right|bottom"
                     android:layout_weight="1" />
             </LinearLayout>
 
         </LinearLayout>
+
     </RelativeLayout>
 </layout>

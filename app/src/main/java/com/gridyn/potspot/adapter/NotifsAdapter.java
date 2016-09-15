@@ -193,6 +193,14 @@ public class NotifsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         if (holder instanceof BookRequestHolder) {
 
             ((BookRequestHolder) holder).itemBookRequestBinding.setSpotName(notif.getSpot().getData().getName());
+            ((BookRequestHolder) holder).itemBookRequestBinding.setUserName(notif.getUser().getData().getName());
+
+            if (notif.getUser().getData().getImgs().size() > 0)
+                Picasso.with(context)
+                        .load(Constant.URL_IMAGE + notif.getUser().getData().getImgs().get(0))
+                        .resize(96, 96)
+                        .transform(new CircleTransform(96))
+                        .into(((BookRequestHolder) holder).userPic);
 
             if (notif.getSpot().getData().getImgs().size() > 0)
                 Picasso.with(context)
@@ -514,6 +522,9 @@ public class NotifsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         @BindView(R.id.spot_img)
         ImageView spotImg;
+
+        @BindView(R.id.user_pic)
+        ImageView userPic;
 
         public BookRequestHolder(ItemBookRequestBinding itemBookRequestBinding) {
             super(itemBookRequestBinding.getRoot());
