@@ -59,4 +59,6 @@ public interface Constant {
     String FB_ID = "fbid";
     String FB_TOKEN = "fbtoken";
     String GPLUS_TOKEN = "gplus";
+    String ACCEPT_REQ_MODEL = "reqmodel";
+    String BOOK_TIME = "time";
 }

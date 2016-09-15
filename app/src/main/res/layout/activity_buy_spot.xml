@@ -170,8 +170,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="right|center_vertical"
                     android:layout_marginTop="30dp"
-                    android:text="@string/set"
-                    android:onClick="onClickVisitTime" />
+                    android:text="@string/set" />
 
                 <View
                     android:layout_width="match_parent"

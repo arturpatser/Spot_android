@@ -114,8 +114,8 @@ public interface UserService {
     @POST("booking/{id}/invite/decline")
     Call<SuccessResponse> declineInvite(@Path("id") String requestId, @Body Map<String, String> token);
 
-    @POST("booking/show/payed")
-    Call<PayedSpotsResponse> showPayedSpotsFriend(@Body Map<String, String> token);
+    @POST("booking/show/user_payed")
+    Call<PayedSpotsResponse> showPayedSpots(@Body Map<String, String> token);
 
     @POST("user/facebook_login")
     Call<UserLoginResponse> loginViaFacebook(@Body FacebookLoginQuery facebookLoginQuery);

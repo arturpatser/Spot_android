@@ -92,8 +92,10 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
         requestId = getIntent().getExtras().getString(Constant.REQUEST_ID);
         partySize = getIntent().getExtras().getString(Constant.PARTY_SIZE);
         spotPrice = getIntent().getExtras().getInt(Constant.SPOT_PRICE);
+        bookTime = getIntent().getExtras().getString(Constant.BOOK_TIME);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_buy_spot);
+
         binding.setShowSplit(true);
         binding.setForBook(forBook);
 
@@ -107,6 +109,7 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
                 new IntentFilter(Constant.INTENT_INVITE_FRIEND));
     }
 
+    private String bookTime;
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -183,6 +186,56 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
         if (forBook) {
 
             mPay.setText(getString(R.string.request_booking));
+
+            mTime.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    final Calendar calendar = Calendar.getInstance();
+                    TimePickerDialog.OnTimeSetListener callback = new TimePickerDialog.OnTimeSetListener() {
+                        @Override
+                        public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
+
+                            minsFrom = modifyHour(hourOfDay, view.getIsCurrentlyAmOrPm()) * 60 + minute;
+
+                            sTimeFrom = Integer.toString(hourOfDay) + ":" + appendMinute(minute);
+                            sAmPmFrom = view.getIsCurrentlyAmOrPm() == 0 ? "AM" : "PM";
+
+                            TimePickerDialog.OnTimeSetListener callback = new TimePickerDialog.OnTimeSetListener() {
+                                @Override
+                                public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
+
+                                    minsTo = modifyHour(hourOfDay, view.getIsCurrentlyAmOrPm()) * 60 + minute;
+
+                                    sTimeTo = Integer.toString(hourOfDay) + ":" + appendMinute(minute);
+                                    sAmPmTo = view.getIsCurrentlyAmOrPm() == 0 ? "AM" : "PM";
+
+                                    mTime.setText(sTimeFrom + " - " + sTimeTo);
+
+                                    mTotalPrice.setText( "$" + calcTotalPrice() + "\ntotal price" );
+                                }
+                            };
+                            final TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(
+                                    callback, calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE), false
+                            );
+                            timePickerDialog.setTimeInterval(1, 30, 60);
+                            timePickerDialog.setTitle(getString(R.string.time_to));
+                            timePickerDialog.setAccentColor(getResources().getColor(R.color.mainRed));
+                            timePickerDialog.show(getFragmentManager(), "TimePickerDialogTo");
+                        }
+                    };
+                    final TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(
+                            callback, calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE), false
+                    );
+                    timePickerDialog.setTitle(getString(R.string.time_from));
+                    timePickerDialog.setTimeInterval(1, 30, 60);
+                    timePickerDialog.setAccentColor(getResources().getColor(R.color.mainRed));
+                    timePickerDialog.show(getFragmentManager(), "TimePickerDialogFrom");
+                }
+            });
+        } else {
+
+            mTime.setText(bookTime);
         }
     }
 
@@ -266,49 +319,6 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
                 mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.setAccentColor(getResources().getColor(R.color.mainRed));
         datePickerDialog.show(getFragmentManager(), "DatePickerDialog");
-    }
-
-    public void onClickVisitTime(View view) {
-        final Calendar calendar = Calendar.getInstance();
-        TimePickerDialog.OnTimeSetListener callback = new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
-
-                minsFrom = modifyHour(hourOfDay, view.getIsCurrentlyAmOrPm()) * 60 + minute;
-
-                sTimeFrom = Integer.toString(hourOfDay) + ":" + appendMinute(minute);
-                sAmPmFrom = view.getIsCurrentlyAmOrPm() == 0 ? "AM" : "PM";
-
-                TimePickerDialog.OnTimeSetListener callback = new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
-
-                        minsTo = modifyHour(hourOfDay, view.getIsCurrentlyAmOrPm()) * 60 + minute;
-
-                        sTimeTo = Integer.toString(hourOfDay) + ":" + appendMinute(minute);
-                        sAmPmTo = view.getIsCurrentlyAmOrPm() == 0 ? "AM" : "PM";
-
-                        mTime.setText(sTimeFrom + " - " + sTimeTo);
-
-                        mTotalPrice.setText( "$" + calcTotalPrice() + "\ntotal price" );
-                    }
-                };
-                final TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(
-                        callback, calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE), false
-                );
-                timePickerDialog.setTimeInterval(1, 30, 60);
-                timePickerDialog.setTitle(getString(R.string.time_to));
-                timePickerDialog.setAccentColor(getResources().getColor(R.color.mainRed));
-                timePickerDialog.show(getFragmentManager(), "TimePickerDialogTo");
-            }
-        };
-        final TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(
-                callback, calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE), false
-        );
-        timePickerDialog.setTitle(getString(R.string.time_from));
-        timePickerDialog.setTimeInterval(1, 30, 60);
-        timePickerDialog.setAccentColor(getResources().getColor(R.color.mainRed));
-        timePickerDialog.show(getFragmentManager(), "TimePickerDialogFrom");
     }
 
     private String appendMinute(int minute) {

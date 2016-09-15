@@ -10,6 +10,7 @@ import android.view.Window;
 import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.R;
 import com.gridyn.potspot.databinding.ActivityPopupBinding;
+import com.gridyn.potspot.model.AcceptRequestModel;
 
 public class ClientPopup extends AppCompatActivity {
 
@@ -18,6 +19,7 @@ public class ClientPopup extends AppCompatActivity {
     String requestId;
     String partySize;
     int spotPrice;
+    AcceptRequestModel acceptRequestModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +41,8 @@ public class ClientPopup extends AppCompatActivity {
 
             spotId = args.getString(Constant.SPOT_ID);
             requestId = args.getString(Constant.REQUEST_ID);
+
+            acceptRequestModel = args.getParcelable(Constant.ACCEPT_REQ_MODEL);
         }
     }
 
@@ -50,9 +54,18 @@ public class ClientPopup extends AppCompatActivity {
         intent.putExtra(Constant.OPEN_FOR_BOOK, false);
         intent.putExtra(Constant.PARTY_SIZE, partySize);
         intent.putExtra(Constant.SPOT_PRICE, spotPrice);
+        intent.putExtra(Constant.BOOK_TIME, buildBookTime());
         startActivity(intent);
 
         finish();
+    }
+
+    private String buildBookTime() {
+
+        return acceptRequestModel.getAcceptRequestData().getsTimeFrom() + " " +
+                acceptRequestModel.getAcceptRequestData().getsAmPmFrom() + " - " +
+                acceptRequestModel.getAcceptRequestData().getsTimeTo() + " " +
+                acceptRequestModel.getAcceptRequestData().getsAmPmTo();
     }
 
     public void onClickCancel(View view) {

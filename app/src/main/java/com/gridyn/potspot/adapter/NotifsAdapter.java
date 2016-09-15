@@ -153,6 +153,7 @@ public class NotifsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         intent.putExtra(Constant.OPEN_FOR_BOOK, false);
                         intent.putExtra(Constant.PARTY_SIZE, String.valueOf(notif.getData().getGuests()));
                         intent.putExtra(Constant.SPOT_PRICE, notif.getSpot().getData().getPrice());
+                        intent.putExtra(Constant.BOOK_TIME, buildBookTime(notif));
                         context.startActivity(intent);
                     } else
                         Snackbar.make(parent, context.getString(R.string.request_process), Snackbar.LENGTH_SHORT).show();
@@ -417,6 +418,13 @@ public class NotifsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 }
             });
         }
+    }
+
+    private String buildBookTime(Message notif) {
+
+        return notif.getData().getsTimeFrom() + " " + notif.getData().getsAmPmFrom() + " - " +
+                notif.getData().getsTimeTo() + " " + notif.getData().getsAmPmTo();
+
     }
 
     private void removeItem(Message notif, int position) {

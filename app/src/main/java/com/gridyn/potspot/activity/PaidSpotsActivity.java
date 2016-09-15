@@ -47,7 +47,7 @@ public class PaidSpotsActivity extends AppCompatActivity {
 
     private void loadPaidSpots() {
 
-        Call<PayedSpotsResponse> call = ServerApiUtil.initUser().showPayedSpotsFriend(Person.getTokenMap());
+        Call<PayedSpotsResponse> call = ServerApiUtil.initUser().showPayedSpots(Person.getTokenMap());
 
         call.enqueue(new Callback<PayedSpotsResponse>() {
             @Override
