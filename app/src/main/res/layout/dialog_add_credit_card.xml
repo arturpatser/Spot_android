@@ -52,22 +52,47 @@
                 android:password="true" />
         </android.support.design.widget.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_height="match_parent"
             android:layout_weight="1">
 
-            <EditText
-                android:id="@+id/card_date"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/expiry_date"
-                android:textAllCaps="true"
-                android:inputType="number"
-                android:maxLength="5"
-                android:gravity="center" />
-        </android.support.design.widget.TextInputLayout>
+                android:layout_margin="10dp"
+                android:layout_weight="1">
+
+                <EditText
+                    android:id="@+id/card_month"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/month"
+                    android:textAllCaps="true"
+                    android:inputType="number"
+                    android:maxLength="2"
+                    android:gravity="center" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="1">
+
+                <EditText
+                    android:id="@+id/card_year"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/year"
+                    android:textAllCaps="true"
+                    android:inputType="number"
+                    android:maxLength="2"
+                    android:gravity="center" />
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
+
     </LinearLayout>
 
     <!--  <LinearLayout

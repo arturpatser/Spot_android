@@ -38,7 +38,7 @@ public class PaymentActivity extends AppCompatActivity {
     private static final String TAG = PaymentActivity.class.getName();
     private TextView mEmail;
     private TextView mCreditCard;
-    private EditText mCardNumber, mCvv, mDate;
+    private EditText mCardNumber, mCvv, mYear, mMonth;
     TextView currentCard;
     Snackbar progress;
 
@@ -61,7 +61,7 @@ public class PaymentActivity extends AppCompatActivity {
             String last = userCurrentCard.substring(12,16);
             currentCard.setText(getString(R.string.credit_card) + ": " + first + "****" + last);
         }
-        progress = Snackbar.make(findViewById(android.R.id.content), R.string.activating_card, Snackbar.LENGTH_INDEFINITE);
+
     }
 
     private void initToolbar() {
@@ -82,22 +82,27 @@ public class PaymentActivity extends AppCompatActivity {
 
     public void onClickAddCreditCard(View view) {
         //TODO: view for alert dialog
+        addCard();
+    }
+
+    private void addCard() {
+
         final View creditCard = getLayoutInflater()
                 .inflate(R.layout.dialog_add_credit_card, (ViewGroup) findViewById(R.id.payment_dialog));
         listenFocus(creditCard);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        progress = Snackbar.make(findViewById(android.R.id.content), R.string.activating_card, Snackbar.LENGTH_INDEFINITE);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(creditCard);
         builder.setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(final DialogInterface dialog, int which) {
                 if (true) {
                     try {
                         Stripe stripe = new Stripe(Constant.STRIPE_KEY);
 
                         final String cardNumber = mCardNumber.getText().toString();
-                        final String month = mDate.getText().subSequence(0,2).toString();
-                        final String year = mDate.getText().subSequence(3,5).toString();
+                        final String month = mMonth.getText().toString();
+                        final String year = mYear.getText().toString();
                         final String cvv = mCvv.getText().toString();
 
                         Log.d(TAG, "onClick: card num = " + cardNumber + " m = " + month + " y = " + year + " cvv = " + cvv);
@@ -113,6 +118,17 @@ public class PaymentActivity extends AppCompatActivity {
                                         public void onError(Exception error) {
 
                                             Log.e(TAG, "onError: error while create token for stripe = " + Log.getStackTraceString(error));
+
+                                            progress.setText(getString(R.string.error_card_data));
+                                            progress.setAction(getString(R.string.try_again), new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+
+                                                    dialog.dismiss();
+
+                                                    addCard();
+                                                }
+                                            });
                                         }
 
                                         @Override
@@ -151,6 +167,15 @@ public class PaymentActivity extends AppCompatActivity {
                                                 public void onFailure(Throwable t) {
 
                                                     Log.e(TAG, "onFailure: error while add card = " + Log.getStackTraceString(t));
+
+                                                    progress.setText(getString(R.string.error_connection));
+                                                    progress.setAction(getString(R.string.try_again), new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View v) {
+
+                                                            addCard();
+                                                        }
+                                                    });
                                                 }
                                             });
                                         }
@@ -200,16 +225,17 @@ public class PaymentActivity extends AppCompatActivity {
 //        String[] date = mDate.getText().toString().trim().split("/");
         return !mCardNumber.getText().toString().isEmpty() &&
                 !mCvv.getText().toString().isEmpty() &&
-                !mDate.getText().toString().isEmpty() &&
+                !mMonth.getText().toString().isEmpty() &&
+                !mYear.getText().toString().isEmpty() &&
                 mCardNumber.getText().toString().length() == 16 &&
-                mCvv.getText().toString().length() == 3 &&
-                mDate.getText().length() == 5;
+                mCvv.getText().toString().length() == 3;
     }
 
     private void listenFocus(View creditCard) {
         mCardNumber = (EditText) creditCard.findViewById(R.id.card_number);
         mCvv = (EditText) creditCard.findViewById(R.id.card_cvv);
-        mDate = (EditText) creditCard.findViewById(R.id.card_date);
+        mMonth = (EditText) creditCard.findViewById(R.id.card_month);
+        mYear = (EditText) creditCard.findViewById(R.id.card_year);
 
         mCardNumber.addTextChangedListener(new TextWatcher() {
             @Override
@@ -238,34 +264,25 @@ public class PaymentActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.length() == 3) {
-                    mDate.requestFocus();
+                    mMonth.requestFocus();
                 }
             }
         });
 
-        mDate.addTextChangedListener(new TextWatcher() {
+        mMonth.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {/*NOP*/}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                if (count == 2)
-                    mDate.setText(s + "/");
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
-                if(s.length() == 2) {
-                    mDate.setText(s + "/");
-                    mDate.setSelection(mDate.getText().length());
+                if (s.length() == 2) {
+                    mYear.requestFocus();
                 }
-//                } else if(s.length() == 3) {
-//                    String date = mDate.getText().toString().trim();
-//                    char[] ch = date.toCharArray();
-//                    mDate.setText(ch[0] + ch[1]);
-//                }
             }
         });
     }

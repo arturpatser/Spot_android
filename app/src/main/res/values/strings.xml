@@ -204,4 +204,8 @@
     <string name="send_message">Send message</string>
     <string name="activating_card">Activating your card...</string>
     <string name="successfull_add_card">Card successfuly activated</string>
+    <string name="error_card_data">Card data is invalid</string>
+    <string name="try_again">Try again ?</string>
+    <string name="year">year</string>
+    <string name="month">month</string>
 </resources>
