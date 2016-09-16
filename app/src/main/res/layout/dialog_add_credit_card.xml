@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/card_number"
             android:textAllCaps="true"
-            android:maxLength="8"
+            android:maxLength="16"
             android:inputType="number" />
     </android.support.design.widget.TextInputLayout>
 
@@ -48,7 +48,8 @@
                 android:hint="@string/cvv_code"
                 android:textAllCaps="true"
                 android:maxLength="3"
-                android:inputType="number" />
+                android:inputType="number"
+                android:password="true" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -63,7 +64,9 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/expiry_date"
                 android:textAllCaps="true"
-                android:inputType="number" />
+                android:inputType="number"
+                android:maxLength="5"
+                android:gravity="center" />
         </android.support.design.widget.TextInputLayout>
     </LinearLayout>
 

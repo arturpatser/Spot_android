@@ -11,16 +11,27 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.gridyn.potspot.Constant;
+import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
+import com.gridyn.potspot.query.AddCardQuery;
+import com.gridyn.potspot.response.SuccessResponse;
+import com.gridyn.potspot.utils.ServerApiUtil;
+import com.gridyn.potspot.utils.SharedPrefsUtils;
 import com.stripe.android.Stripe;
 import com.stripe.android.TokenCallback;
+import com.stripe.android.model.Card;
 import com.stripe.android.model.Token;
 import com.stripe.exception.AuthenticationException;
-import com.stripe.android.model.Card;
+
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 public class PaymentActivity extends AppCompatActivity {
 
@@ -28,6 +39,8 @@ public class PaymentActivity extends AppCompatActivity {
     private TextView mEmail;
     private TextView mCreditCard;
     private EditText mCardNumber, mCvv, mDate;
+    TextView currentCard;
+    Snackbar progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +50,18 @@ public class PaymentActivity extends AppCompatActivity {
 
         mEmail = (TextView) findViewById(R.id.payment_email);
         mCreditCard = (TextView) findViewById(R.id.payment_credit_card);
+        currentCard = (TextView) findViewById(R.id.current_card);
 
+        String userCurrentCard = SharedPrefsUtils.getStringPreference(this, Constant.USER_CARD);
+
+        if (userCurrentCard == null)
+            currentCard.setText(R.string.credit_card);
+        else {
+            String first = userCurrentCard.substring(0,4);
+            String last = userCurrentCard.substring(12,16);
+            currentCard.setText(getString(R.string.credit_card) + ": " + first + "****" + last);
+        }
+        progress = Snackbar.make(findViewById(android.R.id.content), R.string.activating_card, Snackbar.LENGTH_INDEFINITE);
     }
 
     private void initToolbar() {
@@ -71,22 +95,67 @@ public class PaymentActivity extends AppCompatActivity {
                     try {
                         Stripe stripe = new Stripe(Constant.STRIPE_KEY);
 
-                        Card card = new Card("4242424242424242", 12, 2017, "123");
+                        final String cardNumber = mCardNumber.getText().toString();
+                        final String month = mDate.getText().subSequence(0,2).toString();
+                        final String year = mDate.getText().subSequence(3,5).toString();
+                        final String cvv = mCvv.getText().toString();
 
-                        stripe.createToken(card,
-                                new TokenCallback() {
-                                    @Override
-                                    public void onError(Exception error) {
+                        Log.d(TAG, "onClick: card num = " + cardNumber + " m = " + month + " y = " + year + " cvv = " + cvv);
 
-                                        Log.e(TAG, "onError: error while create token for stripe = " + Log.getStackTraceString(error));
-                                    }
+                        Card card = new Card(cardNumber, Integer.parseInt(month), Integer.parseInt(year), cvv);
 
-                                    @Override
-                                    public void onSuccess(Token token) {
+                        if (checkCard()) {
 
-                                        Log.d(TAG, "onSuccess: successfull received stripe token = " + token.getId());
-                                    }
-                                });
+                            progress.show();
+                            stripe.createToken(card,
+                                    new TokenCallback() {
+                                        @Override
+                                        public void onError(Exception error) {
+
+                                            Log.e(TAG, "onError: error while create token for stripe = " + Log.getStackTraceString(error));
+                                        }
+
+                                        @Override
+                                        public void onSuccess(Token token) {
+
+                                            Log.d(TAG, "onSuccess: successfull received stripe token = " + token.getId());
+
+                                            Call<SuccessResponse> call = ServerApiUtil.initUser()
+                                                    .addCard(Person.getId(), new AddCardQuery(Person.getToken(),
+                                                            token.getId()));
+
+                                            call.enqueue(new Callback<SuccessResponse>() {
+                                                @Override
+                                                public void onResponse(Response<SuccessResponse> response, Retrofit retrofit) {
+
+                                                    SuccessResponse success = response.body();
+
+                                                    Log.d(TAG, "onResponse: success = " + success);
+
+                                                    if (success == null) {
+
+                                                    } else {
+
+                                                        progress.setText(getString(R.string.successfull_add_card));
+                                                        progress.setDuration(Snackbar.LENGTH_SHORT);
+                                                        progress.show();
+
+                                                        SharedPrefsUtils.setStringPreference(PaymentActivity.this, Constant.USER_CARD, cardNumber);
+                                                        SharedPrefsUtils.setStringPreference(PaymentActivity.this, Constant.USER_CARD_M, month);
+                                                        SharedPrefsUtils.setStringPreference(PaymentActivity.this, Constant.USER_CARD_Y, year);
+                                                        SharedPrefsUtils.setStringPreference(PaymentActivity.this, Constant.USER_CARD_C, cvv);
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onFailure(Throwable t) {
+
+                                                    Log.e(TAG, "onFailure: error while add card = " + Log.getStackTraceString(t));
+                                                }
+                                            });
+                                        }
+                                    });
+                        }
 
                     } catch (AuthenticationException e) {
                         Log.e(TAG, "onClickBuyPay: error while init stripe = " + Log.getStackTraceString(e));
@@ -97,6 +166,7 @@ public class PaymentActivity extends AppCompatActivity {
                 }
             }
         });
+
         builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -104,7 +174,26 @@ public class PaymentActivity extends AppCompatActivity {
             }
         });
         AlertDialog alertDialog = builder.create();
+        alertDialog.setCancelable(false);
         alertDialog.show();
+
+        Button neutral_button = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+
+        Button positive_button = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+
+
+        if (neutral_button != null) {
+
+
+            neutral_button.setTextColor(getResources()
+                    .getColor(android.R.color.black));
+        }
+        if (positive_button != null) {
+
+            positive_button.setTextColor(getResources()
+                    .getColor(android.R.color.black));
+        }
+
     }
 
     private boolean checkCard() {
@@ -112,9 +201,9 @@ public class PaymentActivity extends AppCompatActivity {
         return !mCardNumber.getText().toString().isEmpty() &&
                 !mCvv.getText().toString().isEmpty() &&
                 !mDate.getText().toString().isEmpty() &&
-                Integer.valueOf(mCardNumber.getText().toString().trim()) == 8 &&
-                Integer.valueOf(mCvv.getText().toString().trim()) == 3;
-//                Integer.valueOf(date[0].concat(date[1])) == 4;
+                mCardNumber.getText().toString().length() == 16 &&
+                mCvv.getText().toString().length() == 3 &&
+                mDate.getText().length() == 5;
     }
 
     private void listenFocus(View creditCard) {
@@ -127,11 +216,13 @@ public class PaymentActivity extends AppCompatActivity {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {/*NOP*/}
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {/*NOP*/}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                /*NOP*/
+            }
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.length() == 8) {
+                if (s.length() == 16) {
                     mCvv.requestFocus();
                 }
             }
@@ -157,12 +248,19 @@ public class PaymentActivity extends AppCompatActivity {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {/*NOP*/}
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {/*NOP*/}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                if (count == 2)
+                    mDate.setText(s + "/");
+            }
 
             @Override
             public void afterTextChanged(Editable s) {
-//                if(s.length() == 2) {
-//                    mDate.append("/");
+
+                if(s.length() == 2) {
+                    mDate.setText(s + "/");
+                    mDate.setSelection(mDate.getText().length());
+                }
 //                } else if(s.length() == 3) {
 //                    String date = mDate.getText().toString().trim();
 //                    char[] ch = date.toCharArray();

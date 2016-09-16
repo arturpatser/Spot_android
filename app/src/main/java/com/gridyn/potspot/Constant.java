@@ -61,4 +61,8 @@ public interface Constant {
     String GPLUS_TOKEN = "gplus";
     String ACCEPT_REQ_MODEL = "reqmodel";
     String BOOK_TIME = "time";
+    String USER_CARD = "card";
+    String USER_CARD_M = "cardm";
+    String USER_CARD_Y = "cardy";
+    String USER_CARD_C = "cardc";
 }

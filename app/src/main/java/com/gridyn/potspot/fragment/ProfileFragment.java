@@ -246,6 +246,7 @@ public class ProfileFragment extends Fragment {
                     } else {
                         Picasso.with(getContext())
                                 .load(BASE_IMAGE)
+                                .resize(96, 96)
                                 .into(mAvatar);
                     }
                     if (message.data.spot != null && message.data.spot.size() != 0) {

@@ -55,6 +55,7 @@
             android:layout_margin="20dp"
             android:onClick="onClickAddCreditCard">
             <TextView
+                android:id="@+id/current_card"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/credit_card"/>

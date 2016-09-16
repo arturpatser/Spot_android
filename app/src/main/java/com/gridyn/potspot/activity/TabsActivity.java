@@ -1,6 +1,5 @@
 package com.gridyn.potspot.activity;
 
-import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -40,7 +39,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class TabsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener {
 
-    private static final String TAG = TabActivity.class.getName();
+    private static final String TAG = TabsActivity.class.getName();
     private Toolbar mToolbar;
     private DrawerLayout mDrawer;
     private View mHeaderView;
@@ -99,7 +98,7 @@ public class TabsActivity extends AppCompatActivity
         SelectPageUtil.init(tabLayout, mTitleToolbar);
         TabsPagerFragmentAdapter adapter = new TabsPagerFragmentAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
-
+        viewPager.setOffscreenPageLimit(0);
         tabLayout.setupWithViewPager(viewPager);
     }
 

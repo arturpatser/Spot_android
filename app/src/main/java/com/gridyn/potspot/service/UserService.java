@@ -1,6 +1,7 @@
 package com.gridyn.potspot.service;
 
 import com.gridyn.potspot.model.NotificationModel;
+import com.gridyn.potspot.query.AddCardQuery;
 import com.gridyn.potspot.query.BookQuery;
 import com.gridyn.potspot.query.EnableHostQuery;
 import com.gridyn.potspot.query.FacebookLoginQuery;
@@ -118,6 +119,12 @@ public interface UserService {
 
     @POST("booking/show/host_payed")
     Call<NotificationModel> showPayedSpotsHost(@Body Map<String, String> token);
+
+    @POST("user/{id}/add_card")
+    Call<SuccessResponse> addCard(@Path("id") String userId, @Body AddCardQuery addCardQuery);
+
+    @POST("user/{id}/add_card_host")
+    Call<SuccessResponse> addCardHost(@Path("id") String userId, @Body AddCardQuery addCardQuery);
 
     @POST("user/facebook_login")
     Call<UserLoginResponse> loginViaFacebook(@Body FacebookLoginQuery facebookLoginQuery);

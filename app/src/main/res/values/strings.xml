@@ -202,4 +202,6 @@
     <string name="successfull_add_friend">change</string>
     <string name="available">Available</string>
     <string name="send_message">Send message</string>
+    <string name="activating_card">Activating your card...</string>
+    <string name="successfull_add_card">Card successfuly activated</string>
 </resources>
