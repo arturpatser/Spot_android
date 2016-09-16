@@ -254,7 +254,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                     SharedPrefsUtils.getStringPreference(this, Constant.FB_TOKEN));
 
         } else if (SharedPrefsUtils.getBooleanPreference(this, Constant.GPLUS_APP_LOGIN, false)) {
-
+            callGPlusReg(SharedPrefsUtils.getStringPreference(this, Constant.GPLUS_TOKEN));
         } else {
             setContentView(R.layout.activity_main);
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE

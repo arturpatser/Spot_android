@@ -79,7 +79,12 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         if (holder instanceof Holder) {
 
-            final SpotSearchResponse.Spots spot = mSpotList.get(position);
+            int pos = position;
+
+            if (!Person.isHost() && position > 3)
+                pos--;
+
+            final SpotSearchResponse.Spots spot = mSpotList.get(pos);
             AssetManager asset = mContext.getAssets();
 
         if (spot.data.imgs.size() != 0) {
