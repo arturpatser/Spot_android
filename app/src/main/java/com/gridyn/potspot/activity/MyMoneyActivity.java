@@ -21,6 +21,7 @@ import com.gridyn.potspot.model.PaymentHistoryItem;
 import com.gridyn.potspot.model.notificationsModels.Message;
 import com.gridyn.potspot.utils.ServerApiUtil;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -49,6 +50,8 @@ public class MyMoneyActivity extends AppCompatActivity {
         if (Person.isHost()) {
 
             binding = DataBindingUtil.setContentView(this, R.layout.activity_my_money_host);
+
+            binding.setMoneyValue("");
 
             paymentHistoryAdapter = new PaymentHistoryAdapter(this);
 
@@ -96,25 +99,6 @@ public class MyMoneyActivity extends AppCompatActivity {
 
     private void loadMyMoneyInfo() {
 
-        //TODO change blank values by real, implement retrofit logic here
-        binding.setMoneyValue("20");
-
-//        paymentHistoryAdapter.setMyMoneyDetails("01/07", "55");
-//
-//        final ArrayList<PaymentHistoryItem> paymentHistoryItemArrayList = new ArrayList<>();
-//
-//        Random r = new Random();
-//
-//        for (int i = 0; i < 10; i++) {
-//
-//            int randDay = Math.abs(r.nextInt() % 31);
-//            int randMonth = Math.abs(r.nextInt() % 12);
-//            int randValue = Math.abs(r.nextInt() % 200);
-//            paymentHistoryItemArrayList.add(new PaymentHistoryItem(randDay + "/" + randMonth, "" + randValue));
-//        }
-//
-//        paymentHistoryAdapter.addItems(paymentHistoryItemArrayList);
-
         Call<NotificationModel> call = ServerApiUtil.initUser().showPayedSpots(Person.getTokenMap());
 
         call.enqueue(new Callback<NotificationModel>() {
@@ -131,24 +115,37 @@ public class MyMoneyActivity extends AppCompatActivity {
 
                 ArrayList<PaymentHistoryItem> paymentHistoryItems = new ArrayList<>();
 
-                SimpleDateFormat format = new SimpleDateFormat("MM-dd");
+                DateFormat dateFormat = new SimpleDateFormat("dd-MM");
 
                 for (Message message : notifsArray) {
 
-                    PaymentHistoryItem paymentHistoryItem = new PaymentHistoryItem(format
-                            .format(new Date(message.getSystem().getTimeCreated())),
+                    Log.d(TAG, "onResponse: timecreated = " + message.getSystem().getTimeCreated() * 1000);
+
+                    Date date = new Date(message.getSystem().getTimeCreated() * 1000);
+
+                    PaymentHistoryItem paymentHistoryItem = new PaymentHistoryItem(dateFormat
+                            .format(date),
                             String.valueOf(message.getSystem().getFullPrice() / 100) );
 
                     paymentHistoryItems.add(paymentHistoryItem);
 
                 }
 
-                paymentHistoryAdapter.addAll(paymentHistoryItems);
+                if (paymentHistoryItems.size() > 0) {
+
+                    paymentHistoryAdapter.setMyMoneyDetails(paymentHistoryItems.get(0).getDate(),
+                            paymentHistoryItems.get(0).getValue());
+
+                    paymentHistoryItems.remove(0);
+                    
+                    paymentHistoryAdapter.addAll(paymentHistoryItems);
+                }
             }
 
             @Override
             public void onFailure(Throwable t) {
 
+                Log.e(TAG, "onFailure: eror while load spots = " + Log.getStackTraceString(t));
             }
         });
 
@@ -176,6 +173,7 @@ public class MyMoneyActivity extends AppCompatActivity {
             @Override
             public void onFailure(Throwable t) {
 
+                Log.e(TAG, "onFailure: eror while load spots = " + Log.getStackTraceString(t));
             }
         });
     }

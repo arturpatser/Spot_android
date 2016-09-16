@@ -39,7 +39,7 @@ public class System {
     private List<Object> invitedFriends = new ArrayList<Object>();
     @SerializedName("TimeCreated")
     @Expose
-    private Integer timeCreated;
+    private long timeCreated;
     @SerializedName("TimeUpdated")
     @Expose
     private Integer timeUpdated;
@@ -217,7 +217,7 @@ public class System {
      * @return
      *     The timeCreated
      */
-    public Integer getTimeCreated() {
+    public long getTimeCreated() {
         return timeCreated;
     }
 
@@ -226,7 +226,7 @@ public class System {
      * @param timeCreated
      *     The TimeCreated
      */
-    public void setTimeCreated(Integer timeCreated) {
+    public void setTimeCreated(long timeCreated) {
         this.timeCreated = timeCreated;
     }
 

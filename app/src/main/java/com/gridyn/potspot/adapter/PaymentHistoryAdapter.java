@@ -27,8 +27,8 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private final Context context;
     ArrayList<PaymentHistoryItem> paymentHistoryItems;
     LayoutInflater layoutInflater;
-    private String latestPaymentDate;
-    private String pendingMoney;
+    private String latestPaymentDate = "";
+    private String pendingMoney = "";
 
     public PaymentHistoryAdapter(Context context) {
 
@@ -111,10 +111,10 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         notifyDataSetChanged();
     }
 
-    public void setMyMoneyDetails(String s, String s1) {
+    public void setMyMoneyDetails(String latesPaymentDate, String pendingMoney) {
 
-        this.latestPaymentDate = s;
-        this.pendingMoney = s1;
+        this.latestPaymentDate = latesPaymentDate;
+        this.pendingMoney = pendingMoney;
 
         notifyDataSetChanged();
     }

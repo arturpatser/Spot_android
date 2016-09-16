@@ -95,9 +95,9 @@ public class FirstLaunchActivity extends IntroActivity {
         // This variable holds the pages while they are being created
         final ArrayList<Fragment> pages = new ArrayList<>();
 
-        pages.add(FirstLaunchFragment.newInstance(R.drawable.step1));
-        pages.add(FirstLaunchFragment.newInstance(R.drawable.step2));
-        pages.add(FirstLaunchFragment.newInstance(R.drawable.step3));
+        pages.add(FirstLaunchFragment.newInstance(R.drawable.f1_min));
+        pages.add(FirstLaunchFragment.newInstance(R.drawable.f2_min));
+        pages.add(FirstLaunchFragment.newInstance(R.drawable.f3_min));
 
         return pages;
     }
