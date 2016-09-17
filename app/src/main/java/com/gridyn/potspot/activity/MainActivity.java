@@ -381,11 +381,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            handleSignInResult(result);
-        }
-
-        if (requestCode == RC_SIGN_IN) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             GoogleSignInAccount googleSignInAccount = result.getSignInAccount();
 
             Log.d(TAG, "onActivityResult: result = " + result.getStatus());
@@ -400,18 +395,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 callGPlusReg(token);
                 // callServerReg();
             }
-        }
-    }
-
-    private void handleSignInResult(GoogleSignInResult result) {
-
-        if (result.isSuccess()) {
-            GoogleSignInAccount acct = result.getSignInAccount();
-            String idToken = acct.getIdToken();
-            Log.d(TAG, "ID Token: " + idToken);
-            // TODO(user): send token to server and validate server-side
-        } else {
-            Log.d(TAG, "ID Token: null");
         }
     }
 

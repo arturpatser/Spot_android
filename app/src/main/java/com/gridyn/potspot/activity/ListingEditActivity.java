@@ -165,7 +165,7 @@ public class ListingEditActivity extends AppCompatActivity {
 
     private void initRecycler(List<String> imgs) {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.list_edit_recycler);
-        ListingEditAdapter adapter = new ListingEditAdapter(imgs, getApplicationContext()); //TODO: null -> List<String>
+        ListingEditAdapter adapter = new ListingEditAdapter(imgs, getApplicationContext());
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), 1, LinearLayoutManager.HORIZONTAL, false);
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
 

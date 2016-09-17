@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,7 +19,6 @@ import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
 import com.gridyn.potspot.activity.DescriptionSpotActivity;
 import com.gridyn.potspot.activity.SpaceActivity;
-import com.gridyn.potspot.activity.VerificationActivity;
 import com.gridyn.potspot.response.SpotSearchResponse;
 import com.gridyn.potspot.response.SuccessResponse;
 import com.gridyn.potspot.utils.ServerApiUtil;
@@ -185,16 +183,17 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 public void onClick(View v) {
 
                     if (!Person.isHost()) {
-                        Snackbar.make(parent, "Your account is not verified", Snackbar.LENGTH_INDEFINITE)
-                                .setAction("goto verify", new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        final Intent intent = new Intent(mContext, VerificationActivity.class);
-                                        mContext.startActivity(intent);
-                                    }
-                                })
-                                .setActionTextColor(mContext.getResources().getColor(R.color.mainRed))
-                                .show();
+                        //TODO show verification window here
+//                        Snackbar.make(parent, "Your account is not verified", Snackbar.LENGTH_INDEFINITE)
+//                                .setAction("goto verify", new View.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(View v) {
+//                                        final Intent intent = new Intent(mContext, VerificationActivity.class);
+//                                        mContext.startActivity(intent);
+//                                    }
+//                                })
+//                                .setActionTextColor(mContext.getResources().getColor(R.color.mainRed))
+//                                .show();
                     } else if (Person.isHost()) {
                         Intent intent = new Intent(mContext, SpaceActivity.class);
                         mContext.startActivity(intent);
@@ -224,7 +223,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public int getItemViewType(int position) {
 
-        if (mSpotList.size() > 3 && position == 1 && !Person.isHost())
+        if (mSpotList.size() > 2 && position == 1 && !Person.isHost())
             return TYPE_BANNER;
 
         return TYPE_ITEM;
@@ -232,7 +231,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemCount() {
-        return !Person.isHost() ? mSpotList.size() + 1 : mSpotList.size();
+        return (mSpotList.size() > 2 && !Person.isHost()) ? mSpotList.size() + 1 : mSpotList.size();
     }
 
     public static class Holder extends RecyclerView.ViewHolder {

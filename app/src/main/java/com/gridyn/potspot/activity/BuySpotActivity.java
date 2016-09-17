@@ -529,7 +529,6 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
             @Override
             public void friendsSelected(ArrayList<FriendModel> selectedItems) {
 
-                //TODO process selected friends here
                 Log.d(TAG, "friendsSelected: process friends started " + selectedItems);
                 adapter.clear();
                 if (selectedItems.size() > 0) {
@@ -579,7 +578,6 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
 
         float fSplitPrice = (float) spot.data.price / (adapter.acceptedCount() + 1);
 
-        //TODO change price
         f.setSplitSize(fSplitPrice);
     }
 }

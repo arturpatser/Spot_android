@@ -34,12 +34,12 @@ import com.google.gson.GsonBuilder;
 import com.gridyn.potspot.Constant;
 import com.gridyn.potspot.Person;
 import com.gridyn.potspot.R;
+import com.gridyn.potspot.SearchBridge;
 import com.gridyn.potspot.SelectPageUtil;
 import com.gridyn.potspot.Spot;
 import com.gridyn.potspot.activity.SearchCriteriaActivity;
 import com.gridyn.potspot.activity.SearchResultActivity;
 import com.gridyn.potspot.activity.SpaceActivity;
-import com.gridyn.potspot.activity.VerificationActivity;
 import com.gridyn.potspot.adapter.HomeAdapter;
 import com.gridyn.potspot.model.events.AddToFavoriteEvent;
 import com.gridyn.potspot.query.SearchCriteriaQuery;
@@ -102,16 +102,17 @@ public class HomeFragment extends Fragment /*implements OnMapReadyCallback */ {
             Log.d(TAG, "onOptionsItemSelected: add potspot clicked");
 
             if (!Person.isHost()) {
-                Snackbar.make(getView(), "Your account is not verified", Snackbar.LENGTH_INDEFINITE)
-                        .setAction("goto verify", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                final Intent intent = new Intent(mView.getContext(), VerificationActivity.class);
-                                startActivity(intent);
-                            }
-                        })
-                        .setActionTextColor(getResources().getColor(R.color.mainRed))
-                        .show();
+                //TODO show verification window here
+//                Snackbar.make(getView(), "Your account is not verified", Snackbar.LENGTH_INDEFINITE)
+//                        .setAction("goto verify", new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                final Intent intent = new Intent(mView.getContext(), VerificationActivity.class);
+//                                startActivity(intent);
+//                            }
+//                        })
+//                        .setActionTextColor(getResources().getColor(R.color.mainRed))
+//                        .show();
             } else if (Person.isHost()) {
                 final Intent intent = new Intent(mView.getContext(), SpaceActivity.class);
                 startActivity(intent);
@@ -225,8 +226,27 @@ public class HomeFragment extends Fragment /*implements OnMapReadyCallback */ {
 
                 Log.d(TAG, "onClick: find first available clicked");
 
-                Intent intent = new Intent(mView.getContext(), SearchResultActivity.class);
-//                startActivity(intent);
+                Call<SpotSearchResponse> call = mService.searchSpotGlobal(Person.getTokenMap());
+
+                call.enqueue(new Callback<SpotSearchResponse>() {
+                    @Override
+                    public void onResponse(Response<SpotSearchResponse> response, Retrofit retrofit) {
+                        Log.i(Constant.LOG, "response side");
+                        if (response.body().success) {
+
+                            SearchBridge.setDataForSearchResult(response.body().message.get(0).spots);
+                            final Intent intent = new Intent(getActivity(), SearchResultActivity.class);
+                            startActivity(intent);
+                        } else {
+                            Log.i(Constant.LOG, "logooooogogogogogogogogogogoogogogogogoggogogogogogogogogog");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        Log.i(Constant.LOG, t.toString());
+                    }
+                });
             }
         });
         search.setOnClickListener(new View.OnClickListener() {

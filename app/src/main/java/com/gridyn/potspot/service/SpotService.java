@@ -29,6 +29,9 @@ public interface SpotService {
     @POST("spot/search")
     Call<SpotSearchResponse> searchSpot(@Body SearchCriteriaQuery searchCriteria);
 
+    @POST("spot/search")
+    Call<SpotSearchResponse> searchSpotGlobal(@Body Map<String, String> token);
+
     @POST("spot/{id}")
     Call<SpotInfoResponse> getSpot(@Path("id") String id);
 

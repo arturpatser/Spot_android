@@ -154,16 +154,17 @@ public class TabsActivity extends AppCompatActivity
                 Log.d(TAG, "onOptionsItemSelected: add potspot clicked");
 
                 if (!Person.isHost()) {
-                    Snackbar.make(mDrawer, "Your account is not verified", Snackbar.LENGTH_SHORT)
-                            .setAction("goto verify", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    final Intent intent = new Intent(TabsActivity.this, VerificationActivity.class);
-                                    startActivity(intent);
-                                }
-                            })
-                            .setActionTextColor(getResources().getColor(R.color.mainRed))
-                            .show();
+                    //TODO show verification window here
+//                    Snackbar.make(mDrawer, "Your account is not verified", Snackbar.LENGTH_SHORT)
+//                            .setAction("goto verify", new View.OnClickListener() {
+//                                @Override
+//                                public void onClick(View v) {
+//                                    final Intent intent = new Intent(TabsActivity.this, VerificationActivity.class);
+//                                    startActivity(intent);
+//                                }
+//                            })
+//                            .setActionTextColor(getResources().getColor(R.color.mainRed))
+//                            .show();
                 } else if (Person.isHost()) {
                     intent = new Intent(TabsActivity.this, SpaceActivity.class);
                 }

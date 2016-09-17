@@ -15,8 +15,8 @@
     <string name="home">Home</string>
     <string name="option">option</string>
     <string name="menu_search">menu_search</string>
-    <string name="notification">notification</string>
-    <string name="profile">profile</string>
+    <string name="notification">Notification</string>
+    <string name="profile">Profile</string>
     <string name="btn_find">Find first available</string>
     <string name="all_listing">All listing in Toronto</string>
     <string name="listing_map">Listing of Toronto on map</string>

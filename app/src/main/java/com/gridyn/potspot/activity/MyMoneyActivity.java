@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -182,16 +181,18 @@ public class MyMoneyActivity extends AppCompatActivity {
     public void onBecomeHostClick(View view) {
 
         if (!Person.isHost()) {
-            Snackbar.make(view, "Your account is not verified", Snackbar.LENGTH_INDEFINITE)
-                    .setAction("goto verify", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            final Intent intent = new Intent(MyMoneyActivity.this, VerificationActivity.class);
-                            startActivity(intent);
-                        }
-                    })
-                    .setActionTextColor(getResources().getColor(R.color.mainRed))
-                    .show();
+
+            //TODO show verification window here
+//            Snackbar.make(view, "Your account is not verified", Snackbar.LENGTH_INDEFINITE)
+//                    .setAction("goto verify", new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            final Intent intent = new Intent(MyMoneyActivity.this, VerificationActivity.class);
+//                            startActivity(intent);
+//                        }
+//                    })
+//                    .setActionTextColor(getResources().getColor(R.color.mainRed))
+//                    .show();
         } else if (Person.isHost()) {
             startActivity(new Intent(this, SpaceActivity.class));
         }

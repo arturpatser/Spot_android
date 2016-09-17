@@ -194,7 +194,9 @@
             android:name=".activity.InvitedToJoinPopup"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.UserDialog" />
-        <activity android:name=".activity.FavoritesActivity"></activity>
+        <activity
+            android:name=".activity.FavoritesActivity"
+            android:theme="@style/AppTheme.Other"/>
     </application>
 
 </manifest>

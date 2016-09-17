@@ -23,7 +23,6 @@ import com.gridyn.potspot.R;
 import com.gridyn.potspot.SelectPageUtil;
 import com.gridyn.potspot.activity.MySpotsActivity;
 import com.gridyn.potspot.activity.ProfileEditActivity;
-import com.gridyn.potspot.activity.VerificationActivity;
 import com.gridyn.potspot.response.UserInfoResponse;
 import com.gridyn.potspot.service.UserService;
 import com.gridyn.potspot.utils.FragmentUtils;
@@ -296,16 +295,17 @@ public class ProfileFragment extends Fragment {
                 } else if (mWaitingForVerify) {
                     Snackbar.make(getView(), "Your request is processed", Snackbar.LENGTH_LONG).show();
                 } else if (!Person.isHost()) {
-                    Snackbar.make(getView(), "Account is not verified", Snackbar.LENGTH_INDEFINITE)
-                            .setAction("goto verify", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    final Intent intent = new Intent(getContext(), VerificationActivity.class);
-                                    startActivity(intent);
-                                }
-                            })
-                            .setActionTextColor(getResources().getColor(R.color.mainRed))
-                            .show();
+                    //TODO show verification window here
+//                    Snackbar.make(getView(), "Account is not verified", Snackbar.LENGTH_INDEFINITE)
+//                            .setAction("goto verify", new View.OnClickListener() {
+//                                @Override
+//                                public void onClick(View v) {
+//                                    final Intent intent = new Intent(getContext(), VerificationActivity.class);
+//                                    startActivity(intent);
+//                                }
+//                            })
+//                            .setActionTextColor(getResources().getColor(R.color.mainRed))
+//                            .show();
                 }
             }
         });

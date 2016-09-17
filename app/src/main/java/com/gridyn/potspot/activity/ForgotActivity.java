@@ -49,7 +49,7 @@ public class ForgotActivity extends AppCompatActivity {
         if (email.isEmpty()) {
             Snackbar.make(view, "Input email", Snackbar.LENGTH_SHORT).show();
         } else {
-            //TODO: retrofit
+
         }
     }
 
