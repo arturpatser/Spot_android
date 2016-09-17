@@ -1,5 +1,6 @@
 package com.gridyn.potspot.adapter;
 
+import android.content.Context;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -15,17 +16,20 @@ import java.util.List;
 
 public class TabsPagerFragmentAdapter extends FragmentPagerAdapter {
 
+    private final Context context;
     private List<Fragment> mFragmentList;
     private TabLayout mTabLayout;
     private TextView mTitleToolbar;
 
-    public TabsPagerFragmentAdapter(FragmentManager fm) {
+    public TabsPagerFragmentAdapter(FragmentManager fm, Context context) {
         super(fm);
         mFragmentList = Arrays.asList(
                 HomeFragment.getInstance(),
                 NotificationFragment.getInstance(),
                 ProfileFragment.getInstance()
         );
+
+        this.context = context;
     }
 
     @Override
@@ -40,6 +44,7 @@ public class TabsPagerFragmentAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return null;
+
+        return "";
     }
 }

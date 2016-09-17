@@ -65,7 +65,7 @@
         <activity
             android:name=".activity.TabsActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Other" />
+            android:theme="@style/AppTheme.Other.NoActionBar" />
         <activity
             android:name=".activity.ForgotActivity"
             android:parentActivityName=".activity.LoginActivity"

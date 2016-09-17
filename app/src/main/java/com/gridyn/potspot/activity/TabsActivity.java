@@ -93,12 +93,40 @@ public class TabsActivity extends AppCompatActivity
     }
 
     private void initTabs() {
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         SelectPageUtil.init(tabLayout, mTitleToolbar);
-        TabsPagerFragmentAdapter adapter = new TabsPagerFragmentAdapter(getSupportFragmentManager());
+        final TabsPagerFragmentAdapter adapter = new TabsPagerFragmentAdapter(getSupportFragmentManager(), this);
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(0);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+                switch (position) {
+
+                    case 0:
+                        mTitleToolbar.setText(getString(R.string.home));
+                        break;
+                    case 1:
+                        mTitleToolbar.setText(getString(R.string.notification));
+                        break;
+                    case 2:
+                        mTitleToolbar.setText(getString(R.string.profile));
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         tabLayout.setupWithViewPager(viewPager);
     }
 
@@ -126,7 +154,7 @@ public class TabsActivity extends AppCompatActivity
                 Log.d(TAG, "onOptionsItemSelected: add potspot clicked");
 
                 if (!Person.isHost()) {
-                    Snackbar.make(mDrawer, "Your account is not verified", Snackbar.LENGTH_INDEFINITE)
+                    Snackbar.make(mDrawer, "Your account is not verified", Snackbar.LENGTH_SHORT)
                             .setAction("goto verify", new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
