@@ -36,7 +36,6 @@ import retrofit.Retrofit;
 public class PaymentActivity extends AppCompatActivity {
 
     private static final String TAG = PaymentActivity.class.getName();
-    private TextView mEmail;
     private TextView mCreditCard;
     private EditText mCardNumber, mCvv, mYear, mMonth;
     TextView currentCard;
@@ -48,7 +47,6 @@ public class PaymentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_payment);
         initToolbar();
 
-        mEmail = (TextView) findViewById(R.id.payment_email);
         mCreditCard = (TextView) findViewById(R.id.payment_credit_card);
         currentCard = (TextView) findViewById(R.id.current_card);
 

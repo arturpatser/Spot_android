@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -285,6 +286,23 @@ public class ProfileEditActivity extends AppCompatActivity {
         builder.setView(dialogView);
         AlertDialog dialog = builder.create();
         dialog.show();
+
+        Button neutral_button = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+
+        Button positive_button = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+
+
+        if (neutral_button != null) {
+
+
+            neutral_button.setTextColor(getResources()
+                    .getColor(android.R.color.black));
+        }
+        if (positive_button != null) {
+
+            positive_button.setTextColor(getResources()
+                    .getColor(android.R.color.black));
+        }
     }
 
     public void onClickEditName(View view) {
@@ -311,6 +329,23 @@ public class ProfileEditActivity extends AppCompatActivity {
         builder.setView(dialogView);
         AlertDialog dialog = builder.create();
         dialog.show();
+
+        Button neutral_button = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+
+        Button positive_button = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+
+
+        if (neutral_button != null) {
+
+
+            neutral_button.setTextColor(getResources()
+                    .getColor(android.R.color.black));
+        }
+        if (positive_button != null) {
+
+            positive_button.setTextColor(getResources()
+                    .getColor(android.R.color.black));
+        }
     }
 
     public void onClickProfileEditAvatar(View view) {

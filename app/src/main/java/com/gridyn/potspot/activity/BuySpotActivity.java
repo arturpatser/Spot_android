@@ -269,7 +269,7 @@ public class BuySpotActivity extends AppCompatActivity implements BuySpotInterfa
                             .into(mHeader);
 
                     mName.setText(spot.data.name);
-                    mUnderName.setText(spot.data.type + " | " + "спроси у Ильи про дату");
+                    mUnderName.setText(spot.data.type + " | " + spot.data.address);
                     mPartySize.setText(partySize + "\nparty size");
                     mTotalPrice.setText("$" + spot.data.price + "\ntotal price");
                     if (!forBook) {
